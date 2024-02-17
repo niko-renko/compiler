@@ -1,0 +1,18 @@
+class A [
+    fields x, y
+    method m() with locals:
+        print(&this.x)
+]
+
+class B [
+    fields x
+    method m() with locals:
+        ifonly 1: {
+            print(3)
+        }
+]
+
+main with x:
+x = @A
+!x.x = 3
+_ = ^x.m()

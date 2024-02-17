@@ -1,0 +1,6 @@
+main with x:
+x = 10
+while x: {
+    print(1)
+    x = (x - 1)
+}
