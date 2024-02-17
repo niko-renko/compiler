@@ -101,8 +101,7 @@ impl<'ast> Classes<'ast> {
             )?;
         }
 
-        write!(writer, "\n")?;
-        Ok(())
+        write!(writer, "\n")
     }
 }
 

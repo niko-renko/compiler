@@ -13,3 +13,15 @@ impl Into<ControlTransfer> for Return {
         ControlTransfer::Return(self)
     }
 }
+
+impl Write for Return {
+    fn write<T: std::io::Write>(
+        &self,
+        writer: &mut T,
+        classes: &Classes,
+        function: &Function,
+    ) -> Result<(), std::io::Error> {
+        write!(writer, "ret ")?;
+        self.0.write(writer, classes, function)
+    }
+}

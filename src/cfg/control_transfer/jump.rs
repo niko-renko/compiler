@@ -11,3 +11,15 @@ impl Jump {
         self.0
     }
 }
+
+impl Write for Jump {
+    fn write<T: std::io::Write>(
+        &self,
+        writer: &mut T,
+        classes: &Classes,
+        function: &Function,
+    ) -> Result<(), std::io::Error> {
+        write!(writer, "jump ")?;
+        self.0.write(writer, classes, function)
+    }
+}

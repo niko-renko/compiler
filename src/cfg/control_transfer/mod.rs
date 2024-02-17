@@ -17,4 +17,18 @@ pub enum ControlTransfer {
     Fail(Fail),
 }
 
-impl ControlTransfer {}
+impl Write for ControlTransfer {
+    fn write<T: std::io::Write>(
+        &self,
+        writer: &mut T,
+        classes: &Classes,
+        function: &Function,
+    ) -> Result<(), std::io::Error> {
+        match self {
+            ControlTransfer::Return(cf) => cf.write(writer, classes, function),
+            ControlTransfer::Branch(cf) => cf.write(writer, classes, function),
+            ControlTransfer::Jump(cf) => cf.write(writer, classes, function),
+            ControlTransfer::Fail(cf) => cf.write(writer, classes, function),
+        }
+    }
+}

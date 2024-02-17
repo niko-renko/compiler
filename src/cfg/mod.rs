@@ -6,6 +6,7 @@ mod instruction;
 mod label;
 mod place;
 mod place_value;
+mod traits;
 mod value;
 
 use bb::BB;
@@ -14,32 +15,31 @@ pub use instruction::*;
 pub use label::Label;
 pub use place::*;
 pub use place_value::PlaceValue;
+pub use traits::Write;
 pub use value::Value;
 
 pub struct CFG {
     current: Label,
-    blocks: Vec<BB>,
+    blocks: Vec<(Label, BB)>,
     edges: Vec<(Label, Label)>,
     next_temp: usize,
 }
 
 impl CFG {
     pub fn new() -> Self {
+        let label = Label::from(0);
         CFG {
-            current: Label::from(0),
-            blocks: vec![BB::new()],
+            current: label,
+            blocks: vec![(label, BB::new())],
             edges: Vec::new(),
             next_temp: 0,
         }
-    }
-
-    pub fn write<T: std::io::Write>(&self, writer: &mut T, classes: &Classes, function: &Function) {
     }
 }
 
 impl CFG {
     fn current(&mut self) -> &mut BB {
-        &mut self.blocks[self.current.get_id()]
+        &mut self.blocks[self.current.get_id()].1
     }
 
     fn set_current(&mut self, label: Label) {
@@ -47,8 +47,9 @@ impl CFG {
     }
 
     pub fn new_block(&mut self) -> Label {
-        self.blocks.push(BB::new());
-        Label::from(self.blocks.len() - 1)
+        let label = Label::from(self.blocks.len());
+        self.blocks.push((label, BB::new()));
+        label
     }
 
     pub fn add(&mut self, instruction: Instruction) -> Place {
@@ -135,5 +136,26 @@ impl CFG {
 
         let value = value.abs() as usize;
         self.add(Op::from(place.into(), Value::from_raw(value).into(), operator).into())
+    }
+}
+
+impl Write for CFG {
+    fn write<T: std::io::Write>(
+        &self,
+        writer: &mut T,
+        classes: &Classes,
+        function: &Function,
+    ) -> Result<(), std::io::Error> {
+        for (label, block) in &self.blocks {
+            label.write(writer, classes, function)?;
+            if label.get_id() == 0 {
+                write!(writer, "{}:\n", function.get_params_sig())?;
+            } else {
+                write!(writer, ":\n")?;
+            }
+            block.write(writer, classes, function)?;
+        }
+
+        Ok(())
     }
 }

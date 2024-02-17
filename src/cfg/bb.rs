@@ -21,3 +21,24 @@ impl BB {
         self.end = control_transfer;
     }
 }
+
+impl Write for BB {
+    fn write<T: std::io::Write>(
+        &self,
+        writer: &mut T,
+        classes: &Classes,
+        function: &Function,
+    ) -> Result<(), std::io::Error> {
+        for (place, instruction) in &self.instructions {
+            if let Place::None = place {
+            } else {
+                place.write(writer, classes, function)?;
+                write!(writer, " = ")?;
+            }
+            instruction.write(writer, classes, function)?;
+            writeln!(writer)?;
+        }
+        self.end.write(writer, classes, function)?;
+        writeln!(writer)
+    }
+}

@@ -14,3 +14,14 @@ impl Into<Place> for Temp {
         Place::Temp(self)
     }
 }
+
+impl Write for Temp {
+    fn write<T: std::io::Write>(
+        &self,
+        writer: &mut T,
+        _: &Classes,
+        _: &Function,
+    ) -> Result<(), std::io::Error> {
+        write!(writer, "%{}", self.0)
+    }
+}

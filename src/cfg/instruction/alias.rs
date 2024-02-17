@@ -13,3 +13,14 @@ impl Into<Instruction> for Alias {
         Instruction::Alias(self)
     }
 }
+
+impl Write for Alias {
+    fn write<T: std::io::Write>(
+        &self,
+        writer: &mut T,
+        classes: &Classes,
+        function: &Function,
+    ) -> Result<(), std::io::Error> {
+        self.0.write(writer, classes, function)
+    }
+}

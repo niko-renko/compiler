@@ -73,7 +73,21 @@ impl Parse for Statement {
 }
 
 impl Update for Statement {
-    fn update<'cfg>(&self, cfg: &'cfg mut CFG, _: &Function, _: &Classes) -> Result<Place, String> {
-        unimplemented!()
+    fn update<'cfg>(
+        &self,
+        cfg: &'cfg mut CFG,
+        function: &Function,
+        classes: &Classes,
+    ) -> Result<Place, String> {
+        match self {
+            // Statement::Assignment(assignment) => assignment.update(cfg, function, classes),
+            // Statement::FieldUpdate(field_update) => field_update.update(cfg, function, classes),
+            // Statement::If(if_statement) => if_statement.update(cfg, function, classes),
+            // Statement::IfOnly(ifonly) => ifonly.update(cfg, function, classes),
+            // Statement::While(while_statement) => while_statement.update(cfg, function, classes),
+            // Statement::Return(return_statement) => return_statement.update(cfg, function, classes),
+            Statement::Print(s) => s.update(cfg, function, classes),
+            _ => unimplemented!(),
+        }
     }
 }

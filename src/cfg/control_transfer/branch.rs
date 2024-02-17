@@ -25,3 +25,19 @@ impl Into<ControlTransfer> for Branch {
         ControlTransfer::Branch(self)
     }
 }
+
+impl Write for Branch {
+    fn write<T: std::io::Write>(
+        &self,
+        writer: &mut T,
+        classes: &Classes,
+        function: &Function,
+    ) -> Result<(), std::io::Error> {
+        write!(writer, "if ")?;
+        self.condition.write(writer, classes, function)?;
+        write!(writer, " then ")?;
+        self.t.write(writer, classes, function)?;
+        write!(writer, " else ")?;
+        self.f.write(writer, classes, function)
+    }
+}

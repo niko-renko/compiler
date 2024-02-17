@@ -29,9 +29,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     for function in functions {
         let mut cfg = cfg::CFG::new();
         cfg_update::Build::from(&classes, &function).update(&mut cfg)?;
-        cfg_update::SSA::new().update(&mut cfg)?;
-        cfg_update::Peephole::new().update(&mut cfg)?;
-        cfg.write(&mut out_stream, &classes, &function);
+        // cfg_update::SSA::new().update(&mut cfg)?;
+        // cfg_update::Peephole::new().update(&mut cfg)?;
+        // cfg_update::VN::new().update(&mut cfg)?;
+        cfg::Write::write(&cfg, &mut out_stream, &classes, &function)?;
     }
 
     Ok(())
