@@ -84,12 +84,7 @@ impl Update for Op {
             }
             Operator::Div => {
                 let is_zero = cfg.add(
-                    cfg::Op::from(
-                        right.clone().into(),
-                        Value::from(0).into(),
-                        cfg::Operator::Eq,
-                    )
-                    .into(),
+                    cfg::Op::from(right.into(), Value::from(0).into(), cfg::Operator::Eq).into(),
                 );
 
                 cfg.fail_if(is_zero, true, FailReason::NotANumber);

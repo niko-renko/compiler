@@ -13,3 +13,18 @@ impl Parse for Print {
         Ok((next, Print { expression }))
     }
 }
+
+impl Update for Print {
+    fn update<'cfg>(
+        &self,
+        cfg: &'cfg mut CFG,
+        function: &Function,
+        classes: &Classes,
+    ) -> Result<Place, String> {
+        let place_value = self.expression.update(cfg, function, classes)?;
+        cfg.fail_if_ptr(place_value);
+        let raw = cfg.to_raw(place_value);
+        cfg.add_placed(Place::None, cfg::Print::from(raw.into()).into());
+        Ok(place_value)
+    }
+}

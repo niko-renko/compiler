@@ -13,6 +13,7 @@ pub enum Place {
     Local(Named),
     Temp(Temp),
     Static(Static),
+    None,
 }
 
 impl Into<PlaceValue> for Place {

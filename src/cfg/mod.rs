@@ -58,6 +58,10 @@ impl CFG {
         temp.into()
     }
 
+    pub fn add_placed(&mut self, place: Place, instruction: Instruction) {
+        self.current().add((place, instruction));
+    }
+
     pub fn end(&mut self, control_transfer: ControlTransfer) {
         match &control_transfer {
             ControlTransfer::Branch(branch) => {
