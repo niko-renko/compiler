@@ -24,10 +24,16 @@ impl<'cfg> Extract<'cfg, CFG> for Assign {
 
         for (label, bb) in cfg.get_blocks() {
             let mut var_kill = HashSet::new();
-            for (place, instruction) in bb.get_instructions() {
-                let places_read = instruction.places_read();
 
-                for place in places_read {
+            let write_read: Vec<(&Place, Vec<Place>)> = bb
+                .get_instructions()
+                .iter()
+                .map(|(w, i)| (w, i.places_read()))
+                .chain(vec![(&Place::None, bb.get_end().places_read())])
+                .collect();
+
+            for (write, read) in write_read {
+                for place in read {
                     if let Place::Named(named) = place {
                         let id = named.get_id();
                         if !var_kill.contains(&id) {
@@ -36,7 +42,7 @@ impl<'cfg> Extract<'cfg, CFG> for Assign {
                     }
                 }
 
-                if let Place::Named(named) = place {
+                if let Place::Named(named) = write {
                     let id = named.get_id();
                     var_kill.insert(id);
                     assigned.entry(id).or_insert(vec![]).push(*label);

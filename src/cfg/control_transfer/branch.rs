@@ -46,3 +46,9 @@ impl Write for Branch {
         self.false_label.write(writer, classes, function)
     }
 }
+
+impl PlacesRead for Branch {
+    fn places_read(&self) -> Vec<Place> {
+        vec![self.condition]
+    }
+}

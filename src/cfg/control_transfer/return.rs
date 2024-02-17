@@ -26,3 +26,9 @@ impl Write for Return {
         self.0.write(writer, classes, function)
     }
 }
+
+impl PlacesRead for Return {
+    fn places_read(&self) -> Vec<Place> {
+        self.0.places_read()
+    }
+}

@@ -50,3 +50,9 @@ impl Write for Fail {
         self.0.write(writer, classes, function)
     }
 }
+
+impl PlacesRead for Fail {
+    fn places_read(&self) -> Vec<Place> {
+        vec![]
+    }
+}

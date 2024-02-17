@@ -30,3 +30,9 @@ impl Write for Jump {
         self.0.write(writer, classes, function)
     }
 }
+
+impl PlacesRead for Jump {
+    fn places_read(&self) -> Vec<Place> {
+        vec![]
+    }
+}

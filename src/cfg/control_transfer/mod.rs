@@ -33,3 +33,14 @@ impl Write for ControlTransfer {
         }
     }
 }
+
+impl PlacesRead for ControlTransfer {
+    fn places_read(&self) -> Vec<Place> {
+        match self {
+            ControlTransfer::Return(cf) => cf.places_read(),
+            ControlTransfer::Branch(cf) => cf.places_read(),
+            ControlTransfer::Jump(cf) => cf.places_read(),
+            ControlTransfer::Fail(cf) => cf.places_read(),
+        }
+    }
+}
