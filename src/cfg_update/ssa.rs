@@ -11,6 +11,9 @@ impl SSA {
 impl Update for SSA {
     fn update(&self, cfg: &mut CFG) -> Result<(), String> {
         let assign = Assign::extract(cfg)?;
+        for place in assign.get_globals() {
+            dbg!(place);
+        }
         for place in assign.get_assigned() {
             dbg!(place);
         }

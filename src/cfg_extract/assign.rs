@@ -3,12 +3,12 @@ use std::collections::{HashMap, HashSet};
 use super::*;
 
 pub struct Assign {
-    globals: HashSet<Place>,
+    globals: HashSet<usize>,
     assigned: HashMap<usize, Vec<Label>>,
 }
 
 impl Assign {
-    pub fn get_globals(&self) -> &HashSet<Place> {
+    pub fn get_globals(&self) -> &HashSet<usize> {
         &self.globals
     }
 
@@ -28,20 +28,18 @@ impl<'cfg> Extract<'cfg, CFG> for Assign {
                 let places_read = instruction.places_read();
 
                 for place in places_read {
-                    if let Place::Named(_) = place {
-                        if !var_kill.contains(&place) {
-                            globals.insert(place);
+                    if let Place::Named(named) = place {
+                        let id = named.get_id();
+                        if !var_kill.contains(&id) {
+                            globals.insert(id);
                         }
                     }
                 }
 
-                var_kill.insert(place);
-
                 if let Place::Named(named) = place {
-                    assigned
-                        .entry(named.get_id())
-                        .or_insert(vec![])
-                        .push(*label);
+                    let id = named.get_id();
+                    var_kill.insert(id);
+                    assigned.entry(id).or_insert(vec![]).push(*label);
                 }
             }
         }
