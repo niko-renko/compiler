@@ -36,37 +36,50 @@ impl<'ast> Index<'ast> {
 
         self.class_owns.get_mut(class_name).unwrap().push(id);
     }
+
+    fn get(&self, name: &Name) -> Option<usize> {
+        self.ids.get(name).map(|id| *id)
+    }
+
+    fn count(&self) -> usize {
+        self.next_id
+    }
 }
 
 pub struct Classes<'ast> {
-    classes: HashSet<&'ast Name>,
+    classes: Vec<&'ast Name>,
     fields: Index<'ast>,
     methods: Index<'ast>,
 }
 
 impl<'ast> Classes<'ast> {
-    pub fn get_field_count(class_name: &Name) -> usize {
-        unimplemented!()
+    pub fn get_class_id(&self, class_name: &Name) -> Option<usize> {
+        self.classes.iter().position(|&c| c == class_name)
     }
 
-    pub fn get_vtable_name(&self, class_name: &Name) -> String {
-        format!("{}_vtable", class_name.as_ref())
+    pub fn get_field_id(&self, field_name: &Local) -> Option<usize> {
+        self.fields.get(field_name.get_name())
     }
 
-    pub fn get_fieldmap_name(&self, class_name: &Name) -> String {
-        format!("{}_field_map", class_name.as_ref())
+    pub fn get_method_id(&self, method_name: &Name) -> Option<usize> {
+        self.methods.get(method_name)
     }
 
-    pub fn get_field_id(field_name: &Local) -> usize {
-        unimplemented!()
+    pub fn get_field_count(&self, class_id: usize) -> usize {
+        self.fields.count()
     }
 
-    pub fn get_method_id(method_name: &Name) -> usize {
-        unimplemented!()
+    pub fn get_vtable_name(&self, class_id: usize) -> String {
+        format!("{}_vtable", self.classes[class_id].as_ref())
+    }
+
+    pub fn get_fieldmap_name(&self, class_id: usize) -> String {
+        format!("{}_field_map", self.classes[class_id].as_ref())
     }
 
     pub fn write<T: std::io::Write>(&self, writer: &mut T) -> Result<(), std::io::Error> {
         for &class_name in &self.classes {
+            let class_id = self.get_class_id(class_name).unwrap();
             let empty = Vec::new();
 
             let fields = self.fields.class_owns.get(class_name).unwrap_or(&empty);
@@ -80,7 +93,7 @@ impl<'ast> Classes<'ast> {
             write!(
                 writer,
                 "global array {}: {{ {} }}\n",
-                self.get_fieldmap_name(class_name),
+                self.get_fieldmap_name(class_id),
                 fields_mapping.join(", ")
             )?;
 
@@ -89,14 +102,13 @@ impl<'ast> Classes<'ast> {
 
             for &id in methods {
                 let &function_name = self.methods.ids_reverse.get(&id).unwrap();
-                // BAD! Two definitions for how to make function name
-                methods_mapping[id] = format!("{}_{}", class_name.as_ref(), function_name.as_ref());
+                methods_mapping[id] = Function::name(Some(class_name), function_name);
             }
 
             write!(
                 writer,
                 "global array {}: {{ {} }}\n",
-                self.get_vtable_name(class_name),
+                self.get_vtable_name(class_id),
                 methods_mapping.join(", ")
             )?;
         }
@@ -107,32 +119,34 @@ impl<'ast> Classes<'ast> {
 
 impl<'ast> Extract<'ast> for Classes<'ast> {
     fn extract(ast: &'ast AST) -> Result<Self, String> {
-        let mut classes = Classes {
-            classes: HashSet::new(),
-            fields: Index::new(),
-            methods: Index::new(),
-        };
+        let mut classes = HashSet::new();
+        let mut fields = Index::new();
+        let mut methods = Index::new();
 
         for class in ast.get_classes() {
             let class_name = class.get_name();
 
-            if classes.classes.contains(class_name) {
+            if classes.contains(class_name) {
                 return Err(format!("Class {} already defined", class_name.as_ref()));
             }
 
-            classes.classes.insert(class_name);
+            classes.insert(class_name);
 
             for field in class.get_fields() {
-                classes
-                    .fields
-                    .bind(class_name, field.get_local().get_name());
+                fields.bind(class_name, field.get_local().get_name());
             }
 
             for method in class.get_methods() {
-                classes.methods.bind(class_name, method.get_name());
+                methods.bind(class_name, method.get_name());
             }
         }
 
-        Ok(classes)
+        let classes: Vec<&Name> = classes.iter().map(|name| *name).collect();
+
+        Ok(Classes {
+            classes,
+            methods,
+            fields,
+        })
     }
 }

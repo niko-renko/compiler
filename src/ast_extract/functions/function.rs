@@ -30,19 +30,22 @@ impl<'ast> Function<'ast> {
         }
     }
 
-    pub fn get_name(&self) -> String {
-        if let Some(class_name) = self.class_name {
-            // BAD! Two definitions for how to make function name
-            format!("{}_{}", class_name.as_ref(), self.function_name.as_ref())
+    pub fn name(class_name: Option<&'ast Name>, function_name: &'ast Name) -> String {
+        if let Some(class_name) = class_name {
+            format!("{}_{}", class_name.as_ref(), function_name.as_ref())
         } else {
-            String::from(self.function_name.as_ref())
+            String::from(function_name.as_ref())
         }
+    }
+
+    pub fn get_name(&self) -> String {
+        Self::name(self.class_name, self.function_name)
     }
 
     pub fn get_params_sig(&self) -> String {
         let mut params: Vec<&Local> = self.params.iter().collect();
 
-        if let Some(class_name) = self.class_name {
+        if let Some(_) = self.class_name {
             params.insert(0, &self.this);
         }
 
