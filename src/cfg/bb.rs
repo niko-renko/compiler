@@ -24,6 +24,10 @@ impl BB {
     pub fn get_end(&self) -> ControlTransfer {
         self.end
     }
+
+    pub fn get_instructions(&self) -> &Vec<(Place, Instruction)> {
+        &self.instructions
+    }
 }
 
 impl Write for BB {

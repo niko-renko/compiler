@@ -15,7 +15,7 @@ pub use instruction::*;
 pub use label::Label;
 pub use place::*;
 pub use place_value::PlaceValue;
-pub use traits::Write;
+pub use traits::{PlacesRead, Write};
 pub use value::Value;
 
 pub struct CFG {
@@ -38,6 +38,10 @@ impl CFG {
 }
 
 impl CFG {
+    pub fn get_blocks(&self) -> &Vec<(Label, BB)> {
+        &self.blocks
+    }
+
     fn current(&mut self) -> &mut BB {
         &mut self.blocks[self.current.get_id()].1
     }

@@ -69,3 +69,11 @@ impl Write for Op {
         self.right.write(writer, classes, function)
     }
 }
+
+impl PlacesRead for Op {
+    fn places_read(&self) -> Vec<Place> {
+        let mut places = self.left.places_read();
+        places.extend(self.right.places_read());
+        places
+    }
+}

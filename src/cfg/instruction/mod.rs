@@ -49,3 +49,19 @@ impl Write for Instruction {
         }
     }
 }
+
+impl PlacesRead for Instruction {
+    fn places_read(&self) -> Vec<Place> {
+        match self {
+            // Instruction::Alloc(alloc) => alloc.places_read(),
+            // Instruction::Call(call) => call.places_read(),
+            // Instruction::Get(get) => get.places_read(),
+            Instruction::Alias(i) => i.places_read(),
+            Instruction::Op(i) => i.places_read(),
+            // Instruction::Phi(phi) => phi.places_read(),
+            Instruction::Print(i) => i.places_read(),
+            // Instruction::Set(set) => set.places_read(),
+            _ => Vec::new(),
+        }
+    }
+}

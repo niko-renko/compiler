@@ -8,7 +8,7 @@ pub use named::Named;
 use r#static::Static;
 pub use temp::Temp;
 
-#[derive(Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Place {
     Named(Named),
     Temp(Temp),

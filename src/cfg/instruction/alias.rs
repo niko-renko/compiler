@@ -24,3 +24,9 @@ impl Write for Alias {
         self.0.write(writer, classes, function)
     }
 }
+
+impl PlacesRead for Alias {
+    fn places_read(&self) -> Vec<Place> {
+        self.0.places_read()
+    }
+}

@@ -28,3 +28,9 @@ impl Write for Print {
         write!(writer, ")")
     }
 }
+
+impl PlacesRead for Print {
+    fn places_read(&self) -> Vec<Place> {
+        self.value.places_read()
+    }
+}
