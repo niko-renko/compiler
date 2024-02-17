@@ -1,7 +1,7 @@
 main with x:
-if 1: {
-    print(0)
+if 0: {
+    x = 1
 } else {
-    print(1)
+    x = 2
 }
-print(2)
+print(x)

@@ -80,7 +80,7 @@ impl Update for Statement {
         function: &Function,
     ) -> Result<Place, String> {
         match self {
-            // Statement::Assignment(assignment) => assignment.update(cfg, function, classes),
+            Statement::Assignment(assignment) => assignment.update(cfg, classes, function),
             // Statement::FieldUpdate(field_update) => field_update.update(cfg, function, classes),
             Statement::If(s) => s.update(cfg, classes, function),
             // Statement::IfOnly(ifonly) => ifonly.update(cfg, function, classes),

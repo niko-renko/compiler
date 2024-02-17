@@ -48,7 +48,7 @@ impl Update for If {
 
         cfg.set_current(false_block);
         cfg.end(Jump::from(new_current).into());
-        // self.false_body.update(cfg, classes, function)?;
+        self.false_body.update(cfg, classes, function)?;
 
         cfg.set_current(new_current);
         Ok(Place::None)
