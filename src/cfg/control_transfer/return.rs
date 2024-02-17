@@ -1,5 +1,6 @@
 use super::*;
 
+#[derive(Clone, Copy)]
 pub struct Return(PlaceValue);
 
 impl Return {

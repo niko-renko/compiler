@@ -88,12 +88,14 @@ impl CFG {
         let false_branch = if condition { success_block } else { fail_block };
 
         let branch = Branch::from(place, true_branch, false_branch);
+        let current_end = self.current().get_end();
         self.end(branch.into());
 
         self.set_current(fail_block);
         self.end(Fail::from(fail_reason).into());
 
         self.set_current(success_block);
+        self.end(current_end);
     }
 
     pub fn fail_if_ptr(&mut self, place: Place) {

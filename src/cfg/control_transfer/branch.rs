@@ -1,5 +1,6 @@
 use super::*;
 
+#[derive(Clone, Copy)]
 pub struct Branch {
     condition: Place,
     true_label: Label,

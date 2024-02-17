@@ -10,7 +10,7 @@ pub use temp::Temp;
 
 #[derive(Clone, Copy)]
 pub enum Place {
-    Local(Named),
+    Named(Named),
     Temp(Temp),
     Static(Static),
     None,
@@ -30,7 +30,7 @@ impl Write for Place {
         function: &Function,
     ) -> Result<(), std::io::Error> {
         match self {
-            // Place::Local(p) => p.write(writer, classes, function),
+            Place::Named(p) => p.write(writer, classes, function),
             Place::Temp(p) => p.write(writer, classes, function),
             // Place::Static(p) => p.write(writer, classes, function),
             Place::None => Ok(()),

@@ -10,6 +10,7 @@ pub use fail::{Fail, FailReason};
 pub use jump::Jump;
 pub use r#return::Return;
 
+#[derive(Clone, Copy)]
 pub enum ControlTransfer {
     Return(Return),
     Branch(Branch),

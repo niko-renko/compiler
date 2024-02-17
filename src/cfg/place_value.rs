@@ -1,5 +1,6 @@
 use super::*;
 
+#[derive(Clone, Copy)]
 pub enum PlaceValue {
     Place(Place),
     Value(Value),

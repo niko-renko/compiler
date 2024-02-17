@@ -1,5 +1,6 @@
 use super::*;
 
+#[derive(Clone, Copy)]
 pub enum FailReason {
     NotAPointer,
     NotANumber,
@@ -23,6 +24,7 @@ impl Write for FailReason {
     }
 }
 
+#[derive(Clone, Copy)]
 pub struct Fail(FailReason);
 
 impl Fail {

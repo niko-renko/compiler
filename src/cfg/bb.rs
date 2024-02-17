@@ -20,6 +20,10 @@ impl BB {
     pub fn end(&mut self, control_transfer: ControlTransfer) {
         self.end = control_transfer;
     }
+
+    pub fn get_end(&self) -> ControlTransfer {
+        self.end
+    }
 }
 
 impl Write for BB {
