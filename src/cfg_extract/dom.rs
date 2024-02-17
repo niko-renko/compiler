@@ -3,7 +3,10 @@ use std::collections::{HashMap, HashSet};
 use super::*;
 
 #[derive(Debug)]
-pub struct Dom(HashMap<Label, HashSet<Label>>);
+pub struct Dom {
+    dom: HashMap<Label, HashSet<Label>>,
+    idom: HashMap<Label, Label>,
+}
 
 impl<'cfg> Extract<'cfg, CFG> for Dom {
     fn extract(from: &'cfg CFG) -> Result<Self, String> {
@@ -40,6 +43,24 @@ impl<'cfg> Extract<'cfg, CFG> for Dom {
             }
         }
 
-        Ok(Dom(dom))
+        let mut idom = HashMap::new();
+
+        for (label, this_dom) in &dom {
+            let mut highest = 0;
+
+            for dom_label in this_dom {
+                if dom_label == label {
+                    continue;
+                }
+
+                let len = dom.get(dom_label).unwrap().len();
+                if len > highest {
+                    idom.insert(*label, *dom_label);
+                    highest = len;
+                }
+            }
+        }
+
+        Ok(Dom { dom, idom })
     }
 }
