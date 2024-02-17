@@ -48,8 +48,8 @@ impl CFG {
         &mut self.blocks[self.current.get_id()].1
     }
 
-    pub fn get_preds(&self) -> &HashMap<Label, Vec<Label>> {
-        &self.preds
+    pub fn get_preds(&self, label: Label) -> Vec<Label> {
+        self.preds.get(&label).cloned().unwrap_or_default()
     }
 
     pub fn get_blocks(&self) -> &Vec<(Label, BB)> {
