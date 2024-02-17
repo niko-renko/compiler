@@ -7,6 +7,10 @@ impl Named {
     pub fn from(local_id: usize) -> Self {
         Named(local_id, 0)
     }
+
+    pub fn get_id(&self) -> usize {
+        self.0
+    }
 }
 
 impl Into<Place> for Named {

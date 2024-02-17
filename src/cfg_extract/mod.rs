@@ -1,4 +1,4 @@
-use crate::cfg::{Place, PlacesRead, CFG};
+use crate::cfg::{Label, Place, PlacesRead, CFG};
 use crate::Extract;
 
 mod assign;
