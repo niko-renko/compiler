@@ -32,9 +32,8 @@ impl Write for Place {
         match self {
             Place::Named(p) => p.write(writer, classes, function),
             Place::Temp(p) => p.write(writer, classes, function),
-            // Place::Static(p) => p.write(writer, classes, function),
+            Place::Static(p) => p.write(writer, classes, function),
             Place::None => Ok(()),
-            _ => Ok(()),
         }
     }
 }
