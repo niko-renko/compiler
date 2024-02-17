@@ -24,8 +24,8 @@ impl Update for Local {
     fn update<'cfg>(
         &self,
         _: &'cfg mut CFG,
-        function: &Function,
         _: &Classes,
+        function: &Function,
     ) -> Result<Place, String> {
         if let Some(local_id) = function.get_local_id(self) {
             Ok(Named::from(local_id).into())

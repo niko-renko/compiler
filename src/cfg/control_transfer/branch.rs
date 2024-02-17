@@ -2,21 +2,25 @@ use super::*;
 
 pub struct Branch {
     condition: Place,
-    t: Label,
-    f: Label,
+    true_label: Label,
+    false_label: Label,
 }
 
 impl Branch {
-    pub fn from(condition: Place, t: Label, f: Label) -> Self {
-        Branch { condition, t, f }
+    pub fn from(condition: Place, true_label: Label, false_label: Label) -> Self {
+        Branch {
+            condition,
+            true_label,
+            false_label,
+        }
     }
 
     pub fn get_true(&self) -> Label {
-        self.t
+        self.true_label
     }
 
     pub fn get_false(&self) -> Label {
-        self.f
+        self.false_label
     }
 }
 
@@ -36,8 +40,8 @@ impl Write for Branch {
         write!(writer, "if ")?;
         self.condition.write(writer, classes, function)?;
         write!(writer, " then ")?;
-        self.t.write(writer, classes, function)?;
+        self.true_label.write(writer, classes, function)?;
         write!(writer, " else ")?;
-        self.f.write(writer, classes, function)
+        self.false_label.write(writer, classes, function)
     }
 }

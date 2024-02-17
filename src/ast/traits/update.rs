@@ -4,7 +4,7 @@ pub trait Update {
     fn update<'cfg>(
         &self,
         cfg: &'cfg mut CFG,
-        function: &Function,
         classes: &Classes,
+        function: &Function,
     ) -> Result<Place, String>;
 }

@@ -7,7 +7,7 @@ mod r#return;
 
 pub use branch::Branch;
 pub use fail::{Fail, FailReason};
-use jump::Jump;
+pub use jump::Jump;
 pub use r#return::Return;
 
 pub enum ControlTransfer {

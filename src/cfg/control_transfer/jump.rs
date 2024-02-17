@@ -12,6 +12,12 @@ impl Jump {
     }
 }
 
+impl Into<ControlTransfer> for Jump {
+    fn into(self) -> ControlTransfer {
+        ControlTransfer::Jump(self)
+    }
+}
+
 impl Write for Jump {
     fn write<T: std::io::Write>(
         &self,

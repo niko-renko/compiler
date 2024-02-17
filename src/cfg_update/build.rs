@@ -14,7 +14,7 @@ impl<'ast> Build<'ast> {
 impl<'ast> Update for Build<'ast> {
     fn update(&self, cfg: &mut CFG) -> Result<(), String> {
         for statement in self.function.get_statements() {
-            ast::Update::update(statement, cfg, self.function, self.classes)?;
+            ast::Update::update(statement, cfg, self.classes, self.function)?;
         }
 
         Ok(())

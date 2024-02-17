@@ -28,7 +28,7 @@ impl Parse for Constant {
 }
 
 impl Update for Constant {
-    fn update<'cfg>(&self, cfg: &'cfg mut CFG, _: &Function, _: &Classes) -> Result<Place, String> {
+    fn update<'cfg>(&self, cfg: &'cfg mut CFG, _: &Classes, _: &Function) -> Result<Place, String> {
         let i = Alias::from(Value::from(self.0).into());
         Ok(cfg.add(i.into()))
     }

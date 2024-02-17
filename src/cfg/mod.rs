@@ -42,7 +42,7 @@ impl CFG {
         &mut self.blocks[self.current.get_id()].1
     }
 
-    fn set_current(&mut self, label: Label) {
+    pub fn set_current(&mut self, label: Label) {
         self.current = label;
     }
 

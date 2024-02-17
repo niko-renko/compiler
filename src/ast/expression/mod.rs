@@ -66,13 +66,13 @@ impl Update for Expression {
     fn update<'cfg>(
         &self,
         cfg: &'cfg mut CFG,
-        function: &Function,
         classes: &Classes,
+        function: &Function,
     ) -> Result<Place, String> {
         match self {
-            Expression::Constant(constant) => constant.update(cfg, function, classes),
-            Expression::Local(local) => local.update(cfg, function, classes),
-            Expression::Op(op) => op.update(cfg, function, classes),
+            Expression::Constant(constant) => constant.update(cfg, classes, function),
+            Expression::Local(local) => local.update(cfg, classes, function),
+            Expression::Op(op) => op.update(cfg, classes, function),
             // Expression::Call(call) => call.update(cfg, function, classes),
             // Expression::FieldRead(field_read) => field_read.update(cfg, function, classes),
             // Expression::New(new) => new.update(cfg, function, classes),

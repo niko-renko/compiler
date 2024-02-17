@@ -39,6 +39,6 @@ impl Write for BB {
             writeln!(writer)?;
         }
         self.end.write(writer, classes, function)?;
-        writeln!(writer)
+        write!(writer, "\n\n")
     }
 }

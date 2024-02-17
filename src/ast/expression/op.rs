@@ -53,13 +53,13 @@ impl Update for Op {
     fn update<'cfg>(
         &self,
         cfg: &'cfg mut CFG,
-        function: &Function,
         classes: &Classes,
+        function: &Function,
     ) -> Result<Place, String> {
-        let left = self.left.update(cfg, function, classes)?;
+        let left = self.left.update(cfg, classes, function)?;
         cfg.fail_if_ptr(left);
 
-        let right = self.right.update(cfg, function, classes)?;
+        let right = self.right.update(cfg, classes, function)?;
         cfg.fail_if_ptr(right);
 
         match self.operator {

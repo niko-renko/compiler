@@ -13,3 +13,17 @@ impl Parse for Body {
         Ok((next, Body { statements }))
     }
 }
+
+impl Update for Body {
+    fn update<'cfg>(
+        &self,
+        cfg: &'cfg mut CFG,
+        classes: &Classes,
+        function: &Function,
+    ) -> Result<Place, String> {
+        for statement in &self.statements {
+            statement.update(cfg, classes, function)?;
+        }
+        Ok(Place::None)
+    }
+}
