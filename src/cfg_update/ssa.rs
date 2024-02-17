@@ -11,6 +11,7 @@ impl SSA {
 impl Update for SSA {
     fn update(&self, cfg: &mut CFG) -> Result<(), String> {
         let assign = Assign::extract(cfg)?;
+
         for place in assign.get_globals() {
             let mut work_list: Vec<Label> = assign.get_assigned().get(place).unwrap().clone();
 
@@ -18,6 +19,7 @@ impl Update for SSA {
                 let label = work_list.pop().unwrap();
             }
         }
+
         Ok(())
     }
 }

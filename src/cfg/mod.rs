@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use crate::ast_extract::{Classes, Function};
 
 mod bb;
@@ -21,7 +23,7 @@ pub use value::Value;
 pub struct CFG {
     current: Label,
     blocks: Vec<(Label, BB)>,
-    edges: Vec<(Label, Label)>,
+    preds: HashMap<Label, Vec<Label>>,
     next_temp: usize,
 }
 
@@ -31,19 +33,27 @@ impl CFG {
         CFG {
             current: label,
             blocks: vec![(label, BB::new())],
-            edges: Vec::new(),
+            preds: HashMap::new(),
             next_temp: 0,
         }
     }
 }
 
 impl CFG {
-    pub fn get_blocks(&self) -> &Vec<(Label, BB)> {
-        &self.blocks
+    fn add_pred(&mut self, label: Label, pred: Label) {
+        self.preds.entry(label).or_insert_with(Vec::new).push(pred);
     }
 
-    fn current(&mut self) -> &mut BB {
+    fn get_current(&mut self) -> &mut BB {
         &mut self.blocks[self.current.get_id()].1
+    }
+
+    pub fn get_preds(&self) -> &HashMap<Label, Vec<Label>> {
+        &self.preds
+    }
+
+    pub fn get_blocks(&self) -> &Vec<(Label, BB)> {
+        &self.blocks
     }
 
     pub fn set_current(&mut self, label: Label) {
@@ -59,27 +69,27 @@ impl CFG {
     pub fn add(&mut self, instruction: Instruction) -> Place {
         let temp = Temp::from(self.next_temp);
         self.next_temp += 1;
-        self.current().add((temp.into(), instruction));
+        self.get_current().add((temp.into(), instruction));
         temp.into()
     }
 
     pub fn add_placed(&mut self, place: Place, instruction: Instruction) {
-        self.current().add((place, instruction));
+        self.get_current().add((place, instruction));
     }
 
     pub fn end(&mut self, control_transfer: ControlTransfer) {
         match &control_transfer {
             ControlTransfer::Branch(branch) => {
-                self.edges.push((self.current, branch.get_true()));
-                self.edges.push((self.current, branch.get_false()));
+                self.add_pred(branch.get_true(), self.current);
+                self.add_pred(branch.get_false(), self.current);
             }
             ControlTransfer::Jump(jump) => {
-                self.edges.push((self.current, jump.get_label()));
+                self.add_pred(jump.get_label(), self.current);
             }
             _ => {}
         }
 
-        self.current().end(control_transfer);
+        self.get_current().end(control_transfer);
     }
 }
 
@@ -92,7 +102,7 @@ impl CFG {
         let false_branch = if condition { success_block } else { fail_block };
 
         let branch = Branch::from(place, true_branch, false_branch);
-        let current_end = self.current().get_end();
+        let current_end = self.get_current().get_end();
         self.end(branch.into());
 
         self.set_current(fail_block);
