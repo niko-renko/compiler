@@ -10,6 +10,6 @@ impl SSA {
 
 impl Update for SSA {
     fn update(&self, cfg: &mut CFG) -> Result<(), String> {
-        unimplemented!()
+        Ok(())
     }
 }

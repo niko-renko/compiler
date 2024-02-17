@@ -1,6 +1,7 @@
 use std::collections::{HashMap, HashSet};
 
 use super::*;
+
 struct Index<'ast> {
     ids: HashMap<&'ast Name, usize>,
     ids_reverse: HashMap<usize, &'ast Name>,
@@ -117,7 +118,7 @@ impl<'ast> Classes<'ast> {
     }
 }
 
-impl<'ast> Extract<'ast> for Classes<'ast> {
+impl<'ast> Extract<'ast, AST> for Classes<'ast> {
     fn extract(ast: &'ast AST) -> Result<Self, String> {
         let mut classes = HashSet::new();
         let mut fields = Index::new();

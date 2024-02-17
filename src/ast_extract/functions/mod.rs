@@ -6,7 +6,7 @@ pub use function::Function;
 
 pub struct Functions<'ast>(Vec<Function<'ast>>);
 
-impl<'ast> Extract<'ast> for Functions<'ast> {
+impl<'ast> Extract<'ast, AST> for Functions<'ast> {
     fn extract(ast: &'ast AST) -> Result<Self, String> {
         let mut functions = vec![];
 

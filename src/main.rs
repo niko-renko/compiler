@@ -6,10 +6,12 @@ use std::{
 mod ast;
 mod ast_extract;
 mod cfg;
+mod cfg_extract;
 mod cfg_update;
+mod traits;
 
-use ast_extract::Extract;
 use cfg_update::Update;
+use traits::Extract;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut in_stream = in_stream()?;
@@ -29,7 +31,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     for function in functions {
         let mut cfg = cfg::CFG::new();
         cfg_update::Build::from(&classes, &function).update(&mut cfg)?;
-        // cfg_update::SSA::new().update(&mut cfg)?;
+        cfg_update::SSA::new().update(&mut cfg)?;
         // cfg_update::Peephole::new().update(&mut cfg)?;
         // cfg_update::VN::new().update(&mut cfg)?;
         cfg::Write::write(&cfg, &mut out_stream, &classes, &function)?;
