@@ -43,12 +43,10 @@ impl Update for SSA {
             }
         }
 
-        // Do BFS order named numbering
         let mut last_version = HashMap::new();
         let mut last_in_blocks: HashMap<Label, HashMap<usize, usize>> = HashMap::new();
 
         for label in &*cfg {
-            dbg!(label);
             let block = cfg.get_block_mut(label);
             let mut last_in_block = HashMap::new();
 
