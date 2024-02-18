@@ -39,6 +39,12 @@ impl Into<ControlTransfer> for Fail {
     }
 }
 
+impl PlacesRead for Fail {
+    fn places_read(&self) -> Vec<Place> {
+        vec![]
+    }
+}
+
 impl Write for Fail {
     fn write<T: std::io::Write>(
         &self,
@@ -48,11 +54,5 @@ impl Write for Fail {
     ) -> Result<(), std::io::Error> {
         write!(writer, "fail ")?;
         self.0.write(writer, classes, function)
-    }
-}
-
-impl PlacesRead for Fail {
-    fn places_read(&self) -> Vec<Place> {
-        vec![]
     }
 }

@@ -31,6 +31,12 @@ impl Into<ControlTransfer> for Branch {
     }
 }
 
+impl PlacesRead for Branch {
+    fn places_read(&self) -> Vec<Place> {
+        vec![self.condition]
+    }
+}
+
 impl Write for Branch {
     fn write<T: std::io::Write>(
         &self,
@@ -44,11 +50,5 @@ impl Write for Branch {
         self.true_label.write(writer, classes, function)?;
         write!(writer, " else ")?;
         self.false_label.write(writer, classes, function)
-    }
-}
-
-impl PlacesRead for Branch {
-    fn places_read(&self) -> Vec<Place> {
-        vec![self.condition]
     }
 }

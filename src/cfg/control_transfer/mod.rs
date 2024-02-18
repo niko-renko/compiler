@@ -18,6 +18,17 @@ pub enum ControlTransfer {
     Fail(Fail),
 }
 
+impl PlacesRead for ControlTransfer {
+    fn places_read(&self) -> Vec<Place> {
+        match self {
+            ControlTransfer::Return(cf) => cf.places_read(),
+            ControlTransfer::Branch(cf) => cf.places_read(),
+            ControlTransfer::Jump(cf) => cf.places_read(),
+            ControlTransfer::Fail(cf) => cf.places_read(),
+        }
+    }
+}
+
 impl Write for ControlTransfer {
     fn write<T: std::io::Write>(
         &self,
@@ -30,17 +41,6 @@ impl Write for ControlTransfer {
             ControlTransfer::Branch(cf) => cf.write(writer, classes, function),
             ControlTransfer::Jump(cf) => cf.write(writer, classes, function),
             ControlTransfer::Fail(cf) => cf.write(writer, classes, function),
-        }
-    }
-}
-
-impl PlacesRead for ControlTransfer {
-    fn places_read(&self) -> Vec<Place> {
-        match self {
-            ControlTransfer::Return(cf) => cf.places_read(),
-            ControlTransfer::Branch(cf) => cf.places_read(),
-            ControlTransfer::Jump(cf) => cf.places_read(),
-            ControlTransfer::Fail(cf) => cf.places_read(),
         }
     }
 }

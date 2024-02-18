@@ -8,6 +8,15 @@ pub enum PlaceValue {
     Value(Value),
 }
 
+impl PlacesRead for PlaceValue {
+    fn places_read(&self) -> Vec<Place> {
+        match self {
+            PlaceValue::Place(pv) => vec![*pv],
+            PlaceValue::Value(_) => vec![],
+        }
+    }
+}
+
 impl Write for PlaceValue {
     fn write<T: std::io::Write>(
         &self,
@@ -18,15 +27,6 @@ impl Write for PlaceValue {
         match self {
             PlaceValue::Place(pv) => pv.write(writer, classes, function),
             PlaceValue::Value(pv) => pv.write(writer, classes, function),
-        }
-    }
-}
-
-impl PlacesRead for PlaceValue {
-    fn places_read(&self) -> Vec<Place> {
-        match self {
-            PlaceValue::Place(pv) => vec![*pv],
-            PlaceValue::Value(pv) => vec![],
         }
     }
 }

@@ -15,6 +15,12 @@ impl Into<ControlTransfer> for Return {
     }
 }
 
+impl PlacesRead for Return {
+    fn places_read(&self) -> Vec<Place> {
+        self.0.places_read()
+    }
+}
+
 impl Write for Return {
     fn write<T: std::io::Write>(
         &self,
@@ -24,11 +30,5 @@ impl Write for Return {
     ) -> Result<(), std::io::Error> {
         write!(writer, "ret ")?;
         self.0.write(writer, classes, function)
-    }
-}
-
-impl PlacesRead for Return {
-    fn places_read(&self) -> Vec<Place> {
-        self.0.places_read()
     }
 }

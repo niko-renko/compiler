@@ -19,6 +19,12 @@ impl Into<ControlTransfer> for Jump {
     }
 }
 
+impl PlacesRead for Jump {
+    fn places_read(&self) -> Vec<Place> {
+        vec![]
+    }
+}
+
 impl Write for Jump {
     fn write<T: std::io::Write>(
         &self,
@@ -28,11 +34,5 @@ impl Write for Jump {
     ) -> Result<(), std::io::Error> {
         write!(writer, "jump ")?;
         self.0.write(writer, classes, function)
-    }
-}
-
-impl PlacesRead for Jump {
-    fn places_read(&self) -> Vec<Place> {
-        vec![]
     }
 }
