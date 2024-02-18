@@ -40,20 +40,26 @@ impl CFG {
 }
 
 impl CFG {
-    fn add_pred(&mut self, label: Label, pred: Label) {
-        self.preds.entry(label).or_insert_with(Vec::new).push(pred);
-    }
-
-    fn get_current(&mut self) -> &mut BB {
-        &mut self.blocks[self.current.get_id()].1
-    }
-
     pub fn get_preds(&self, label: Label) -> Vec<Label> {
         self.preds.get(&label).cloned().unwrap_or_default()
     }
 
     pub fn get_blocks(&self) -> &Vec<(Label, BB)> {
         &self.blocks
+    }
+
+    pub fn get_block(&mut self, label: Label) -> &mut BB {
+        &mut self.blocks[label.get_id()].1
+    }
+
+    fn get_current(&mut self) -> &mut BB {
+        &mut self.blocks[self.current.get_id()].1
+    }
+}
+
+impl CFG {
+    fn add_pred(&mut self, label: Label, pred: Label) {
+        self.preds.entry(label).or_insert_with(Vec::new).push(pred);
     }
 
     pub fn set_current(&mut self, label: Label) {
@@ -65,7 +71,9 @@ impl CFG {
         self.blocks.push((label, BB::new()));
         label
     }
+}
 
+impl CFG {
     pub fn add(&mut self, instruction: Instruction) -> Place {
         let temp = Temp::from(self.next_temp);
         self.next_temp += 1;

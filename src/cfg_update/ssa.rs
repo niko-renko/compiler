@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+
 use super::*;
 
 pub struct SSA;
@@ -13,13 +15,33 @@ impl Update for SSA {
         let assign = Assign::extract(cfg)?;
         let dom = crate::cfg_extract::Dom::extract(cfg)?;
 
-        for place in assign.get_globals() {
-            let mut work_list: Vec<Label> = assign.get_assigned().get(place).unwrap().clone();
+        for global in assign.get_globals() {
+            let mut blocks_assigned = assign.get_assigned().get(global).unwrap().clone();
+            let mut processed = HashSet::new();
 
-            while !work_list.is_empty() {
-                let label = work_list.pop().unwrap();
+            while !blocks_assigned.is_empty() {
+                let block_assigned = blocks_assigned.pop().unwrap();
+                let empty = HashSet::new();
+                let blocks_read = dom.get_df().get(&block_assigned).unwrap_or(&empty);
+                dbg!(block_assigned, blocks_read);
+                for block_read in blocks_read {
+                    let block = cfg.get_block(*block_read);
+
+                    if block.has_phi(*global, block_assigned) {
+                        continue;
+                    }
+
+                    block.add_phi(*global, block_assigned);
+
+                    if !processed.contains(block_read) {
+                        processed.insert(*block_read);
+                        blocks_assigned.push(*block_read);
+                    }
+                }
             }
         }
+
+        // Do BFS order named numbering
 
         Ok(())
     }

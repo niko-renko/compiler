@@ -13,6 +13,12 @@ impl BB {
         }
     }
 
+    pub fn has_phi(&self, local: usize, label: Label) -> bool {
+        false
+    }
+
+    pub fn add_phi(&mut self, local: usize, label: Label) {}
+
     pub fn add(&mut self, instruction: (Place, Instruction)) {
         self.instructions.push(instruction);
     }

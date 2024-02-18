@@ -10,6 +10,12 @@ pub struct Dom {
 }
 
 impl Dom {
+    pub fn get_df(&self) -> &HashMap<Label, HashSet<Label>> {
+        &self.df
+    }
+}
+
+impl Dom {
     fn compute_dom(cfg: &CFG) -> HashMap<Label, HashSet<Label>> {
         let mut dom = HashMap::new();
 
@@ -98,8 +104,6 @@ impl<'cfg> Extract<'cfg, CFG> for Dom {
         let dom = Dom::compute_dom(from);
         let idom = Dom::compute_idom(&dom);
         let df = Dom::compute_df(from, &idom);
-
-        dbg!(&df);
 
         Ok(Dom { dom, idom, df })
     }
