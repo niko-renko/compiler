@@ -18,6 +18,10 @@ impl PlacesRead for Alias {
     fn places_read(&self) -> Vec<Place> {
         self.0.places_read()
     }
+
+    fn places_read_mut(&mut self) -> Vec<&mut Place> {
+        self.0.places_read_mut()
+    }
 }
 
 impl Write for Alias {

@@ -23,6 +23,10 @@ impl PlacesRead for Jump {
     fn places_read(&self) -> Vec<Place> {
         vec![]
     }
+
+    fn places_read_mut(&mut self) -> Vec<&mut Place> {
+        vec![]
+    }
 }
 
 impl Write for Jump {

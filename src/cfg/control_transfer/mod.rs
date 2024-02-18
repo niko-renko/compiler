@@ -27,6 +27,15 @@ impl PlacesRead for ControlTransfer {
             ControlTransfer::Fail(cf) => cf.places_read(),
         }
     }
+
+    fn places_read_mut(&mut self) -> Vec<&mut Place> {
+        match self {
+            ControlTransfer::Return(cf) => cf.places_read_mut(),
+            ControlTransfer::Branch(cf) => cf.places_read_mut(),
+            ControlTransfer::Jump(cf) => cf.places_read_mut(),
+            ControlTransfer::Fail(cf) => cf.places_read_mut(),
+        }
+    }
 }
 
 impl Write for ControlTransfer {

@@ -1,6 +1,6 @@
 use crate::ast;
 use crate::ast_extract::{Classes, Function};
-use crate::cfg::{Label, CFG};
+use crate::cfg::{Place, PlacesRead, CFG};
 use crate::cfg_extract::Assign;
 use crate::Extract;
 

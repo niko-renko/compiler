@@ -35,6 +35,10 @@ impl PlacesRead for Branch {
     fn places_read(&self) -> Vec<Place> {
         vec![self.condition]
     }
+
+    fn places_read_mut(&mut self) -> Vec<&mut Place> {
+        vec![&mut self.condition]
+    }
 }
 
 impl Write for Branch {

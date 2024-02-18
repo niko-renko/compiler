@@ -48,6 +48,10 @@ impl CFG {
         &self.blocks
     }
 
+    pub fn get_blocks_mut(&mut self) -> &mut Vec<(Label, BB)> {
+        &mut self.blocks
+    }
+
     pub fn get_block(&mut self, label: Label) -> &mut BB {
         &mut self.blocks[label.get_id()].1
     }

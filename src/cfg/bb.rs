@@ -72,6 +72,10 @@ impl BB {
     pub fn get_instructions(&self) -> &Vec<(Place, Instruction)> {
         &self.instructions
     }
+
+    pub fn get_instructions_mut(&mut self) -> &mut Vec<(Place, Instruction)> {
+        &mut self.instructions
+    }
 }
 
 impl Write for BB {

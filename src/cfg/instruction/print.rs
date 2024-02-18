@@ -20,6 +20,10 @@ impl PlacesRead for Print {
     fn places_read(&self) -> Vec<Place> {
         self.value.places_read()
     }
+
+    fn places_read_mut(&mut self) -> Vec<&mut Place> {
+        self.value.places_read_mut()
+    }
 }
 
 impl Write for Print {

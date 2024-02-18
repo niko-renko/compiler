@@ -43,6 +43,20 @@ impl PlacesRead for Instruction {
             _ => Vec::new(),
         }
     }
+
+    fn places_read_mut(&mut self) -> Vec<&mut Place> {
+        match self {
+            // Instruction::Alloc(alloc) => alloc.places_read_mut(),
+            // Instruction::Call(call) => call.places_read_mut(),
+            // Instruction::Get(get) => get.places_read_mut(),
+            Instruction::Alias(i) => i.places_read_mut(),
+            Instruction::Op(i) => i.places_read_mut(),
+            Instruction::Phi(i) => i.places_read_mut(),
+            Instruction::Print(i) => i.places_read_mut(),
+            // Instruction::Set(set) => set.places_read_mut(),
+            _ => Vec::new(),
+        }
+    }
 }
 
 impl Write for Instruction {
