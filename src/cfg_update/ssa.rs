@@ -1,4 +1,6 @@
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
+
+use crate::cfg::Instruction;
 
 use super::*;
 
@@ -42,6 +44,40 @@ impl Update for SSA {
         }
 
         // Do BFS order named numbering
+        let mut last_version = HashMap::new();
+        let mut last_in_blocks: HashMap<Label, HashMap<usize, usize>> = HashMap::new();
+
+        for label in &*cfg {
+            dbg!(label);
+            let block = cfg.get_block_mut(label);
+            let mut last_in_block = HashMap::new();
+
+            for (place, instruction) in block.get_instructions_mut() {
+                if let Instruction::Phi(phi) = instruction {
+                    for (named, label) in phi.get_entries_mut() {
+                        let last_in_block = last_in_blocks.entry(*label).or_default();
+                        let version = last_in_block.get(&named.get_id()).unwrap_or(&0);
+                        named.set_version(*version);
+                    }
+                } else {
+                    for place in instruction.places_read_mut() {
+                        if let Place::Named(named) = place {
+                            let version = last_version.entry(named.get_id()).or_default();
+                            named.set_version(*version);
+                        }
+                    }
+                }
+
+                if let Place::Named(named) = place {
+                    let new_version = last_version.get(&named.get_id()).unwrap_or(&0) + 1;
+                    last_version.insert(named.get_id(), new_version);
+                    last_in_block.insert(named.get_id(), new_version);
+                    named.set_version(new_version);
+                }
+            }
+
+            last_in_blocks.insert(label, last_in_block);
+        }
 
         Ok(())
     }

@@ -6,6 +6,10 @@ impl Phi {
     pub fn new() -> Self {
         Phi(vec![])
     }
+
+    pub fn get_entries_mut(&mut self) -> &mut Vec<(Named, Label)> {
+        &mut self.0
+    }
 }
 
 impl Phi {

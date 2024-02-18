@@ -11,6 +11,10 @@ impl Named {
     pub fn get_id(&self) -> usize {
         self.0
     }
+
+    pub fn set_version(&mut self, version: usize) {
+        self.1 = version;
+    }
 }
 
 impl Into<Place> for Named {

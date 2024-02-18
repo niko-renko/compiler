@@ -41,14 +41,14 @@ impl Iterator for BFSIter {
 
     fn next(&mut self) -> Option<Self::Item> {
         if let Some(label) = self.queue.pop() {
-            if !self.visited.contains(&label) {
-                self.visited.push(label);
-                self.queue
-                    .extend(self.edges_out.get(&label).cloned().unwrap_or_default());
-                Some(label)
-            } else {
-                self.next()
+            let empty = vec![];
+            for edge_out in self.edges_out.get(&label).unwrap_or(&empty) {
+                if self.queue.contains(edge_out) || self.visited.contains(edge_out) {
+                    continue;
+                }
+                self.queue.push(*edge_out);
             }
+            Some(label)
         } else {
             None
         }
