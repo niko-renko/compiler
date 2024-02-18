@@ -22,14 +22,15 @@ impl<'cfg> Extract<'cfg, CFG> for Assign {
         let mut globals = HashSet::new();
         let mut assigned = HashMap::new();
 
-        for (label, bb) in cfg.get_blocks() {
+        for label in cfg {
+            let block = cfg.get_block(label);
             let mut var_kill = HashSet::new();
 
-            let write_read: Vec<(&Place, Vec<Place>)> = bb
+            let write_read: Vec<(&Place, Vec<Place>)> = block
                 .get_instructions()
                 .iter()
                 .map(|(w, i)| (w, i.places_read()))
-                .chain(vec![(&Place::None, bb.get_end().places_read())])
+                .chain(vec![(&Place::None, block.get_end().places_read())])
                 .collect();
 
             for (write, read) in write_read {

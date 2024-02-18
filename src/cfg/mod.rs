@@ -20,6 +20,50 @@ pub use place_value::PlaceValue;
 pub use traits::{PlacesRead, Write};
 pub use value::Value;
 
+pub struct BFSIter {
+    edges_out: HashMap<Label, Vec<Label>>,
+    queue: Vec<Label>,
+    visited: Vec<Label>,
+}
+
+impl BFSIter {
+    fn from(edges_out: HashMap<Label, Vec<Label>>, start: Label) -> Self {
+        BFSIter {
+            edges_out,
+            queue: vec![start],
+            visited: Vec::new(),
+        }
+    }
+}
+
+impl Iterator for BFSIter {
+    type Item = Label;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if let Some(label) = self.queue.pop() {
+            if !self.visited.contains(&label) {
+                self.visited.push(label);
+                self.queue
+                    .extend(self.edges_out.get(&label).cloned().unwrap_or_default());
+                Some(label)
+            } else {
+                self.next()
+            }
+        } else {
+            None
+        }
+    }
+}
+
+impl IntoIterator for &CFG {
+    type Item = Label;
+    type IntoIter = BFSIter;
+
+    fn into_iter(self) -> Self::IntoIter {
+        BFSIter::from(self.edges_out.clone(), Label::from(0))
+    }
+}
+
 pub struct CFG {
     current: Label,
     blocks: Vec<BB>,
@@ -41,51 +85,32 @@ impl CFG {
     }
 }
 
-// struct BFSIterator<T>;
-//
-// impl Iterator for BFSIterator<Label> {
-//     type Item = Label;
-//
-//     fn next(&mut self) -> Option<Self::Item> {
-//         None
-//     }
-// }
-//
-// impl<'cfg> IntoIterator for &'cfg CFG {
-//     type Item = &'cfg BB;
-//     type IntoIter = BFSIterator;
-//
-//     fn into_iter(self) -> Self::IntoIter {}
-// }
-
 impl CFG {
-    pub fn get_block_mut(&mut self, label: Label) -> &mut BB {
-        &mut self.blocks[label.get_id()]
+    pub fn get_block(&self, label: Label) -> &BB {
+        &self.blocks[label.get_id()]
     }
 
-    fn get_current_mut(&mut self) -> &mut BB {
-        &mut self.blocks[self.current.get_id()]
+    pub fn get_block_mut(&mut self, label: Label) -> &mut BB {
+        &mut self.blocks[label.get_id()]
     }
 
     pub fn get_edges_in(&self, label: Label) -> Vec<Label> {
         self.edges_in.get(&label).cloned().unwrap_or_default()
     }
 
-    pub fn get_blocks(&self) -> Vec<(Label, &BB)> {
-        self.blocks
-            .iter()
-            .enumerate()
-            .map(|(id, block)| (Label::from(id), block))
-            .collect()
+    pub fn get_edges_out(&self, label: Label) -> Vec<Label> {
+        self.edges_out.get(&label).cloned().unwrap_or_default()
+    }
+
+    fn get_current_mut(&mut self) -> &mut BB {
+        &mut self.blocks[self.current.get_id()]
     }
 }
 
 impl CFG {
-    fn add_edge_in(&mut self, label: Label, from: Label) {
-        self.edges_in
-            .entry(label)
-            .or_insert_with(Vec::new)
-            .push(from);
+    fn add_edge(&mut self, from: Label, to: Label) {
+        self.edges_in.entry(to).or_insert_with(Vec::new).push(from);
+        self.edges_out.entry(from).or_insert_with(Vec::new).push(to);
     }
 
     pub fn set_current(&mut self, label: Label) {
@@ -113,11 +138,11 @@ impl CFG {
     pub fn end(&mut self, control_transfer: ControlTransfer) {
         match &control_transfer {
             ControlTransfer::Branch(branch) => {
-                self.add_edge_in(branch.get_true(), self.current);
-                self.add_edge_in(branch.get_false(), self.current);
+                self.add_edge(self.current, branch.get_true());
+                self.add_edge(self.current, branch.get_false());
             }
             ControlTransfer::Jump(jump) => {
-                self.add_edge_in(jump.get_label(), self.current);
+                self.add_edge(self.current, jump.get_label());
             }
             _ => {}
         }
@@ -195,7 +220,8 @@ impl Write for CFG {
         classes: &Classes,
         function: &Function,
     ) -> Result<(), std::io::Error> {
-        for (label, block) in self.get_blocks() {
+        for label in self {
+            let block = self.get_block(label);
             label.write(writer, classes, function)?;
             if label.get_id() == 0 {
                 write!(writer, "{}:\n", function.get_params_sig())?;

@@ -19,7 +19,7 @@ impl Dom {
     fn compute_dom(cfg: &CFG) -> HashMap<Label, HashSet<Label>> {
         let mut dom = HashMap::new();
 
-        for (label, _) in cfg.get_blocks() {
+        for label in cfg {
             let mut set = HashSet::new();
             set.insert(label);
             dom.insert(label, set);
@@ -30,7 +30,7 @@ impl Dom {
         while changed {
             changed = false;
 
-            for (label, _) in cfg.get_blocks() {
+            for label in cfg {
                 let mut new_dom = cfg
                     .get_edges_in(label)
                     .iter()
@@ -78,11 +78,11 @@ impl Dom {
     fn compute_df(cfg: &CFG, idom: &HashMap<Label, Label>) -> HashMap<Label, HashSet<Label>> {
         let mut df = HashMap::new();
 
-        for (label, _) in cfg.get_blocks() {
+        for label in cfg {
             df.insert(label, HashSet::new());
         }
 
-        for (label, _) in cfg.get_blocks() {
+        for label in cfg {
             let preds = cfg.get_edges_in(label);
             if preds.len() > 1 {
                 for pred in preds {
