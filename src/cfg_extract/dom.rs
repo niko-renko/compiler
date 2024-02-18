@@ -6,13 +6,14 @@ use super::*;
 pub struct Dom {
     dom: HashMap<Label, HashSet<Label>>,
     idom: HashMap<Label, Label>,
+    df: HashMap<Label, HashSet<Label>>,
 }
 
-impl<'cfg> Extract<'cfg, CFG> for Dom {
-    fn extract(from: &'cfg CFG) -> Result<Self, String> {
+impl Dom {
+    fn compute_dom(cfg: &CFG) -> HashMap<Label, HashSet<Label>> {
         let mut dom = HashMap::new();
 
-        for (label, _) in from.get_blocks() {
+        for (label, _) in cfg.get_blocks() {
             let mut set = HashSet::new();
             set.insert(*label);
             dom.insert(*label, set);
@@ -23,8 +24,8 @@ impl<'cfg> Extract<'cfg, CFG> for Dom {
         while changed {
             changed = false;
 
-            for (label, _) in from.get_blocks() {
-                let mut new_dom = from
+            for (label, _) in cfg.get_blocks() {
+                let mut new_dom = cfg
                     .get_preds(*label)
                     .iter()
                     .map(|pred| dom.get(pred).unwrap())
@@ -43,9 +44,13 @@ impl<'cfg> Extract<'cfg, CFG> for Dom {
             }
         }
 
+        dom
+    }
+
+    fn compute_idom(dom: &HashMap<Label, HashSet<Label>>) -> HashMap<Label, Label> {
         let mut idom = HashMap::new();
 
-        for (label, this_dom) in &dom {
+        for (label, this_dom) in dom {
             let mut highest = 0;
 
             for dom_label in this_dom {
@@ -61,6 +66,41 @@ impl<'cfg> Extract<'cfg, CFG> for Dom {
             }
         }
 
-        Ok(Dom { dom, idom })
+        idom
+    }
+
+    fn compute_df(cfg: &CFG, idom: &HashMap<Label, Label>) -> HashMap<Label, HashSet<Label>> {
+        let mut df = HashMap::new();
+
+        for (label, _) in cfg.get_blocks() {
+            df.insert(*label, HashSet::new());
+        }
+
+        for (label, _) in cfg.get_blocks() {
+            let preds = cfg.get_preds(*label);
+            if preds.len() > 1 {
+                for pred in preds {
+                    let mut runner = pred;
+                    while runner != *idom.get(label).unwrap() {
+                        df.get_mut(&runner).unwrap().insert(*label);
+                        runner = *idom.get(&runner).unwrap();
+                    }
+                }
+            }
+        }
+
+        df
+    }
+}
+
+impl<'cfg> Extract<'cfg, CFG> for Dom {
+    fn extract(from: &'cfg CFG) -> Result<Self, String> {
+        let dom = Dom::compute_dom(from);
+        let idom = Dom::compute_idom(&dom);
+        let df = Dom::compute_df(from, &idom);
+
+        dbg!(&df);
+
+        Ok(Dom { dom, idom, df })
     }
 }
