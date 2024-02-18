@@ -1,6 +1,7 @@
 use super::*;
 
 pub struct BB {
+    phis: HashMap<usize, Vec<Label>>,
     instructions: Vec<(Place, Instruction)>,
     end: ControlTransfer,
 }
@@ -8,16 +9,23 @@ pub struct BB {
 impl BB {
     pub fn new() -> Self {
         BB {
+            phis: HashMap::new(),
             instructions: Vec::new(),
             end: Return::new(Value::from_raw(0).into()).into(),
         }
     }
 
     pub fn has_phi(&self, local: usize, label: Label) -> bool {
-        false
+        if let Some(labels) = self.phis.get(&local) {
+            labels.contains(&label)
+        } else {
+            false
+        }
     }
 
-    pub fn add_phi(&mut self, local: usize, label: Label) {}
+    pub fn add_phi(&mut self, local: usize, label: Label) {
+        self.phis.entry(local).or_insert(Vec::new()).push(label);
+    }
 
     pub fn add(&mut self, instruction: (Place, Instruction)) {
         self.instructions.push(instruction);
