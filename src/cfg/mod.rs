@@ -22,8 +22,9 @@ pub use value::Value;
 
 pub struct CFG {
     current: Label,
-    blocks: Vec<(Label, BB)>,
-    preds: HashMap<Label, Vec<Label>>,
+    blocks: Vec<BB>,
+    edges_in: HashMap<Label, Vec<Label>>,
+    edges_out: HashMap<Label, Vec<Label>>,
     next_temp: usize,
 }
 
@@ -32,38 +33,59 @@ impl CFG {
         let label = Label::from(0);
         CFG {
             current: label,
-            blocks: vec![(label, BB::new())],
-            preds: HashMap::new(),
+            blocks: vec![BB::new()],
+            edges_in: HashMap::new(),
+            edges_out: HashMap::new(),
             next_temp: 0,
         }
     }
 }
 
+// struct BFSIterator<T>;
+//
+// impl Iterator for BFSIterator<Label> {
+//     type Item = Label;
+//
+//     fn next(&mut self) -> Option<Self::Item> {
+//         None
+//     }
+// }
+//
+// impl<'cfg> IntoIterator for &'cfg CFG {
+//     type Item = &'cfg BB;
+//     type IntoIter = BFSIterator;
+//
+//     fn into_iter(self) -> Self::IntoIter {}
+// }
+
 impl CFG {
-    pub fn get_preds(&self, label: Label) -> Vec<Label> {
-        self.preds.get(&label).cloned().unwrap_or_default()
+    pub fn get_block_mut(&mut self, label: Label) -> &mut BB {
+        &mut self.blocks[label.get_id()]
     }
 
-    pub fn get_blocks(&self) -> &Vec<(Label, BB)> {
-        &self.blocks
+    fn get_current_mut(&mut self) -> &mut BB {
+        &mut self.blocks[self.current.get_id()]
     }
 
-    pub fn get_blocks_mut(&mut self) -> &mut Vec<(Label, BB)> {
-        &mut self.blocks
+    pub fn get_edges_in(&self, label: Label) -> Vec<Label> {
+        self.edges_in.get(&label).cloned().unwrap_or_default()
     }
 
-    pub fn get_block(&mut self, label: Label) -> &mut BB {
-        &mut self.blocks[label.get_id()].1
-    }
-
-    fn get_current(&mut self) -> &mut BB {
-        &mut self.blocks[self.current.get_id()].1
+    pub fn get_blocks(&self) -> Vec<(Label, &BB)> {
+        self.blocks
+            .iter()
+            .enumerate()
+            .map(|(id, block)| (Label::from(id), block))
+            .collect()
     }
 }
 
 impl CFG {
-    fn add_pred(&mut self, label: Label, pred: Label) {
-        self.preds.entry(label).or_insert_with(Vec::new).push(pred);
+    fn add_edge_in(&mut self, label: Label, from: Label) {
+        self.edges_in
+            .entry(label)
+            .or_insert_with(Vec::new)
+            .push(from);
     }
 
     pub fn set_current(&mut self, label: Label) {
@@ -71,9 +93,8 @@ impl CFG {
     }
 
     pub fn new_block(&mut self) -> Label {
-        let label = Label::from(self.blocks.len());
-        self.blocks.push((label, BB::new()));
-        label
+        self.blocks.push(BB::new());
+        Label::from(self.blocks.len() - 1)
     }
 }
 
@@ -81,27 +102,27 @@ impl CFG {
     pub fn add(&mut self, instruction: Instruction) -> Place {
         let temp = Temp::from(self.next_temp);
         self.next_temp += 1;
-        self.get_current().add((temp.into(), instruction));
+        self.get_current_mut().add((temp.into(), instruction));
         temp.into()
     }
 
     pub fn add_placed(&mut self, place: Place, instruction: Instruction) {
-        self.get_current().add((place, instruction));
+        self.get_current_mut().add((place, instruction));
     }
 
     pub fn end(&mut self, control_transfer: ControlTransfer) {
         match &control_transfer {
             ControlTransfer::Branch(branch) => {
-                self.add_pred(branch.get_true(), self.current);
-                self.add_pred(branch.get_false(), self.current);
+                self.add_edge_in(branch.get_true(), self.current);
+                self.add_edge_in(branch.get_false(), self.current);
             }
             ControlTransfer::Jump(jump) => {
-                self.add_pred(jump.get_label(), self.current);
+                self.add_edge_in(jump.get_label(), self.current);
             }
             _ => {}
         }
 
-        self.get_current().end(control_transfer);
+        self.get_current_mut().end(control_transfer);
     }
 }
 
@@ -114,7 +135,7 @@ impl CFG {
         let false_branch = if condition { success_block } else { fail_block };
 
         let branch = Branch::from(place, true_branch, false_branch);
-        let current_end = self.get_current().get_end();
+        let current_end = self.get_current_mut().get_end();
         self.end(branch.into());
 
         self.set_current(fail_block);
@@ -174,7 +195,7 @@ impl Write for CFG {
         classes: &Classes,
         function: &Function,
     ) -> Result<(), std::io::Error> {
-        for (label, block) in &self.blocks {
+        for (label, block) in self.get_blocks() {
             label.write(writer, classes, function)?;
             if label.get_id() == 0 {
                 write!(writer, "{}:\n", function.get_params_sig())?;

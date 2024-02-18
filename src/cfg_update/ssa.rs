@@ -25,7 +25,7 @@ impl Update for SSA {
                 let blocks_read = dom.get_df().get(&block_assigned).unwrap_or(&empty);
 
                 for block_read in blocks_read {
-                    let block = cfg.get_block(*block_read);
+                    let block = cfg.get_block_mut(*block_read);
 
                     if block.has_phi(*global, block_assigned) {
                         continue;

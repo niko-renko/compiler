@@ -45,7 +45,7 @@ impl<'cfg> Extract<'cfg, CFG> for Assign {
                 if let Place::Named(named) = write {
                     let id = named.get_id();
                     var_kill.insert(id);
-                    assigned.entry(id).or_insert(vec![]).push(*label);
+                    assigned.entry(id).or_insert(vec![]).push(label);
                 }
             }
         }

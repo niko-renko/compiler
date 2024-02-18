@@ -21,8 +21,8 @@ impl Dom {
 
         for (label, _) in cfg.get_blocks() {
             let mut set = HashSet::new();
-            set.insert(*label);
-            dom.insert(*label, set);
+            set.insert(label);
+            dom.insert(label, set);
         }
 
         let mut changed = true;
@@ -32,7 +32,7 @@ impl Dom {
 
             for (label, _) in cfg.get_blocks() {
                 let mut new_dom = cfg
-                    .get_preds(*label)
+                    .get_edges_in(label)
                     .iter()
                     .map(|pred| dom.get(pred).unwrap())
                     .fold(None, |acc, set| match acc {
@@ -41,11 +41,11 @@ impl Dom {
                     })
                     .unwrap_or_default();
 
-                new_dom.insert(*label);
+                new_dom.insert(label);
 
-                if new_dom != *dom.get(label).unwrap() {
+                if new_dom != *dom.get(&label).unwrap() {
                     changed = true;
-                    dom.insert(*label, new_dom);
+                    dom.insert(label, new_dom);
                 }
             }
         }
@@ -79,16 +79,16 @@ impl Dom {
         let mut df = HashMap::new();
 
         for (label, _) in cfg.get_blocks() {
-            df.insert(*label, HashSet::new());
+            df.insert(label, HashSet::new());
         }
 
         for (label, _) in cfg.get_blocks() {
-            let preds = cfg.get_preds(*label);
+            let preds = cfg.get_edges_in(label);
             if preds.len() > 1 {
                 for pred in preds {
                     let mut runner = pred;
-                    while runner != *idom.get(label).unwrap() {
-                        df.get_mut(&runner).unwrap().insert(*label);
+                    while runner != *idom.get(&label).unwrap() {
+                        df.get_mut(&runner).unwrap().insert(label);
                         runner = *idom.get(&runner).unwrap();
                     }
                 }
