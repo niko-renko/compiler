@@ -3,8 +3,8 @@ use super::*;
 pub struct Phi(Vec<(Named, Label)>);
 
 impl Phi {
-    pub fn from(vec: Vec<(Named, Label)>) -> Self {
-        Self(vec)
+    pub fn new() -> Self {
+        Phi(vec![])
     }
 }
 
@@ -15,6 +15,18 @@ impl Phi {
 
     pub fn add_entry(&mut self, named: Named, label: Label) {
         self.0.push((named, label));
+    }
+}
+
+impl Into<Instruction> for Phi {
+    fn into(self) -> Instruction {
+        Instruction::Phi(self)
+    }
+}
+
+impl PlacesRead for Phi {
+    fn places_read(&self) -> Vec<Place> {
+        vec![]
     }
 }
 

@@ -16,6 +16,12 @@ impl Into<Instruction> for Print {
     }
 }
 
+impl PlacesRead for Print {
+    fn places_read(&self) -> Vec<Place> {
+        self.value.places_read()
+    }
+}
+
 impl Write for Print {
     fn write<T: std::io::Write>(
         &self,
@@ -26,11 +32,5 @@ impl Write for Print {
         write!(writer, "print(")?;
         self.value.write(writer, classes, function)?;
         write!(writer, ")")
-    }
-}
-
-impl PlacesRead for Print {
-    fn places_read(&self) -> Vec<Place> {
-        self.value.places_read()
     }
 }

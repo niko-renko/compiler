@@ -57,6 +57,14 @@ impl Into<Instruction> for Op {
     }
 }
 
+impl PlacesRead for Op {
+    fn places_read(&self) -> Vec<Place> {
+        let mut places = self.left.places_read();
+        places.extend(self.right.places_read());
+        places
+    }
+}
+
 impl Write for Op {
     fn write<T: std::io::Write>(
         &self,
@@ -67,13 +75,5 @@ impl Write for Op {
         self.left.write(writer, classes, function)?;
         self.operator.write(writer, classes, function)?;
         self.right.write(writer, classes, function)
-    }
-}
-
-impl PlacesRead for Op {
-    fn places_read(&self) -> Vec<Place> {
-        let mut places = self.left.places_read();
-        places.extend(self.right.places_read());
-        places
     }
 }

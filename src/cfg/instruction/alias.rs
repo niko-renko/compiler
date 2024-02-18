@@ -14,6 +14,12 @@ impl Into<Instruction> for Alias {
     }
 }
 
+impl PlacesRead for Alias {
+    fn places_read(&self) -> Vec<Place> {
+        self.0.places_read()
+    }
+}
+
 impl Write for Alias {
     fn write<T: std::io::Write>(
         &self,
@@ -22,11 +28,5 @@ impl Write for Alias {
         function: &Function,
     ) -> Result<(), std::io::Error> {
         self.0.write(writer, classes, function)
-    }
-}
-
-impl PlacesRead for Alias {
-    fn places_read(&self) -> Vec<Place> {
-        self.0.places_read()
     }
 }
