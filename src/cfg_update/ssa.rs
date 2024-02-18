@@ -23,7 +23,7 @@ impl Update for SSA {
                 let block_assigned = blocks_assigned.pop().unwrap();
                 let empty = HashSet::new();
                 let blocks_read = dom.get_df().get(&block_assigned).unwrap_or(&empty);
-                dbg!(block_assigned, blocks_read);
+                // dbg!(block_assigned, blocks_read);
                 for block_read in blocks_read {
                     let block = cfg.get_block(*block_read);
 

@@ -1,7 +1,7 @@
 use super::*;
 
 pub struct BB {
-    phis: HashMap<usize, Vec<Label>>,
+    phis: Vec<(Named, Phi)>,
     instructions: Vec<(Place, Instruction)>,
     end: ControlTransfer,
 }
@@ -9,22 +9,28 @@ pub struct BB {
 impl BB {
     pub fn new() -> Self {
         BB {
-            phis: HashMap::new(),
+            phis: Vec::new(),
             instructions: Vec::new(),
             end: Return::new(Value::from_raw(0).into()).into(),
         }
     }
 
     pub fn has_phi(&self, local: usize, label: Label) -> bool {
-        if let Some(labels) = self.phis.get(&local) {
-            labels.contains(&label)
-        } else {
-            false
-        }
+        self.phis
+            .iter()
+            .find(|(n, phi)| n.get_id() == local && phi.has_label(label))
+            .is_some()
     }
 
     pub fn add_phi(&mut self, local: usize, label: Label) {
-        self.phis.entry(local).or_insert(Vec::new()).push(label);
+        let named = Named::from(local);
+        let phi = self.phis.iter_mut().find(|(n, _)| n.get_id() == local);
+
+        if let Some((_, phi)) = phi {
+            phi.add_entry(named, label);
+        } else {
+            self.phis.push((named, Phi::from(vec![(named, label)])));
+        }
     }
 
     pub fn add(&mut self, instruction: (Place, Instruction)) {
@@ -51,6 +57,13 @@ impl Write for BB {
         classes: &Classes,
         function: &Function,
     ) -> Result<(), std::io::Error> {
+        for (named, phi) in &self.phis {
+            named.write(writer, classes, function)?;
+            write!(writer, " = ")?;
+            phi.write(writer, classes, function)?;
+            writeln!(writer)?;
+        }
+
         for (place, instruction) in &self.instructions {
             if let Place::None = place {
             } else {
@@ -60,6 +73,7 @@ impl Write for BB {
             instruction.write(writer, classes, function)?;
             writeln!(writer)?;
         }
+
         self.end.write(writer, classes, function)?;
         write!(writer, "\n\n")
     }
