@@ -47,7 +47,7 @@ impl Update for Call {
         let method_id = if let Some(id) = classes.get_method_id(&self.method) {
             id
         } else {
-            return Err(format!("Method {} not found", function.get_name()));
+            return Err(format!("Method not found"));
         };
 
         let vtable = cfg.add(Get::from(object, Value::from_raw(0).into()).into());
