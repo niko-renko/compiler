@@ -58,11 +58,15 @@ impl<'ast> Function<'ast> {
     }
 
     pub fn get_local_id(&self, local: &Local) -> Option<usize> {
-        self.locals.iter().position(|&l| l == local)
+        let this_vec = vec![&self.this];
+        let mut locals = this_vec.iter().chain(self.locals.iter());
+        locals.position(|&l| l == local)
     }
 
     pub fn get_local(&self, id: usize) -> Option<&Local> {
-        self.locals.get(id).copied()
+        let this_vec = vec![&self.this];
+        let locals: Vec<&&Local> = this_vec.iter().chain(self.locals.iter()).collect();
+        locals.get(id).map(|&&l| l)
     }
 
     pub fn get_statements(&self) -> &Vec<Statement> {
