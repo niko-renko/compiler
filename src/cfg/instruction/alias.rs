@@ -30,7 +30,8 @@ impl PlacesRead for Alias {
 
 impl InstructionHash for Alias {
     fn hash<H: std::hash::Hasher>(&self, state: &mut H, constants: &mut HashMap<Place, usize>) {
-        self.0.hash(state);
+        // self.0.hash(state);
+        Self::random_hash(state);
     }
 }
 

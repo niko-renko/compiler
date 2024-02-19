@@ -38,6 +38,12 @@ impl PlacesRead for Phi {
     }
 }
 
+impl InstructionHash for Phi {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H, constants: &mut HashMap<Place, usize>) {
+        Self::random_hash(state);
+    }
+}
+
 impl Write for Phi {
     fn write<T: std::io::Write>(
         &self,

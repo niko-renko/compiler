@@ -37,6 +37,12 @@ impl PlacesRead for Get {
     }
 }
 
+impl InstructionHash for Get {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H, constants: &mut HashMap<Place, usize>) {
+        Self::random_hash(state);
+    }
+}
+
 impl Write for Get {
     fn write<T: std::io::Write>(
         &self,
