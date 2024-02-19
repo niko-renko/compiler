@@ -1,6 +1,8 @@
 use std::collections::hash_map::DefaultHasher;
 use std::collections::HashMap;
-use std::hash::{BuildHasher, BuildHasherDefault};
+use std::hash::{Hash, Hasher};
+
+use crate::cfg::PlaceValue;
 
 use super::*;
 
@@ -14,7 +16,7 @@ impl VN {
 
 impl Update for VN {
     fn update(&self, cfg: &mut CFG) -> Result<(), String> {
-        let hasher: BuildHasherDefault<DefaultHasher> = Default::default();
+        let mut constants = HashMap::new();
         let mut vn = HashMap::new();
         let mut next_vn = 0;
 
@@ -27,8 +29,13 @@ impl Update for VN {
                     continue;
                 }
 
-                let place_hash = hasher.hash_one(*place);
-                let value_hash = hasher.hash_one(instruction);
+                let mut hasher = DefaultHasher::new();
+                place.hash(&mut hasher);
+                let place_hash = hasher.finish();
+
+                let mut hasher = DefaultHasher::new();
+                instruction.hash(&mut hasher, &mut constants);
+                let value_hash = hasher.finish();
 
                 if let Some(value_number) = vn.get(&value_hash) {
                     delete.push(index);
@@ -37,6 +44,12 @@ impl Update for VN {
                     vn.insert(place_hash, next_vn);
                     vn.insert(value_hash, next_vn);
                     next_vn += 1;
+                }
+
+                if let Instruction::Alias(alias) = instruction {
+                    if let PlaceValue::Value(v) = alias.get_place_value() {
+                        constants.insert(*place, v.get_value());
+                    }
                 }
             }
 

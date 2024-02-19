@@ -1,5 +1,3 @@
-use std::hash::Hash;
-
 use super::*;
 
 pub struct Alias(PlaceValue);
@@ -7,6 +5,10 @@ pub struct Alias(PlaceValue);
 impl Alias {
     pub fn from(place_value: PlaceValue) -> Self {
         Alias(place_value)
+    }
+
+    pub fn get_place_value(&self) -> &PlaceValue {
+        &self.0
     }
 }
 
@@ -26,8 +28,8 @@ impl PlacesRead for Alias {
     }
 }
 
-impl Hash for Alias {
-    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+impl InstructionHash for Alias {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H, constants: &mut HashMap<Place, usize>) {
         self.0.hash(state);
     }
 }

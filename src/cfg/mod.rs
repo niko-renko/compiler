@@ -17,7 +17,7 @@ pub use instruction::*;
 pub use label::Label;
 pub use place::*;
 pub use place_value::PlaceValue;
-pub use traits::{PlacesRead, Write};
+pub use traits::{InstructionHash, PlacesRead, Write};
 pub use value::Value;
 
 pub struct BFSIter {

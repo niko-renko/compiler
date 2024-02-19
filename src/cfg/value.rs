@@ -13,6 +13,10 @@ impl Value {
     pub fn from_raw(value: usize) -> Value {
         Value(value)
     }
+
+    pub fn get_value(&self) -> usize {
+        self.0
+    }
 }
 
 impl Into<PlaceValue> for Value {
