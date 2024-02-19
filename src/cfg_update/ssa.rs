@@ -18,7 +18,8 @@ impl Update for SSA {
         let dom = crate::cfg_extract::Dom::extract(cfg)?;
 
         for global in assign.get_globals() {
-            let mut blocks_assigned = assign.get_assigned().get(global).unwrap().clone();
+            let empty = vec![];
+            let mut blocks_assigned = assign.get_assigned().get(global).unwrap_or(&empty).clone();
             let mut processed = HashSet::new();
 
             while !blocks_assigned.is_empty() {
