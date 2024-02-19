@@ -54,7 +54,7 @@ impl<'ast> Function<'ast> {
             .map(|local| local.get_name().as_ref().as_str())
             .collect();
 
-        params.join(", ")
+        format!("({})", params.join(", "))
     }
 
     pub fn get_local_id(&self, local: &Local) -> Option<usize> {
