@@ -9,6 +9,22 @@ pub enum StaticType {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct Static(StaticType, usize);
 
+impl Static {
+    pub fn vtable(id: usize) -> Self {
+        Self(StaticType::VTable, id)
+    }
+
+    pub fn fieldmap(id: usize) -> Self {
+        Self(StaticType::FieldMap, id)
+    }
+}
+
+impl Into<Place> for Static {
+    fn into(self) -> Place {
+        Place::Static(self)
+    }
+}
+
 impl Write for Static {
     fn write<T: std::io::Write>(
         &self,

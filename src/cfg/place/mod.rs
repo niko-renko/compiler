@@ -5,7 +5,7 @@ mod r#static;
 mod temp;
 
 pub use named::Named;
-use r#static::Static;
+pub use r#static::Static;
 pub use temp::Temp;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]

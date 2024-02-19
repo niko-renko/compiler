@@ -75,8 +75,7 @@ impl Update for Expression {
             Expression::Op(e) => e.update(cfg, classes, function),
             Expression::Call(e) => e.update(cfg, classes, function),
             Expression::FieldRead(e) => e.update(cfg, classes, function),
-            // Expression::New(new) => new.update(cfg, function, classes),
-            _ => Err(String::from("Not implemented")),
+            Expression::New(i) => i.update(cfg, classes, function),
         }
     }
 }

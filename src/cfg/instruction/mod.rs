@@ -32,29 +32,27 @@ pub enum Instruction {
 impl PlacesRead for Instruction {
     fn places_read(&self) -> Vec<Place> {
         match self {
-            // Instruction::Alloc(alloc) => alloc.places_read(),
+            Instruction::Alloc(i) => i.places_read(),
             Instruction::Call(i) => i.places_read(),
             Instruction::Get(i) => i.places_read(),
             Instruction::Alias(i) => i.places_read(),
             Instruction::Op(i) => i.places_read(),
             Instruction::Phi(i) => i.places_read(),
             Instruction::Print(i) => i.places_read(),
-            // Instruction::Set(set) => set.places_read(),
-            _ => Vec::new(),
+            Instruction::Set(i) => i.places_read(),
         }
     }
 
     fn places_read_mut(&mut self) -> Vec<&mut Place> {
         match self {
-            // Instruction::Alloc(alloc) => alloc.places_read_mut(),
+            Instruction::Alloc(i) => i.places_read_mut(),
             Instruction::Call(i) => i.places_read_mut(),
             Instruction::Get(i) => i.places_read_mut(),
             Instruction::Alias(i) => i.places_read_mut(),
             Instruction::Op(i) => i.places_read_mut(),
             Instruction::Phi(i) => i.places_read_mut(),
             Instruction::Print(i) => i.places_read_mut(),
-            // Instruction::Set(set) => set.places_read_mut(),
-            _ => Vec::new(),
+            Instruction::Set(i) => i.places_read_mut(),
         }
     }
 }
@@ -67,15 +65,14 @@ impl Write for Instruction {
         function: &Function,
     ) -> Result<(), std::io::Error> {
         match self {
-            // Instruction::Alloc(alloc) => alloc.write(writer, classes, function),
+            Instruction::Alloc(i) => i.write(writer, classes, function),
             Instruction::Call(i) => i.write(writer, classes, function),
             Instruction::Get(i) => i.write(writer, classes, function),
             Instruction::Alias(i) => i.write(writer, classes, function),
             Instruction::Op(i) => i.write(writer, classes, function),
             Instruction::Phi(i) => i.write(writer, classes, function),
             Instruction::Print(i) => i.write(writer, classes, function),
-            // Instruction::Set(set) => set.write(writer, classes, function),
-            _ => Ok(()),
+            Instruction::Set(i) => i.write(writer, classes, function),
         }
     }
 }
