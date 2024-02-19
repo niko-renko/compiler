@@ -80,12 +80,12 @@ impl Update for Statement {
         function: &Function,
     ) -> Result<Place, String> {
         match self {
-            Statement::Assignment(assignment) => assignment.update(cfg, classes, function),
-            // Statement::FieldUpdate(field_update) => field_update.update(cfg, function, classes),
+            Statement::Assignment(s) => s.update(cfg, classes, function),
+            Statement::FieldUpdate(s) => s.update(cfg, classes, function),
             Statement::If(s) => s.update(cfg, classes, function),
             // Statement::IfOnly(ifonly) => ifonly.update(cfg, function, classes),
             // Statement::While(while_statement) => while_statement.update(cfg, function, classes),
-            // Statement::Return(return_statement) => return_statement.update(cfg, function, classes),
+            Statement::Return(s) => s.update(cfg, classes, function),
             Statement::Print(s) => s.update(cfg, classes, function),
             _ => unimplemented!(),
         }
