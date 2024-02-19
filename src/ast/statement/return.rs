@@ -12,3 +12,18 @@ impl Parse for Return {
         Ok((next, Return { expression }))
     }
 }
+
+impl Update for Return {
+    fn update<'cfg>(
+        &self,
+        cfg: &'cfg mut CFG,
+        classes: &Classes,
+        function: &Function,
+    ) -> Result<Place, String> {
+        let value = self.expression.update(cfg, classes, function)?;
+        cfg.fail_if_ptr(value);
+        let value = cfg.to_raw(value);
+        cfg.end(cfg::Return::from(value.into()).into());
+        Ok(Place::None)
+    }
+}

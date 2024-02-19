@@ -4,7 +4,7 @@ use super::*;
 pub struct Return(PlaceValue);
 
 impl Return {
-    pub fn new(place_value: PlaceValue) -> Self {
+    pub fn from(place_value: PlaceValue) -> Self {
         Return(place_value)
     }
 }
