@@ -76,6 +76,10 @@ impl BB {
     pub fn get_instructions_mut(&mut self) -> &mut Vec<(Place, Instruction)> {
         &mut self.instructions
     }
+
+    pub fn delete_instruction(&mut self, index: usize) {
+        self.instructions.remove(index);
+    }
 }
 
 impl Write for BB {

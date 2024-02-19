@@ -1,3 +1,5 @@
+use std::hash::Hash;
+
 use super::*;
 
 mod alias;
@@ -53,6 +55,22 @@ impl PlacesRead for Instruction {
             Instruction::Phi(i) => i.places_read_mut(),
             Instruction::Print(i) => i.places_read_mut(),
             Instruction::Set(i) => i.places_read_mut(),
+        }
+    }
+}
+
+impl Hash for Instruction {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        match self {
+            // Instruction::Alloc(i) => i.hash(state),
+            // Instruction::Call(i) => i.hash(state),
+            // Instruction::Get(i) => i.hash(state),
+            Instruction::Alias(i) => i.hash(state),
+            // Instruction::Op(i) => i.hash(state),
+            // Instruction::Phi(i) => i.hash(state),
+            // Instruction::Print(i) => i.hash(state),
+            // Instruction::Set(i) => i.hash(state),
+            _ => unimplemented!(),
         }
     }
 }

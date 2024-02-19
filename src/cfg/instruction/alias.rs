@@ -1,3 +1,5 @@
+use std::hash::Hash;
+
 use super::*;
 
 pub struct Alias(PlaceValue);
@@ -21,6 +23,12 @@ impl PlacesRead for Alias {
 
     fn places_read_mut(&mut self) -> Vec<&mut Place> {
         self.0.places_read_mut()
+    }
+}
+
+impl Hash for Alias {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        self.0.hash(state);
     }
 }
 
