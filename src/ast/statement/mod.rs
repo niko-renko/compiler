@@ -84,10 +84,9 @@ impl Update for Statement {
             Statement::FieldUpdate(s) => s.update(cfg, classes, function),
             Statement::If(s) => s.update(cfg, classes, function),
             Statement::IfOnly(s) => s.update(cfg, classes, function),
-            // Statement::While(while_statement) => while_statement.update(cfg, function, classes),
+            Statement::While(s) => s.update(cfg, classes, function),
             Statement::Return(s) => s.update(cfg, classes, function),
             Statement::Print(s) => s.update(cfg, classes, function),
-            _ => unimplemented!(),
         }
     }
 }
