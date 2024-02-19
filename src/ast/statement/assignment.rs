@@ -58,6 +58,11 @@ impl Update for Assignment {
     ) -> Result<Place, String> {
         let left = self.left.update(cfg, classes, function)?;
         let right = self.right.update(cfg, classes, function)?;
+
+        if let Place::None = left {
+            return Ok(right);
+        }
+
         cfg.add_placed(left, Alias::from(right.into()).into());
         Ok(left)
     }

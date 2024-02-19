@@ -4,4 +4,7 @@ if 0: {
 } else {
     x = 2
 }
+x = 3
+x = 4
+_ = 5
 print(x)
