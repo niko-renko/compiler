@@ -4,14 +4,6 @@ class A [
         print(&this.x)
 ]
 
-class B [
-    fields x
-    method m() with locals:
-        ifonly 1: {
-            print(3)
-        }
-]
-
 main with x:
 x = @A
 !x.x = 3

@@ -34,7 +34,11 @@ impl Write for Named {
             writer,
             "%{}{}",
             function.get_local(self.0).unwrap().get_name().as_ref(),
-            self.1
+            if self.1 == 0 {
+                String::from("")
+            } else {
+                self.1.to_string()
+            }
         )
     }
 }

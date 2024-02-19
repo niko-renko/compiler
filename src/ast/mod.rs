@@ -29,7 +29,7 @@ impl AST {
         let (next, main) = MainFunction::parse(next, true)?;
 
         if next.chars().count() > 0 {
-            return Err(String::from("Expected end of file"));
+            return Err(format!("Unexpected end of file: {}", next));
         }
 
         Ok(AST { classes, main })

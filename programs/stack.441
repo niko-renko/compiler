@@ -25,4 +25,14 @@ class Stack [
 ]
 
 main with stk:
-stk = @Stack
+    stk = @Stack
+    !stk.list = 0
+    _ = ^stk.push(1)
+    _ = ^stk.push(3)
+    _ = ^stk.push(5)
+    _ = ^stk.push(9)
+    print(^stk.pop())
+    print(^stk.pop())
+    print(^stk.pop())
+    print(^stk.pop())
+    print(^stk.pop())
