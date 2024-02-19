@@ -33,8 +33,8 @@ impl PlacesRead for Instruction {
     fn places_read(&self) -> Vec<Place> {
         match self {
             // Instruction::Alloc(alloc) => alloc.places_read(),
-            // Instruction::Call(call) => call.places_read(),
-            // Instruction::Get(get) => get.places_read(),
+            Instruction::Call(i) => i.places_read(),
+            Instruction::Get(i) => i.places_read(),
             Instruction::Alias(i) => i.places_read(),
             Instruction::Op(i) => i.places_read(),
             Instruction::Phi(i) => i.places_read(),
@@ -47,8 +47,8 @@ impl PlacesRead for Instruction {
     fn places_read_mut(&mut self) -> Vec<&mut Place> {
         match self {
             // Instruction::Alloc(alloc) => alloc.places_read_mut(),
-            // Instruction::Call(call) => call.places_read_mut(),
-            // Instruction::Get(get) => get.places_read_mut(),
+            Instruction::Call(i) => i.places_read_mut(),
+            Instruction::Get(i) => i.places_read_mut(),
             Instruction::Alias(i) => i.places_read_mut(),
             Instruction::Op(i) => i.places_read_mut(),
             Instruction::Phi(i) => i.places_read_mut(),
@@ -68,8 +68,8 @@ impl Write for Instruction {
     ) -> Result<(), std::io::Error> {
         match self {
             // Instruction::Alloc(alloc) => alloc.write(writer, classes, function),
-            // Instruction::Call(call) => call.write(writer, classes, function),
-            // Instruction::Get(get) => get.write(writer, classes, function),
+            Instruction::Call(i) => i.write(writer, classes, function),
+            Instruction::Get(i) => i.write(writer, classes, function),
             Instruction::Alias(i) => i.write(writer, classes, function),
             Instruction::Op(i) => i.write(writer, classes, function),
             Instruction::Phi(i) => i.write(writer, classes, function),

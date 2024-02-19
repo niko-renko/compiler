@@ -70,10 +70,10 @@ impl Update for Expression {
         function: &Function,
     ) -> Result<Place, String> {
         match self {
-            Expression::Constant(constant) => constant.update(cfg, classes, function),
-            Expression::Local(local) => local.update(cfg, classes, function),
-            Expression::Op(op) => op.update(cfg, classes, function),
-            // Expression::Call(call) => call.update(cfg, function, classes),
+            Expression::Constant(e) => e.update(cfg, classes, function),
+            Expression::Local(e) => e.update(cfg, classes, function),
+            Expression::Op(e) => e.update(cfg, classes, function),
+            Expression::Call(e) => e.update(cfg, classes, function),
             // Expression::FieldRead(field_read) => field_read.update(cfg, function, classes),
             // Expression::New(new) => new.update(cfg, function, classes),
             _ => Err(String::from("Not implemented")),
