@@ -1,5 +1,5 @@
 use std::collections::hash_map::DefaultHasher;
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::hash::{Hash, Hasher};
 
 use crate::cfg::PlaceValue;
@@ -16,9 +16,23 @@ impl VN {
 
 impl Update for VN {
     fn update(&self, cfg: &mut CFG) -> Result<(), String> {
-        let mut constants = HashMap::new();
         let mut vn = HashMap::new();
         let mut next_vn = 0;
+        let mut constants = HashMap::new();
+        let mut keep = HashSet::new();
+
+        for label in &*cfg {
+            let block = cfg.get_block(label);
+            for (_, instruction) in block.get_instructions() {
+                if let Instruction::Phi(phi) = instruction {
+                    keep.extend(phi.places_read());
+                }
+            }
+
+            if let ControlTransfer::Branch(b) = block.get_end() {
+                keep.extend(b.places_read());
+            }
+        }
 
         for label in &*cfg {
             let block = cfg.get_block_mut(label);
@@ -38,7 +52,9 @@ impl Update for VN {
                 let value_hash = hasher.finish();
 
                 if let Some(value_number) = vn.get(&value_hash) {
-                    // delete.push(index);
+                    if !keep.contains(place) {
+                        delete.push(index);
+                    }
                     vn.insert(place_hash, *value_number);
                 } else {
                     vn.insert(place_hash, next_vn);
