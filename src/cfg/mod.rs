@@ -3,6 +3,7 @@ use std::collections::HashMap;
 use crate::ast_extract::{Classes, Function};
 
 mod bb;
+mod bfs;
 mod control_transfer;
 mod instruction;
 mod label;
@@ -12,6 +13,7 @@ mod traits;
 mod value;
 
 use bb::BB;
+pub use bfs::BFSIter;
 pub use control_transfer::*;
 pub use instruction::*;
 pub use label::Label;
@@ -20,39 +22,12 @@ pub use place_value::PlaceValue;
 pub use traits::{InstructionHash, PlacesRead, Write};
 pub use value::Value;
 
-pub struct BFSIter {
+pub struct CFG {
+    current: Label,
+    blocks: Vec<BB>,
+    edges_in: HashMap<Label, Vec<Label>>,
     edges_out: HashMap<Label, Vec<Label>>,
-    queue: Vec<Label>,
-    visited: Vec<Label>,
-}
-
-impl BFSIter {
-    fn from(edges_out: HashMap<Label, Vec<Label>>, start: Label) -> Self {
-        BFSIter {
-            edges_out,
-            queue: vec![start],
-            visited: Vec::new(),
-        }
-    }
-}
-
-impl Iterator for BFSIter {
-    type Item = Label;
-
-    fn next(&mut self) -> Option<Self::Item> {
-        if let Some(label) = self.queue.pop() {
-            let empty = vec![];
-            for edge_out in self.edges_out.get(&label).unwrap_or(&empty) {
-                if self.queue.contains(edge_out) || self.visited.contains(edge_out) {
-                    continue;
-                }
-                self.queue.push(*edge_out);
-            }
-            Some(label)
-        } else {
-            None
-        }
-    }
+    next_temp: usize,
 }
 
 impl IntoIterator for &CFG {
@@ -62,14 +37,6 @@ impl IntoIterator for &CFG {
     fn into_iter(self) -> Self::IntoIter {
         BFSIter::from(self.edges_out.clone(), Label::from(0))
     }
-}
-
-pub struct CFG {
-    current: Label,
-    blocks: Vec<BB>,
-    edges_in: HashMap<Label, Vec<Label>>,
-    edges_out: HashMap<Label, Vec<Label>>,
-    next_temp: usize,
 }
 
 impl CFG {

@@ -36,6 +36,7 @@ impl Update for VN {
                 let mut hasher = DefaultHasher::new();
                 instruction.hash(&mut hasher, &mut constants);
                 let value_hash = hasher.finish();
+                // dbg!(value_hash);
 
                 if let Some(value_number) = vn.get(&value_hash) {
                     delete.push(index);
