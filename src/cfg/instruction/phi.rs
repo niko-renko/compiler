@@ -1,14 +1,20 @@
 use super::*;
 
-pub struct Phi(Vec<(Named, Label)>);
+pub struct Phi(Vec<(Place, Label)>);
 
 impl Phi {
     pub fn new() -> Self {
         Phi(vec![])
     }
 
-    pub fn get_entries_mut(&mut self) -> &mut Vec<(Named, Label)> {
-        &mut self.0
+    pub fn get_entries_mut(&mut self) -> Vec<(&mut Named, &mut Label)> {
+        let mut entries = vec![];
+        for (named, label) in &mut self.0 {
+            if let Place::Named(named) = named {
+                entries.push((named, label));
+            }
+        }
+        entries
     }
 }
 
@@ -18,7 +24,7 @@ impl Phi {
     }
 
     pub fn add_entry(&mut self, named: Named, label: Label) {
-        self.0.push((named, label));
+        self.0.push((named.into(), label));
     }
 }
 
@@ -30,11 +36,11 @@ impl Into<Instruction> for Phi {
 
 impl PlacesRead for Phi {
     fn places_read(&self) -> Vec<Place> {
-        vec![]
+        self.0.iter().map(|(named, _)| *named).collect()
     }
 
     fn places_read_mut(&mut self) -> Vec<&mut Place> {
-        vec![]
+        self.0.iter_mut().map(|(named, _)| named).collect()
     }
 }
 
