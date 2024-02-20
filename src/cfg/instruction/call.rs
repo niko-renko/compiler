@@ -43,7 +43,7 @@ impl PlacesRead for Call {
 }
 
 impl InstructionHash for Call {
-    fn hash<H: std::hash::Hasher>(&self, state: &mut H, constants: &mut HashMap<Place, usize>) {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H, constants: &mut HashMap<Place, Value>) {
         Self::random_hash(state);
     }
 }

@@ -29,9 +29,15 @@ impl PlacesRead for Alias {
 }
 
 impl InstructionHash for Alias {
-    fn hash<H: std::hash::Hasher>(&self, state: &mut H, constants: &mut HashMap<Place, usize>) {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H, constants: &mut HashMap<Place, Value>) {
+        if let PlaceValue::Place(place) = &self.0 {
+            if let Some(value) = constants.get(place) {
+                let place_value: PlaceValue = (*value).into();
+                place_value.hash(state);
+                return;
+            }
+        }
         self.0.hash(state);
-        // Self::random_hash(state);
     }
 }
 

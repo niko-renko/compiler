@@ -60,7 +60,7 @@ impl PlacesRead for Instruction {
 }
 
 impl InstructionHash for Instruction {
-    fn hash<H: std::hash::Hasher>(&self, state: &mut H, constants: &mut HashMap<Place, usize>) {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H, constants: &mut HashMap<Place, Value>) {
         match self {
             Instruction::Alloc(i) => i.hash(state, constants),
             Instruction::Call(i) => i.hash(state, constants),

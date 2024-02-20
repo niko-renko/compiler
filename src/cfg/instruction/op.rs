@@ -72,7 +72,7 @@ impl PlacesRead for Op {
 }
 
 impl InstructionHash for Op {
-    fn hash<H: std::hash::Hasher>(&self, state: &mut H, constants: &mut HashMap<Place, usize>) {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H, constants: &mut HashMap<Place, Value>) {
         Self::random_hash(state);
     }
 }

@@ -36,10 +36,9 @@ impl Update for VN {
                 let mut hasher = DefaultHasher::new();
                 instruction.hash(&mut hasher, &mut constants);
                 let value_hash = hasher.finish();
-                // dbg!(value_hash);
 
                 if let Some(value_number) = vn.get(&value_hash) {
-                    delete.push(index);
+                    // delete.push(index);
                     vn.insert(place_hash, *value_number);
                 } else {
                     vn.insert(place_hash, next_vn);
@@ -49,7 +48,7 @@ impl Update for VN {
 
                 if let Instruction::Alias(alias) = instruction {
                     if let PlaceValue::Value(v) = alias.get_place_value() {
-                        constants.insert(*place, v.get_value());
+                        constants.insert(*place, *v);
                     }
                 }
             }
@@ -58,8 +57,6 @@ impl Update for VN {
                 block.delete_instruction(index);
             }
         }
-
-        // dbg!(constants);
 
         Ok(())
     }
