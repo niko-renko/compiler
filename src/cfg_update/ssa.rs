@@ -59,8 +59,8 @@ impl Update for SSA {
                         named.set_version(*version);
                     }
                 } else {
-                    for place in instruction.used_mut() {
-                        if let PlaceValue::Place(Place::Named(named)) = place {
+                    for used in instruction.used_mut() {
+                        if let PlaceValue::Place(Place::Named(named)) = used {
                             let version = last_version.entry(named.get_id()).or_default();
                             named.set_version(*version);
                         }
@@ -72,6 +72,13 @@ impl Update for SSA {
                     last_version.insert(named.get_id(), new_version);
                     last_in_block.insert(named.get_id(), new_version);
                     named.set_version(new_version);
+                }
+            }
+
+            for used in block.get_end_mut().used_mut() {
+                if let PlaceValue::Place(Place::Named(named)) = used {
+                    let version = last_version.entry(named.get_id()).or_default();
+                    named.set_version(*version);
                 }
             }
 

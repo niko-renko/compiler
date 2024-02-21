@@ -22,7 +22,6 @@ impl Update for Return {
     ) -> Result<Place, String> {
         let value = self.expression.update(cfg, classes, function)?;
         cfg.fail_if_ptr(value);
-        let value = cfg.to_raw(value);
         cfg.end(cfg::Return::from(value.into()).into());
         Ok(Place::None)
     }
