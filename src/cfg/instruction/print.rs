@@ -16,13 +16,13 @@ impl Into<Instruction> for Print {
     }
 }
 
-impl PlacesRead for Print {
-    fn places_read(&self) -> Vec<Place> {
-        self.value.places_read()
+impl Used for Print {
+    fn used(&self) -> Vec<PlaceValue> {
+        vec![self.value]
     }
 
-    fn places_read_mut(&mut self) -> Vec<&mut Place> {
-        self.value.places_read_mut()
+    fn used_mut(&mut self) -> Vec<&mut PlaceValue> {
+        vec![&mut self.value]
     }
 }
 

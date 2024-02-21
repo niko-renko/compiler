@@ -44,12 +44,13 @@ impl Update for FieldUpdate {
         };
 
         let value = self.value.update(cfg, classes, function)?;
-        let field_map = cfg.add(Get::from(object, Value::from_raw(1).into()).into());
-        let field_offset = cfg.add(Get::from(field_map, Value::from_raw(field_id).into()).into());
+        let field_map = cfg.add(Get::from(object.into(), Value::from_raw(1).into()).into());
+        let field_offset =
+            cfg.add(Get::from(field_map.into(), Value::from_raw(field_id).into()).into());
 
         cfg.add_placed(
             Place::None,
-            Set::from(object, field_offset.into(), value.into()).into(),
+            Set::from(object.into(), field_offset.into(), value.into()).into(),
         );
 
         Ok(value)

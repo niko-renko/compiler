@@ -1,12 +1,12 @@
 use super::*;
 
 pub struct Get {
-    ptr: Place,
+    ptr: PlaceValue,
     offset: PlaceValue,
 }
 
 impl Get {
-    pub fn from(ptr: Place, offset: PlaceValue) -> Self {
+    pub fn from(ptr: PlaceValue, offset: PlaceValue) -> Self {
         Self { ptr, offset }
     }
 }
@@ -17,23 +17,13 @@ impl Into<Instruction> for Get {
     }
 }
 
-impl PlacesRead for Get {
-    fn places_read(&self) -> Vec<Place> {
-        let mut places = vec![self.ptr];
-        match self.offset {
-            PlaceValue::Place(place) => places.push(place),
-            _ => (),
-        }
-        places
+impl Used for Get {
+    fn used(&self) -> Vec<PlaceValue> {
+        vec![self.ptr, self.offset]
     }
 
-    fn places_read_mut(&mut self) -> Vec<&mut Place> {
-        let mut places = vec![&mut self.ptr];
-        match &mut self.offset {
-            PlaceValue::Place(place) => places.push(place),
-            _ => (),
-        }
-        places
+    fn used_mut(&mut self) -> Vec<&mut PlaceValue> {
+        vec![&mut self.ptr, &mut self.offset]
     }
 }
 

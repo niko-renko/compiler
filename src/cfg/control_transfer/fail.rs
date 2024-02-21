@@ -39,12 +39,12 @@ impl Into<ControlTransfer> for Fail {
     }
 }
 
-impl PlacesRead for Fail {
-    fn places_read(&self) -> Vec<Place> {
+impl Used for Fail {
+    fn used(&self) -> Vec<PlaceValue> {
         vec![]
     }
 
-    fn places_read_mut(&mut self) -> Vec<&mut Place> {
+    fn used_mut(&mut self) -> Vec<&mut PlaceValue> {
         vec![]
     }
 }

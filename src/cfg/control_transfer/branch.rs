@@ -2,13 +2,13 @@ use super::*;
 
 #[derive(Clone, Copy)]
 pub struct Branch {
-    condition: Place,
+    condition: PlaceValue,
     true_label: Label,
     false_label: Label,
 }
 
 impl Branch {
-    pub fn from(condition: Place, true_label: Label, false_label: Label) -> Self {
+    pub fn from(condition: PlaceValue, true_label: Label, false_label: Label) -> Self {
         Branch {
             condition,
             true_label,
@@ -31,12 +31,12 @@ impl Into<ControlTransfer> for Branch {
     }
 }
 
-impl PlacesRead for Branch {
-    fn places_read(&self) -> Vec<Place> {
+impl Used for Branch {
+    fn used(&self) -> Vec<PlaceValue> {
         vec![self.condition]
     }
 
-    fn places_read_mut(&mut self) -> Vec<&mut Place> {
+    fn used_mut(&mut self) -> Vec<&mut PlaceValue> {
         vec![&mut self.condition]
     }
 }

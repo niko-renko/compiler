@@ -18,13 +18,13 @@ impl Into<Instruction> for Alias {
     }
 }
 
-impl PlacesRead for Alias {
-    fn places_read(&self) -> Vec<Place> {
-        self.0.places_read()
+impl Used for Alias {
+    fn used(&self) -> Vec<PlaceValue> {
+        vec![self.0]
     }
 
-    fn places_read_mut(&mut self) -> Vec<&mut Place> {
-        self.0.places_read_mut()
+    fn used_mut(&mut self) -> Vec<&mut PlaceValue> {
+        vec![&mut self.0]
     }
 }
 

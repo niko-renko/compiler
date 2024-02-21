@@ -32,7 +32,7 @@ impl Update for While {
         let condition = self.condition.update(cfg, classes, function)?;
         cfg.fail_if_ptr(condition);
         let condition = cfg.to_raw(condition);
-        cfg.end(Branch::from(condition, body_block, new_current).into());
+        cfg.end(Branch::from(condition.into(), body_block, new_current).into());
 
         cfg.set_current(body_block);
         self.body.update(cfg, classes, function)?;

@@ -1,13 +1,13 @@
 use super::*;
 
 pub struct Call {
-    code: Place,
-    object: Place,
+    code: PlaceValue,
+    object: PlaceValue,
     args: Vec<PlaceValue>,
 }
 
 impl Call {
-    pub fn from(code: Place, object: Place, args: Vec<PlaceValue>) -> Self {
+    pub fn from(code: PlaceValue, object: PlaceValue, args: Vec<PlaceValue>) -> Self {
         Self { code, object, args }
     }
 }
@@ -18,27 +18,17 @@ impl Into<Instruction> for Call {
     }
 }
 
-impl PlacesRead for Call {
-    fn places_read(&self) -> Vec<Place> {
-        let mut places = vec![self.code, self.object];
-        for arg in &self.args {
-            match arg {
-                PlaceValue::Place(place) => places.push(*place),
-                _ => (),
-            }
-        }
-        places
+impl Used for Call {
+    fn used(&self) -> Vec<PlaceValue> {
+        let mut used = vec![self.code, self.object];
+        used.extend(self.args.clone());
+        used
     }
 
-    fn places_read_mut(&mut self) -> Vec<&mut Place> {
-        let mut places = vec![&mut self.code, &mut self.object];
-        for arg in &mut self.args {
-            match arg {
-                PlaceValue::Place(place) => places.push(place),
-                _ => (),
-            }
-        }
-        places
+    fn used_mut(&mut self) -> Vec<&mut PlaceValue> {
+        let mut used = vec![&mut self.code, &mut self.object];
+        used.extend(self.args.iter_mut());
+        used
     }
 }
 

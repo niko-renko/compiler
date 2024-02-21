@@ -19,7 +19,7 @@ pub use instruction::*;
 pub use label::Label;
 pub use place::*;
 pub use place_value::PlaceValue;
-pub use traits::{InstructionHash, PlacesRead, Write};
+pub use traits::{InstructionHash, Used, Write};
 pub use value::Value;
 
 pub struct CFG {
@@ -126,7 +126,7 @@ impl CFG {
         let true_branch = if condition { fail_block } else { success_block };
         let false_branch = if condition { success_block } else { fail_block };
 
-        let branch = Branch::from(place, true_branch, false_branch);
+        let branch = Branch::from(place.into(), true_branch, false_branch);
         let current_end = self.get_current_mut().get_end();
         self.end(branch.into());
 

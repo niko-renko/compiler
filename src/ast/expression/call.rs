@@ -50,10 +50,10 @@ impl Update for Call {
             return Err(format!("Method not found"));
         };
 
-        let vtable = cfg.add(Get::from(object, Value::from_raw(0).into()).into());
-        let method = cfg.add(Get::from(vtable, Value::from_raw(method_id).into()).into());
+        let vtable = cfg.add(Get::from(object.into(), Value::from_raw(0).into()).into());
+        let method = cfg.add(Get::from(vtable.into(), Value::from_raw(method_id).into()).into());
 
         cfg.fail_if(method, false, FailReason::NoSuchMethod);
-        Ok(cfg.add(cfg::Call::from(method, object, args).into()))
+        Ok(cfg.add(cfg::Call::from(method.into(), object.into(), args).into()))
     }
 }

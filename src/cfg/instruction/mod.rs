@@ -31,30 +31,30 @@ pub enum Instruction {
     Set(Set),
 }
 
-impl PlacesRead for Instruction {
-    fn places_read(&self) -> Vec<Place> {
+impl Used for Instruction {
+    fn used(&self) -> Vec<PlaceValue> {
         match self {
-            Instruction::Alloc(i) => i.places_read(),
-            Instruction::Call(i) => i.places_read(),
-            Instruction::Get(i) => i.places_read(),
-            Instruction::Alias(i) => i.places_read(),
-            Instruction::Op(i) => i.places_read(),
-            Instruction::Phi(i) => i.places_read(),
-            Instruction::Print(i) => i.places_read(),
-            Instruction::Set(i) => i.places_read(),
+            Instruction::Alloc(i) => i.used(),
+            Instruction::Call(i) => i.used(),
+            Instruction::Get(i) => i.used(),
+            Instruction::Alias(i) => i.used(),
+            Instruction::Op(i) => i.used(),
+            Instruction::Phi(i) => i.used(),
+            Instruction::Print(i) => i.used(),
+            Instruction::Set(i) => i.used(),
         }
     }
 
-    fn places_read_mut(&mut self) -> Vec<&mut Place> {
+    fn used_mut(&mut self) -> Vec<&mut PlaceValue> {
         match self {
-            Instruction::Alloc(i) => i.places_read_mut(),
-            Instruction::Call(i) => i.places_read_mut(),
-            Instruction::Get(i) => i.places_read_mut(),
-            Instruction::Alias(i) => i.places_read_mut(),
-            Instruction::Op(i) => i.places_read_mut(),
-            Instruction::Phi(i) => i.places_read_mut(),
-            Instruction::Print(i) => i.places_read_mut(),
-            Instruction::Set(i) => i.places_read_mut(),
+            Instruction::Alloc(i) => i.used_mut(),
+            Instruction::Call(i) => i.used_mut(),
+            Instruction::Get(i) => i.used_mut(),
+            Instruction::Alias(i) => i.used_mut(),
+            Instruction::Op(i) => i.used_mut(),
+            Instruction::Phi(i) => i.used_mut(),
+            Instruction::Print(i) => i.used_mut(),
+            Instruction::Set(i) => i.used_mut(),
         }
     }
 }

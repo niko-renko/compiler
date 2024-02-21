@@ -18,22 +18,22 @@ pub enum ControlTransfer {
     Fail(Fail),
 }
 
-impl PlacesRead for ControlTransfer {
-    fn places_read(&self) -> Vec<Place> {
+impl Used for ControlTransfer {
+    fn used(&self) -> Vec<PlaceValue> {
         match self {
-            ControlTransfer::Return(cf) => cf.places_read(),
-            ControlTransfer::Branch(cf) => cf.places_read(),
-            ControlTransfer::Jump(cf) => cf.places_read(),
-            ControlTransfer::Fail(cf) => cf.places_read(),
+            ControlTransfer::Return(cf) => cf.used(),
+            ControlTransfer::Branch(cf) => cf.used(),
+            ControlTransfer::Jump(cf) => cf.used(),
+            ControlTransfer::Fail(cf) => cf.used(),
         }
     }
 
-    fn places_read_mut(&mut self) -> Vec<&mut Place> {
+    fn used_mut(&mut self) -> Vec<&mut PlaceValue> {
         match self {
-            ControlTransfer::Return(cf) => cf.places_read_mut(),
-            ControlTransfer::Branch(cf) => cf.places_read_mut(),
-            ControlTransfer::Jump(cf) => cf.places_read_mut(),
-            ControlTransfer::Fail(cf) => cf.places_read_mut(),
+            ControlTransfer::Return(cf) => cf.used_mut(),
+            ControlTransfer::Branch(cf) => cf.used_mut(),
+            ControlTransfer::Jump(cf) => cf.used_mut(),
+            ControlTransfer::Fail(cf) => cf.used_mut(),
         }
     }
 }

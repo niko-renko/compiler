@@ -1,11 +1,11 @@
 use super::*;
 
 pub struct Alloc {
-    size: Value,
+    size: PlaceValue,
 }
 
 impl Alloc {
-    pub fn from(size: Value) -> Self {
+    pub fn from(size: PlaceValue) -> Self {
         Self { size }
     }
 }
@@ -16,13 +16,13 @@ impl Into<Instruction> for Alloc {
     }
 }
 
-impl PlacesRead for Alloc {
-    fn places_read(&self) -> Vec<Place> {
-        vec![]
+impl Used for Alloc {
+    fn used(&self) -> Vec<PlaceValue> {
+        vec![self.size]
     }
 
-    fn places_read_mut(&mut self) -> Vec<&mut Place> {
-        vec![]
+    fn used_mut(&mut self) -> Vec<&mut PlaceValue> {
+        vec![&mut self.size]
     }
 }
 

@@ -59,8 +59,8 @@ impl Update for SSA {
                         named.set_version(*version);
                     }
                 } else {
-                    for place in instruction.places_read_mut() {
-                        if let Place::Named(named) = place {
+                    for place in instruction.used_mut() {
+                        if let PlaceValue::Place(Place::Named(named)) = place {
                             let version = last_version.entry(named.get_id()).or_default();
                             named.set_version(*version);
                         }

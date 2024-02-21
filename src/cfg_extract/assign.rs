@@ -25,13 +25,19 @@ impl<'cfg> Extract<'cfg, CFG> for Assign {
         for label in cfg {
             let block = cfg.get_block(label);
             let mut var_kill = HashSet::new();
+            let mut write_read = vec![];
 
-            let write_read: Vec<(&Place, Vec<Place>)> = block
-                .get_instructions()
-                .iter()
-                .map(|(w, i)| (w, i.places_read()))
-                .chain(vec![(&Place::None, block.get_end().places_read())])
-                .collect();
+            for (write, instruction) in block.get_instructions() {
+                let mut read = vec![];
+
+                for used in instruction.used() {
+                    if let PlaceValue::Place(place) = used {
+                        read.push(place);
+                    }
+                }
+
+                write_read.push((write, read));
+            }
 
             for (write, read) in write_read {
                 for place in read {

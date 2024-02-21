@@ -57,17 +57,13 @@ impl Into<Instruction> for Op {
     }
 }
 
-impl PlacesRead for Op {
-    fn places_read(&self) -> Vec<Place> {
-        let mut places = self.left.places_read();
-        places.extend(self.right.places_read());
-        places
+impl Used for Op {
+    fn used(&self) -> Vec<PlaceValue> {
+        vec![self.left, self.right]
     }
 
-    fn places_read_mut(&mut self) -> Vec<&mut Place> {
-        let mut places = self.left.places_read_mut();
-        places.extend(self.right.places_read_mut());
-        places
+    fn used_mut(&mut self) -> Vec<&mut PlaceValue> {
+        vec![&mut self.left, &mut self.right]
     }
 }
 

@@ -30,7 +30,7 @@ impl Update for IfOnly {
         let condition = self.condition.update(cfg, classes, function)?;
         cfg.fail_if_ptr(condition);
         let condition = cfg.to_raw(condition);
-        cfg.end(Branch::from(condition, true_block, new_current).into());
+        cfg.end(Branch::from(condition.into(), true_block, new_current).into());
 
         cfg.set_current(true_block);
         cfg.end(Jump::from(new_current).into());

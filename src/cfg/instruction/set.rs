@@ -1,13 +1,13 @@
 use super::*;
 
 pub struct Set {
-    ptr: Place,
+    ptr: PlaceValue,
     offset: PlaceValue,
     value: PlaceValue,
 }
 
 impl Set {
-    pub fn from(ptr: Place, offset: PlaceValue, value: PlaceValue) -> Self {
+    pub fn from(ptr: PlaceValue, offset: PlaceValue, value: PlaceValue) -> Self {
         Self { ptr, offset, value }
     }
 }
@@ -18,31 +18,13 @@ impl Into<Instruction> for Set {
     }
 }
 
-impl PlacesRead for Set {
-    fn places_read(&self) -> Vec<Place> {
-        let mut places = vec![self.ptr];
-        match self.offset {
-            PlaceValue::Place(place) => places.push(place),
-            _ => (),
-        }
-        match self.value {
-            PlaceValue::Place(place) => places.push(place),
-            _ => (),
-        }
-        places
+impl Used for Set {
+    fn used(&self) -> Vec<PlaceValue> {
+        vec![self.ptr, self.offset, self.value]
     }
 
-    fn places_read_mut(&mut self) -> Vec<&mut Place> {
-        let mut places = vec![&mut self.ptr];
-        match &mut self.offset {
-            PlaceValue::Place(place) => places.push(place),
-            _ => (),
-        }
-        match &mut self.value {
-            PlaceValue::Place(place) => places.push(place),
-            _ => (),
-        }
-        places
+    fn used_mut(&mut self) -> Vec<&mut PlaceValue> {
+        vec![&mut self.ptr, &mut self.offset, &mut self.value]
     }
 }
 

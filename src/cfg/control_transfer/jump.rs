@@ -19,12 +19,12 @@ impl Into<ControlTransfer> for Jump {
     }
 }
 
-impl PlacesRead for Jump {
-    fn places_read(&self) -> Vec<Place> {
+impl Used for Jump {
+    fn used(&self) -> Vec<PlaceValue> {
         vec![]
     }
 
-    fn places_read_mut(&mut self) -> Vec<&mut Place> {
+    fn used_mut(&mut self) -> Vec<&mut PlaceValue> {
         vec![]
     }
 }
