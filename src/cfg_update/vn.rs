@@ -12,12 +12,39 @@ impl VN {
     pub fn new() -> Self {
         VN
     }
+
+    fn update_places_used(
+        places_used: Vec<&mut PlaceValue>,
+        constants: &HashMap<Place, Value>,
+        vn: &HashMap<u64, usize>,
+        name: &HashMap<usize, Place>,
+    ) {
+        for place_used in places_used {
+            let place = match place_used {
+                PlaceValue::Place(place) => place,
+                _ => continue,
+            };
+
+            if let Some(value) = constants.get(place) {
+                *place_used = (*value).into();
+                continue;
+            }
+
+            let mut hasher = DefaultHasher::new();
+            place.hash(&mut hasher);
+            let place_hash = hasher.finish();
+
+            if let Some(value_number) = vn.get(&place_hash) {
+                *place_used = name.get(value_number).unwrap().clone().into();
+            }
+        }
+    }
 }
 
 impl Update for VN {
     fn update(&self, cfg: &mut CFG) -> Result<(), String> {
         let mut vn = HashMap::new();
-        let mut next_vn = 0;
+        let mut next_vn: usize = 0;
         let mut constants = HashMap::new();
         let mut name = HashMap::new();
 
@@ -68,23 +95,15 @@ impl Update for VN {
         for label in &*cfg {
             let block = cfg.get_block_mut(label);
 
-            for (_, instruction) in block.get_instructions_mut() {
-                for used in instruction.used_mut() {
-                    if let PlaceValue::Place(place) = used {
-                        if let Some(value) = constants.get(place) {
-                            *used = (*value).into();
-                        }
-                    }
-                }
-            }
+            let places_used: Vec<&mut PlaceValue> = block
+                .get_instructions_mut()
+                .iter_mut()
+                .flat_map(|(_, instruction)| instruction.used_mut())
+                .filter(|used| matches!(used, PlaceValue::Place(_)))
+                .collect();
 
-            for used in block.get_end_mut().used_mut() {
-                if let PlaceValue::Place(place) = used {
-                    if let Some(value) = constants.get(place) {
-                        *used = (*value).into();
-                    }
-                }
-            }
+            Self::update_places_used(places_used, &constants, &vn, &name);
+            Self::update_places_used(block.get_end_mut().used_mut(), &constants, &vn, &name);
         }
 
         Ok(())
