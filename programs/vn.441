@@ -1,6 +1,11 @@
-main with x, y:
-x = (1 + 2)
-x = (1 + 2)
-x = 3
-y = x
-y = 3
+class A [
+    fields
+    method m(x) with locals y, z:
+        y = (x + 1)
+        y = (x + 1)
+        z = (x / x)
+        return y
+]
+
+main with x:
+return 0

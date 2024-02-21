@@ -1,3 +1,6 @@
+use std::collections::hash_map::DefaultHasher;
+use std::hash::{Hash, Hasher};
+
 use super::*;
 
 pub enum Operator {
@@ -11,6 +14,21 @@ pub enum Operator {
     Eq,
 }
 
+impl Operator {
+    fn get_char(&self) -> String {
+        match self {
+            Operator::Add => String::from("+"),
+            Operator::Sub => String::from("-"),
+            Operator::Mul => String::from("*"),
+            Operator::Div => String::from("/"),
+            Operator::Or => String::from("|"),
+            Operator::And => String::from("&"),
+            Operator::Xor => String::from("^"),
+            Operator::Eq => String::from("=="),
+        }
+    }
+}
+
 impl Write for Operator {
     fn write<T: std::io::Write>(
         &self,
@@ -18,20 +36,7 @@ impl Write for Operator {
         _: &Classes,
         _: &Function,
     ) -> Result<(), std::io::Error> {
-        write!(
-            writer,
-            " {} ",
-            match self {
-                Operator::Add => "+",
-                Operator::Sub => "-",
-                Operator::Mul => "*",
-                Operator::Div => "/",
-                Operator::Or => "|",
-                Operator::And => "&",
-                Operator::Xor => "^",
-                Operator::Eq => "==",
-            }
-        )
+        write!(writer, " {} ", self.get_char())
     }
 }
 
@@ -69,37 +74,58 @@ impl Used for Op {
 
 impl InstructionHash for Op {
     fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-        Self::random_hash(state);
+        let mut hashes = vec![];
+
+        for place in self.used() {
+            let mut hasher = DefaultHasher::new();
+            place.hash(&mut hasher);
+            hashes.push(hasher.finish());
+        }
+
+        hashes.sort().hash(state);
+        self.operator.get_char().hash(state);
     }
 
-    fn get_constant(&self, constants: &mut HashMap<Place, Value>) -> Option<Value> {
-        let mut left = 0;
+    fn get_constant(
+        &self,
+        constants: &mut HashMap<Place, Value>,
+        vn: &HashMap<u64, usize>,
+    ) -> Option<Value> {
+        if matches!(self.left, PlaceValue::Place(_)) && matches!(self.right, PlaceValue::Place(_)) {
+            let left = match self.left {
+                PlaceValue::Place(place) => place,
+                _ => unreachable!(),
+            };
 
-        if let PlaceValue::Value(value) = self.left {
-            left = value.get_value();
-        }
+            let mut hasher = DefaultHasher::new();
+            left.hash(&mut hasher);
+            let left_hash = hasher.finish();
+            let left_vn = vn.get(&left_hash);
 
-        if let PlaceValue::Place(place) = self.left {
-            if let Some(value) = constants.get(&place) {
-                left = value.get_value();
-            } else {
-                return None;
+            let right = match self.right {
+                PlaceValue::Place(place) => place,
+                _ => unreachable!(),
+            };
+
+            let mut hasher = DefaultHasher::new();
+            right.hash(&mut hasher);
+            let right_hash = hasher.finish();
+            let right_vn = vn.get(&right_hash);
+
+            if matches!(self.operator, Operator::Div) && left_vn == right_vn {
+                return Some(Value::from_raw(1));
             }
         }
 
-        let mut right = 0;
+        let left = match self.left {
+            PlaceValue::Value(value) => Some(value.get_value()),
+            PlaceValue::Place(place) => constants.get(&place).map(|x| x.get_value()),
+        }?;
 
-        if let PlaceValue::Value(value) = self.right {
-            right = value.get_value();
-        }
-
-        if let PlaceValue::Place(place) = self.right {
-            if let Some(value) = constants.get(&place) {
-                right = value.get_value();
-            } else {
-                return None;
-            }
-        }
+        let right = match self.left {
+            PlaceValue::Value(value) => Some(value.get_value()),
+            PlaceValue::Place(place) => constants.get(&place).map(|x| x.get_value()),
+        }?;
 
         let result = match self.operator {
             Operator::Add => left + right,

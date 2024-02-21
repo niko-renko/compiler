@@ -73,16 +73,20 @@ impl InstructionHash for Instruction {
         }
     }
 
-    fn get_constant(&self, constants: &mut HashMap<Place, Value>) -> Option<Value> {
+    fn get_constant(
+        &self,
+        constants: &mut HashMap<Place, Value>,
+        vn: &HashMap<u64, usize>,
+    ) -> Option<Value> {
         match self {
-            Instruction::Alloc(i) => i.get_constant(constants),
-            Instruction::Call(i) => i.get_constant(constants),
-            Instruction::Get(i) => i.get_constant(constants),
-            Instruction::Alias(i) => i.get_constant(constants),
-            Instruction::Op(i) => i.get_constant(constants),
-            Instruction::Phi(i) => i.get_constant(constants),
-            Instruction::Print(i) => i.get_constant(constants),
-            Instruction::Set(i) => i.get_constant(constants),
+            Instruction::Alloc(i) => i.get_constant(constants, vn),
+            Instruction::Call(i) => i.get_constant(constants, vn),
+            Instruction::Get(i) => i.get_constant(constants, vn),
+            Instruction::Alias(i) => i.get_constant(constants, vn),
+            Instruction::Op(i) => i.get_constant(constants, vn),
+            Instruction::Phi(i) => i.get_constant(constants, vn),
+            Instruction::Print(i) => i.get_constant(constants, vn),
+            Instruction::Set(i) => i.get_constant(constants, vn),
         }
     }
 }

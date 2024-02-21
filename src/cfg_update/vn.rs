@@ -57,7 +57,7 @@ impl Update for VN {
                     continue;
                 }
 
-                if let Some(value) = instruction.get_constant(&mut constants) {
+                if let Some(value) = instruction.get_constant(&mut constants, &vn) {
                     constants.insert(*place, value);
                     delete.push(index);
                     continue;
@@ -86,11 +86,6 @@ impl Update for VN {
                 block.delete_instruction(index);
             }
         }
-
-        // dbg!(&constants);
-        // go through all critical values read
-        // and if there's a value number for the place, replace the cannonical place
-        // or by a constant value if it was a constant
 
         for label in &*cfg {
             let block = cfg.get_block_mut(label);
