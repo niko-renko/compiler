@@ -84,6 +84,7 @@ impl InstructionHash for Op {
 
         hashes.sort().hash(state);
         self.operator.get_char().hash(state);
+        Self::random_hash(state);
     }
 
     fn get_constant(
@@ -122,7 +123,7 @@ impl InstructionHash for Op {
             PlaceValue::Place(place) => constants.get(&place).map(|x| x.get_value()),
         }?;
 
-        let right = match self.left {
+        let right = match self.right {
             PlaceValue::Value(value) => Some(value.get_value()),
             PlaceValue::Place(place) => constants.get(&place).map(|x| x.get_value()),
         }?;
