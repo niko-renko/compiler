@@ -60,16 +60,29 @@ impl PlacesRead for Instruction {
 }
 
 impl InstructionHash for Instruction {
-    fn hash<H: std::hash::Hasher>(&self, state: &mut H, constants: &mut HashMap<Place, Value>) {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
         match self {
-            Instruction::Alloc(i) => i.hash(state, constants),
-            Instruction::Call(i) => i.hash(state, constants),
-            Instruction::Get(i) => i.hash(state, constants),
-            Instruction::Alias(i) => i.hash(state, constants),
-            Instruction::Op(i) => i.hash(state, constants),
-            Instruction::Phi(i) => i.hash(state, constants),
-            Instruction::Print(i) => i.hash(state, constants),
-            Instruction::Set(i) => i.hash(state, constants),
+            Instruction::Alloc(i) => i.hash(state),
+            Instruction::Call(i) => i.hash(state),
+            Instruction::Get(i) => i.hash(state),
+            Instruction::Alias(i) => i.hash(state),
+            Instruction::Op(i) => i.hash(state),
+            Instruction::Phi(i) => i.hash(state),
+            Instruction::Print(i) => i.hash(state),
+            Instruction::Set(i) => i.hash(state),
+        }
+    }
+
+    fn get_constant(&self, constants: &mut HashMap<Place, Value>) -> Option<Value> {
+        match self {
+            Instruction::Alloc(i) => i.get_constant(constants),
+            Instruction::Call(i) => i.get_constant(constants),
+            Instruction::Get(i) => i.get_constant(constants),
+            Instruction::Alias(i) => i.get_constant(constants),
+            Instruction::Op(i) => i.get_constant(constants),
+            Instruction::Phi(i) => i.get_constant(constants),
+            Instruction::Print(i) => i.get_constant(constants),
+            Instruction::Set(i) => i.get_constant(constants),
         }
     }
 }

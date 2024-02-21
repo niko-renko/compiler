@@ -27,8 +27,12 @@ impl PlacesRead for Print {
 }
 
 impl InstructionHash for Print {
-    fn hash<H: std::hash::Hasher>(&self, state: &mut H, constants: &mut HashMap<Place, Value>) {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
         Self::random_hash(state);
+    }
+
+    fn get_constant(&self, _: &mut HashMap<Place, Value>) -> Option<Value> {
+        None
     }
 }
 

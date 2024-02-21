@@ -29,15 +29,20 @@ impl PlacesRead for Alias {
 }
 
 impl InstructionHash for Alias {
-    fn hash<H: std::hash::Hasher>(&self, state: &mut H, constants: &mut HashMap<Place, Value>) {
-        if let PlaceValue::Place(place) = &self.0 {
-            if let Some(value) = constants.get(place) {
-                let place_value: PlaceValue = (*value).into();
-                place_value.hash(state);
-                return;
-            }
-        }
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
         self.0.hash(state);
+    }
+
+    fn get_constant(&self, constants: &mut HashMap<Place, Value>) -> Option<Value> {
+        if let PlaceValue::Value(value) = &self.0 {
+            return Some(*value);
+        }
+
+        if let PlaceValue::Place(place) = &self.0 {
+            return constants.get(place).map(|v| *v);
+        }
+
+        None
     }
 }
 

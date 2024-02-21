@@ -1,6 +1,6 @@
 use crate::ast;
 use crate::ast_extract::{Classes, Function};
-use crate::cfg::{ControlTransfer, Instruction, InstructionHash, Label, Place, PlacesRead, CFG};
+use crate::cfg::{Instruction, InstructionHash, Label, Place, PlacesRead, CFG};
 use crate::cfg_extract::Assign;
 use crate::Extract;
 

@@ -1,5 +1,5 @@
 use std::collections::hash_map::DefaultHasher;
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 use std::hash::{Hash, Hasher};
 
 use crate::cfg::PlaceValue;
@@ -19,20 +19,7 @@ impl Update for VN {
         let mut vn = HashMap::new();
         let mut next_vn = 0;
         let mut constants = HashMap::new();
-        let mut keep = HashSet::new();
-
-        for label in &*cfg {
-            let block = cfg.get_block(label);
-            for (_, instruction) in block.get_instructions() {
-                if let Instruction::Phi(phi) = instruction {
-                    keep.extend(phi.places_read());
-                }
-            }
-
-            if let ControlTransfer::Branch(b) = block.get_end() {
-                keep.extend(b.places_read());
-            }
-        }
+        let mut name = HashMap::new();
 
         for label in &*cfg {
             let block = cfg.get_block_mut(label);
@@ -43,29 +30,28 @@ impl Update for VN {
                     continue;
                 }
 
+                if let Some(value) = instruction.get_constant(&mut constants) {
+                    constants.insert(*place, value);
+                    delete.push(index);
+                    continue;
+                }
+
                 let mut hasher = DefaultHasher::new();
                 place.hash(&mut hasher);
                 let place_hash = hasher.finish();
 
                 let mut hasher = DefaultHasher::new();
-                instruction.hash(&mut hasher, &mut constants);
+                instruction.hash(&mut hasher);
                 let value_hash = hasher.finish();
 
                 if let Some(value_number) = vn.get(&value_hash) {
-                    if !keep.contains(place) {
-                        delete.push(index);
-                    }
+                    delete.push(index);
                     vn.insert(place_hash, *value_number);
                 } else {
                     vn.insert(place_hash, next_vn);
                     vn.insert(value_hash, next_vn);
+                    name.insert(next_vn, *place);
                     next_vn += 1;
-                }
-
-                if let Instruction::Alias(alias) = instruction {
-                    if let PlaceValue::Value(v) = alias.get_place_value() {
-                        constants.insert(*place, *v);
-                    }
                 }
             }
 
@@ -73,6 +59,11 @@ impl Update for VN {
                 block.delete_instruction(index);
             }
         }
+        dbg!(constants);
+
+        // go through all critical values read
+        // and if there's a value number for the place, replace the cannonical place
+        // or by a constant value if it was a constant
 
         Ok(())
     }

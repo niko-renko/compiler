@@ -72,8 +72,51 @@ impl PlacesRead for Op {
 }
 
 impl InstructionHash for Op {
-    fn hash<H: std::hash::Hasher>(&self, state: &mut H, constants: &mut HashMap<Place, Value>) {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
         Self::random_hash(state);
+    }
+
+    fn get_constant(&self, constants: &mut HashMap<Place, Value>) -> Option<Value> {
+        let mut left = 0;
+
+        if let PlaceValue::Value(value) = self.left {
+            left = value.get_value();
+        }
+
+        if let PlaceValue::Place(place) = self.left {
+            if let Some(value) = constants.get(&place) {
+                left = value.get_value();
+            } else {
+                return None;
+            }
+        }
+
+        let mut right = 0;
+
+        if let PlaceValue::Value(value) = self.right {
+            right = value.get_value();
+        }
+
+        if let PlaceValue::Place(place) = self.right {
+            if let Some(value) = constants.get(&place) {
+                right = value.get_value();
+            } else {
+                return None;
+            }
+        }
+
+        let result = match self.operator {
+            Operator::Add => left + right,
+            Operator::Sub => left - right,
+            Operator::Mul => left * right,
+            Operator::Div => left / right,
+            Operator::Or => left | right,
+            Operator::And => left & right,
+            Operator::Xor => left ^ right,
+            Operator::Eq => (left == right) as usize,
+        };
+
+        Some(Value::from_raw(result))
     }
 }
 
