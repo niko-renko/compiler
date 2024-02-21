@@ -2,6 +2,8 @@ use std::collections::hash_map::DefaultHasher;
 use std::collections::HashMap;
 use std::hash::{Hash, Hasher};
 
+use crate::cfg::Value;
+
 use super::*;
 
 pub struct VN;
@@ -57,16 +59,31 @@ impl Update for VN {
                 block.delete_instruction(index);
             }
         }
-        dbg!(&constants);
 
+        // dbg!(&constants);
         // go through all critical values read
         // and if there's a value number for the place, replace the cannonical place
         // or by a constant value if it was a constant
 
         for label in &*cfg {
             let block = cfg.get_block_mut(label);
-            for (place, instruction) in block.get_instructions_mut() {
-                for place in instruction.used_mut() {}
+
+            for (_, instruction) in block.get_instructions_mut() {
+                for used in instruction.used_mut() {
+                    if let PlaceValue::Place(place) = used {
+                        if let Some(value) = constants.get(place) {
+                            *used = (*value).into();
+                        }
+                    }
+                }
+            }
+
+            for used in block.get_end_mut().used_mut() {
+                if let PlaceValue::Place(place) = used {
+                    if let Some(value) = constants.get(place) {
+                        *used = (*value).into();
+                    }
+                }
             }
         }
 

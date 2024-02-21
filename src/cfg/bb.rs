@@ -69,6 +69,10 @@ impl BB {
         self.end
     }
 
+    pub fn get_end_mut(&mut self) -> &mut ControlTransfer {
+        &mut self.end
+    }
+
     pub fn get_instructions(&self) -> &Vec<(Place, Instruction)> {
         &self.instructions
     }
