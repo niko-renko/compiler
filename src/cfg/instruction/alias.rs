@@ -33,18 +33,14 @@ impl InstructionHash for Alias {
         self.0.hash(state);
     }
 
-    fn get_constant(
-        &self,
-        constants: &mut HashMap<Place, Value>,
-        _: &HashMap<u64, usize>,
-    ) -> Option<Value> {
-        if let PlaceValue::Value(value) = &self.0 {
-            return Some(*value);
-        }
+    fn get_constant(&self, _: &HashMap<u64, PlaceValue>) -> Option<Value> {
+        // if let PlaceValue::Value(value) = &self.0 {
+        //     return Some(*value);
+        // }
 
-        if let PlaceValue::Place(place) = &self.0 {
-            return constants.get(place).map(|v| *v);
-        }
+        // if let PlaceValue::Place(place) = &self.0 {
+        //     return constants.get(place).map(|v| *v);
+        // }
 
         None
     }

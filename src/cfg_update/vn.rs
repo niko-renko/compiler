@@ -43,58 +43,58 @@ impl VN {
 
 impl Update for VN {
     fn update(&self, cfg: &mut CFG) -> Result<(), String> {
-        let mut vn = HashMap::new();
-        let mut next_vn: usize = 0;
-        let mut constants = HashMap::new();
-        let mut name = HashMap::new();
-
         for label in &*cfg {
             let block = cfg.get_block_mut(label);
             let mut delete = vec![];
 
-            for (index, (place, instruction)) in block.get_instructions().iter().enumerate() {
+            // hash: instruction | place
+            let mut vn: HashMap<u64, PlaceValue> = HashMap::new();
+
+            for (index, (place, instruction)) in block.get_instructions_mut().iter_mut().enumerate()
+            {
                 if let Place::None = place {
                     continue;
                 }
 
-                if let Some(value) = instruction.get_constant(&mut constants, &vn) {
-                    constants.insert(*place, value);
-                    delete.push(index);
-                    continue;
+                for used in instruction.used_mut() {
+                    if let PlaceValue::Place(place) = used {
+                        let mut hasher = DefaultHasher::new();
+                        place.hash(&mut hasher);
+                        let place_hash = hasher.finish();
+
+                        if let Some(value) = vn.get(&place_hash) {
+                            *used = value.clone();
+                        }
+                    }
                 }
 
                 let mut hasher = DefaultHasher::new();
                 place.hash(&mut hasher);
                 let place_hash = hasher.finish();
 
+                if let Some(constant) = instruction.get_constant(&vn) {
+                    delete.push(index);
+                    vn.insert(place_hash, constant.into());
+                    continue;
+                }
+
                 let mut hasher = DefaultHasher::new();
                 instruction.hash(&mut hasher);
-                let value_hash = hasher.finish();
+                let instruction_hash = hasher.finish();
 
-                if let Some(value_number) = vn.get(&value_hash) {
+                if let Some(_) = vn.get(&instruction_hash) {
+                    println!("HERE");
                     delete.push(index);
-                    vn.insert(place_hash, *value_number);
+                    vn.insert(place_hash, (*place).into());
                 } else {
-                    vn.insert(place_hash, next_vn);
-                    vn.insert(value_hash, next_vn);
-                    name.insert(next_vn, *place);
-                    next_vn += 1;
+                    vn.insert(place_hash, (*place).into());
+                    vn.insert(instruction_hash, (*place).into());
                 }
             }
 
             for index in delete.into_iter().rev() {
                 block.delete_instruction(index);
             }
-
-            let places_used: Vec<&mut PlaceValue> = block
-                .get_instructions_mut()
-                .iter_mut()
-                .flat_map(|(_, instruction)| instruction.used_mut())
-                .filter(|used| matches!(used, PlaceValue::Place(_)))
-                .collect();
-
-            Self::update_places_used(places_used, &constants, &vn, &name);
-            Self::update_places_used(block.get_end_mut().used_mut(), &constants, &vn, &name);
         }
 
         Ok(())

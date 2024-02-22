@@ -50,11 +50,7 @@ impl InstructionHash for Phi {
         Self::random_hash(state);
     }
 
-    fn get_constant(
-        &self,
-        _: &mut HashMap<Place, Value>,
-        _: &HashMap<u64, usize>,
-    ) -> Option<Value> {
+    fn get_constant(&self, _: &HashMap<u64, PlaceValue>) -> Option<Value> {
         None
     }
 }
