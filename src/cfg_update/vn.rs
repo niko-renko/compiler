@@ -85,10 +85,6 @@ impl Update for VN {
             for index in delete.into_iter().rev() {
                 block.delete_instruction(index);
             }
-        }
-
-        for label in &*cfg {
-            let block = cfg.get_block_mut(label);
 
             let places_used: Vec<&mut PlaceValue> = block
                 .get_instructions_mut()
