@@ -1,4 +1,4 @@
-use crate::ast::{Class, Field, Local, Method, Name, Statement, AST};
+use crate::ast::{Local, Name, Statement, AST};
 use crate::Extract;
 
 mod classes;

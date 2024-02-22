@@ -67,7 +67,13 @@ impl<'ast> Classes<'ast> {
     }
 
     pub fn get_field_count(&self, class_id: usize) -> usize {
-        self.fields.count()
+        let empty = vec![];
+        let fields = self
+            .fields
+            .class_owns
+            .get(self.classes[class_id])
+            .unwrap_or(&empty);
+        fields.len()
     }
 
     pub fn get_vtable_name(&self, class_id: usize) -> String {
