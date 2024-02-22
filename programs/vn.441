@@ -1,11 +1,12 @@
 class A [
     fields
     method m(x) with locals y, z:
-        y = (x + 1)
-        y = (x + 1)
-        z = (x / x)
-        return y
+        y = 1
+        z = y
+        print(z)
+        return z
 ]
 
 main with x:
+print(^@A.m(0))
 return 0

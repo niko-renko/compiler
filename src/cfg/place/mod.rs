@@ -1,3 +1,6 @@
+use std::collections::hash_map::DefaultHasher;
+use std::hash::{Hash, Hasher};
+
 use super::*;
 
 mod named;
@@ -14,6 +17,14 @@ pub enum Place {
     Temp(Temp),
     Static(Static),
     None,
+}
+
+impl Place {
+    pub fn hash_one(&self) -> u64 {
+        let mut hasher = DefaultHasher::new();
+        self.hash(&mut hasher);
+        hasher.finish()
+    }
 }
 
 impl Into<PlaceValue> for Place {

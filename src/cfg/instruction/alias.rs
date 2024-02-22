@@ -30,19 +30,24 @@ impl Used for Alias {
 
 impl InstructionHash for Alias {
     fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-        self.0.hash(state);
+        if let PlaceValue::Place(place) = &self.0 {
+            place.hash(state);
+        } else {
+            Self::random_hash(state);
+        }
     }
 
-    fn get_constant(&self, _: &HashMap<u64, PlaceValue>) -> Option<Value> {
-        // if let PlaceValue::Value(value) = &self.0 {
-        //     return Some(*value);
-        // }
-
-        // if let PlaceValue::Place(place) = &self.0 {
-        //     return constants.get(place).map(|v| *v);
-        // }
-
-        None
+    fn get_constant(&self, vn: &HashMap<u64, PlaceValue>) -> Option<Value> {
+        match &self.0 {
+            PlaceValue::Place(place) => {
+                if let Some(PlaceValue::Value(value)) = vn.get(&place.hash_one()) {
+                    Some(*value)
+                } else {
+                    None
+                }
+            }
+            PlaceValue::Value(value) => Some(*value),
+        }
     }
 }
 
