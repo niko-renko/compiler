@@ -41,10 +41,6 @@ impl<'ast> Index<'ast> {
     fn get(&self, name: &Name) -> Option<usize> {
         self.ids.get(name).map(|id| *id)
     }
-
-    fn count(&self) -> usize {
-        self.next_id
-    }
 }
 
 pub struct Classes<'ast> {

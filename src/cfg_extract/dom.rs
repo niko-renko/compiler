@@ -4,8 +4,6 @@ use super::*;
 
 #[derive(Debug)]
 pub struct Dom {
-    dom: HashMap<Label, HashSet<Label>>,
-    idom: HashMap<Label, Label>,
     df: HashMap<Label, HashSet<Label>>,
 }
 
@@ -105,6 +103,6 @@ impl<'cfg> Extract<'cfg, CFG> for Dom {
         let idom = Dom::compute_idom(&dom);
         let df = Dom::compute_df(from, &idom);
 
-        Ok(Dom { dom, idom, df })
+        Ok(Dom { df })
     }
 }
