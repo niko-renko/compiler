@@ -74,70 +74,72 @@ impl Used for Op {
 
 impl InstructionHash for Op {
     fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-        // let mut hashes = vec![];
+        let mut hashes = vec![];
 
-        // for place in self.used() {
-        //     let mut hasher = DefaultHasher::new();
-        //     place.hash(&mut hasher);
-        //     hashes.push(hasher.finish());
-        // }
+        for place in self.used() {
+            let mut hasher = DefaultHasher::new();
+            place.hash(&mut hasher);
+            hashes.push(hasher.finish());
+        }
 
-        // hashes.sort().hash(state);
-        // self.operator.get_char().hash(state);
-        Self::random_hash(state);
+        hashes.sort();
+        hashes.hash(state);
+        self.operator.get_char().hash(state);
     }
 
     fn get_constant(&self, vn: &HashMap<u64, PlaceValue>) -> Option<Value> {
-        None
+        if matches!(self.left, PlaceValue::Place(_)) && matches!(self.right, PlaceValue::Place(_)) {
+            let left = match self.left {
+                PlaceValue::Place(place) => place,
+                _ => unreachable!(),
+            };
 
-        // if matches!(self.left, PlaceValue::Place(_)) && matches!(self.right, PlaceValue::Place(_)) {
-        //     let left = match self.left {
-        //         PlaceValue::Place(place) => place,
-        //         _ => unreachable!(),
-        //     };
+            let right = match self.right {
+                PlaceValue::Place(place) => place,
+                _ => unreachable!(),
+            };
 
-        //     let mut hasher = DefaultHasher::new();
-        //     left.hash(&mut hasher);
-        //     let left_hash = hasher.finish();
-        //     let left_vn = vn.get(&left_hash);
+            if left == right && matches!(self.operator, Operator::Sub | Operator::Xor) {
+                return Some(Value::from_raw(0));
+            }
 
-        //     let right = match self.right {
-        //         PlaceValue::Place(place) => place,
-        //         _ => unreachable!(),
-        //     };
+            if left == right && matches!(self.operator, Operator::Div) {
+                return Some(Value::from_raw(1));
+            }
+        }
 
-        //     let mut hasher = DefaultHasher::new();
-        //     right.hash(&mut hasher);
-        //     let right_hash = hasher.finish();
-        //     let right_vn = vn.get(&right_hash);
+        let left = match self.left {
+            PlaceValue::Value(value) => Some(value.into()),
+            PlaceValue::Place(place) => vn.get(&place.hash_one()).map(|x| *x),
+        }?;
 
-        //     if matches!(self.operator, Operator::Div) && left_vn == right_vn {
-        //         return Some(Value::from_raw(1));
-        //     }
-        // }
+        let left = match left {
+            PlaceValue::Value(value) => value.get_value(),
+            _ => return None,
+        };
 
-        // let left = match self.left {
-        //     PlaceValue::Value(value) => Some(value.get_value()),
-        //     PlaceValue::Place(place) => constants.get(&place).map(|x| x.get_value()),
-        // }?;
+        let right = match self.right {
+            PlaceValue::Value(value) => Some(value.into()),
+            PlaceValue::Place(place) => vn.get(&place.hash_one()).map(|x| *x),
+        }?;
 
-        // let right = match self.right {
-        //     PlaceValue::Value(value) => Some(value.get_value()),
-        //     PlaceValue::Place(place) => constants.get(&place).map(|x| x.get_value()),
-        // }?;
+        let right = match right {
+            PlaceValue::Value(value) => value.get_value(),
+            _ => return None,
+        };
 
-        // let result = match self.operator {
-        //     Operator::Add => left + right,
-        //     Operator::Sub => left - right,
-        //     Operator::Mul => left * right,
-        //     Operator::Div => left / right,
-        //     Operator::Or => left | right,
-        //     Operator::And => left & right,
-        //     Operator::Xor => left ^ right,
-        //     Operator::Eq => (left == right) as usize,
-        // };
+        let result = match self.operator {
+            Operator::Add => left + right,
+            Operator::Sub => left - right,
+            Operator::Mul => left * right,
+            Operator::Div => left / right,
+            Operator::Or => left | right,
+            Operator::And => left & right,
+            Operator::Xor => left ^ right,
+            Operator::Eq => (left == right) as usize,
+        };
 
-        // Some(Value::from_raw(result))
+        Some(Value::from_raw(result))
     }
 }
 

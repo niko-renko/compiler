@@ -21,7 +21,7 @@ impl VN {
                 None => continue,
             };
 
-            println!("Replacing {:?} with {:?}", used, canonical);
+            // println!("Replacing {:?} with {:?}", used, canonical);
             *used = *canonical;
         }
     }

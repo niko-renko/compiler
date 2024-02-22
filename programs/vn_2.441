@@ -2,13 +2,8 @@ class A [
     fields
     method m(x) with locals y, z, m, h, f:
         y = (x + 10)
-
-        z = (x + 20)
-        m = (20 + x)
-
-        h = (y + z)
-        h = (y + m)
-        return y
+        z = (x + 10)
+        return (y / z)
 ]
 
 main with a:
