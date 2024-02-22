@@ -32,7 +32,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         let mut cfg = cfg::CFG::new();
         cfg_update::Build::from(&classes, &function).update(&mut cfg)?;
         cfg_update::SSA::new().update(&mut cfg)?;
-        // cfg_update::Peephole::new().update(&mut cfg)?;
+        cfg_update::Peephole::new(function.get_this_id()).update(&mut cfg)?;
         cfg_update::VN::new().update(&mut cfg)?;
         cfg::Write::write(&cfg, &mut out_stream, &classes, &function)?;
     }

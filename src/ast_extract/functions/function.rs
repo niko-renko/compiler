@@ -63,6 +63,10 @@ impl<'ast> Function<'ast> {
         locals.position(|&l| l == local)
     }
 
+    pub fn get_this_id(&self) -> Option<usize> {
+        self.get_local_id(&self.this)
+    }
+
     pub fn get_local(&self, id: usize) -> Option<&Local> {
         let this_vec = vec![&self.this];
         let locals: Vec<&&Local> = this_vec.iter().chain(self.locals.iter()).collect();
