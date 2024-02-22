@@ -43,14 +43,14 @@ impl VN {
 
 impl Update for VN {
     fn update(&self, cfg: &mut CFG) -> Result<(), String> {
-        let mut vn = HashMap::new();
-        let mut next_vn: usize = 0;
-        let mut constants = HashMap::new();
-        let mut name = HashMap::new();
-
         for label in &*cfg {
             let block = cfg.get_block_mut(label);
             let mut delete = vec![];
+
+            let mut vn = HashMap::new();
+            let mut next_vn: usize = 0;
+            let mut constants = HashMap::new();
+            let mut name = HashMap::new();
 
             for (index, (place, instruction)) in block.get_instructions().iter().enumerate() {
                 if let Place::None = place {
@@ -85,10 +85,6 @@ impl Update for VN {
             for index in delete.into_iter().rev() {
                 block.delete_instruction(index);
             }
-        }
-
-        for label in &*cfg {
-            let block = cfg.get_block_mut(label);
 
             let places_used: Vec<&mut PlaceValue> = block
                 .get_instructions_mut()
