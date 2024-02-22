@@ -11,11 +11,18 @@ impl VN {
 
     fn replace(used: Vec<&mut PlaceValue>, vn: &HashMap<u64, PlaceValue>) {
         for used in used {
-            if let PlaceValue::Place(place) = used {
-                if let Some(pv) = vn.get(&place.hash_one()) {
-                    *used = *pv;
-                }
-            }
+            let canonical = match used {
+                PlaceValue::Place(place) => vn.get(&place.hash_one()),
+                _ => continue,
+            };
+
+            let canonical = match canonical {
+                Some(canonical) => canonical,
+                None => continue,
+            };
+
+            println!("Replacing {:?} with {:?}", used, canonical);
+            *used = *canonical;
         }
     }
 }
