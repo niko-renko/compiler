@@ -27,6 +27,10 @@ impl Update for Peephole {
                     _ => continue,
                 };
 
+                if matches!(op.get_operator(), Operator::And) {
+                    continue;
+                }
+
                 let mut has_one = false;
                 let mut has_this = false;
 

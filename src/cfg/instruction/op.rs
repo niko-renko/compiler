@@ -54,6 +54,10 @@ impl Op {
             operator,
         }
     }
+
+    pub fn get_operator(&self) -> &Operator {
+        &self.operator
+    }
 }
 
 impl Into<Instruction> for Op {
