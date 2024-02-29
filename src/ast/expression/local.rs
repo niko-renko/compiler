@@ -4,10 +4,6 @@ use super::*;
 pub struct Local(Name);
 
 impl Local {
-    pub fn from(name: Name) -> Self {
-        Local(name)
-    }
-
     pub fn get_name(&self) -> &Name {
         &self.0
     }
