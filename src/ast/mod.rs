@@ -2,17 +2,21 @@ use crate::ast_extract::{Classes, Function};
 use crate::cfg::{self, *};
 
 mod class;
+mod declaration;
 mod expression;
 mod main_function;
 mod name;
 mod statement;
 mod traits;
+mod r#type;
 
 pub use class::{Class, Field, Method};
+pub use declaration::Declaration;
 use expression::Expression;
 pub use expression::Local;
 use main_function::MainFunction;
 pub use name::Name;
+pub use r#type::Type;
 pub use statement::Statement;
 use traits::Parse;
 pub use traits::Update;

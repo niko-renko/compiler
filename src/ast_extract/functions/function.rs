@@ -3,22 +3,30 @@ use super::*;
 pub struct Function<'ast> {
     class_name: Option<&'ast Name>,
     function_name: &'ast Name,
-    params: &'ast Vec<Local>,
-    locals: Vec<&'ast Local>,
+    params: &'ast Vec<Declaration>,
+    locals: Vec<&'ast Declaration>,
     statements: &'ast Vec<Statement>,
-    this: Local,
+    this: Option<Declaration>,
 }
 
 impl<'ast> Function<'ast> {
     pub fn from(
         class_name: Option<&'ast Name>,
         function_name: &'ast Name,
-        params: &'ast Vec<Local>,
-        locals: &'ast Vec<Local>,
+        params: &'ast Vec<Declaration>,
+        locals: &'ast Vec<Declaration>,
         statements: &'ast Vec<Statement>,
     ) -> Self {
-        let this = Local::from(Name::from(String::from("this")));
-        let locals: Vec<&Local> = locals.iter().chain(params.iter()).collect();
+        let this = if let Some(class_name) = class_name {
+            Some(Declaration::from(
+                Name::from(String::from("this")),
+                Type::new_object(class_name.clone()),
+            ))
+        } else {
+            None
+        };
+
+        let locals: Vec<&Declaration> = locals.iter().chain(params.iter()).collect();
 
         Self {
             class_name,
@@ -43,34 +51,48 @@ impl<'ast> Function<'ast> {
     }
 
     pub fn get_params_sig(&self) -> String {
-        let mut params: Vec<&Local> = self.params.iter().collect();
+        let mut params: Vec<&Declaration> = self.params.iter().collect();
 
-        if let Some(_) = self.class_name {
-            params.insert(0, &self.this);
+        if let Some(this) = &self.this {
+            params.insert(0, this);
         }
 
         let params: Vec<&str> = params
             .iter()
-            .map(|local| local.get_name().as_ref().as_str())
+            .map(|declaration| declaration.get_name().as_ref().as_str())
             .collect();
 
         format!("({})", params.join(", "))
     }
 
     pub fn get_local_id(&self, local: &Local) -> Option<usize> {
-        let this_vec = vec![&self.this];
+        let this_vec = if let Some(this) = &self.this {
+            vec![this]
+        } else {
+            vec![]
+        };
+
         let mut locals = this_vec.iter().chain(self.locals.iter());
-        locals.position(|&l| l == local)
+        locals.position(|&declaration| declaration.get_name() == local.get_name())
+    }
+
+    pub fn get_declaration(&self, id: usize) -> Option<&Declaration> {
+        let this_vec = if let Some(this) = &self.this {
+            vec![this]
+        } else {
+            vec![]
+        };
+
+        let locals: Vec<&&Declaration> = this_vec.iter().chain(self.locals.iter()).collect();
+        locals.get(id).map(|&&l| l)
     }
 
     pub fn get_this_id(&self) -> Option<usize> {
-        self.get_local_id(&self.this)
-    }
-
-    pub fn get_local(&self, id: usize) -> Option<&Local> {
-        let this_vec = vec![&self.this];
-        let locals: Vec<&&Local> = this_vec.iter().chain(self.locals.iter()).collect();
-        locals.get(id).map(|&&l| l)
+        if let Some(_) = &self.this {
+            Some(0)
+        } else {
+            None
+        }
     }
 
     pub fn get_statements(&self) -> &Vec<Statement> {

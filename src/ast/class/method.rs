@@ -3,8 +3,8 @@ use super::*;
 #[derive(Debug)]
 pub struct Method {
     name: Name,
-    params: Vec<Local>,
-    locals: Vec<Local>,
+    params: Vec<Declaration>,
+    locals: Vec<Declaration>,
     body: Vec<Statement>,
 }
 
@@ -13,11 +13,11 @@ impl Method {
         &self.name
     }
 
-    pub fn get_params(&self) -> &Vec<Local> {
+    pub fn get_params(&self) -> &Vec<Declaration> {
         &self.params
     }
 
-    pub fn get_locals(&self) -> &Vec<Local> {
+    pub fn get_locals(&self) -> &Vec<Declaration> {
         &self.locals
     }
 
@@ -32,11 +32,11 @@ impl Parse for Method {
         let (next, name) = Name::parse(next, true)?;
 
         let next = Self::consume_string(next, "(", false)?;
-        let (next, params) = Local::parse_until(next, ")", ",")?;
+        let (next, params) = Declaration::parse_until(next, ")", ",")?;
 
         let next = Self::consume_string(next, "with", true)?;
         let next = Self::consume_string(next, "locals", true)?;
-        let (next, locals) = Local::parse_until(next, ":", ",")?;
+        let (next, locals) = Declaration::parse_until(next, ":", ",")?;
         let (next, body) = Statement::parse_while(next)?;
 
         Ok((

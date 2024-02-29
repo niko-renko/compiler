@@ -1,11 +1,11 @@
 class A [
-    fields
-    method m(x) with locals y, z, m, h, f:
+    fields a
+    method m(x:int) with locals y:int, z:int:
         y = (x + 10)
-        z = (x + 10)
-        return (y / z)
+        z = (10 + x)
+        return z
 ]
 
-main with a:
+main with a:int:
 a = @A
 return ^a.m(1)
