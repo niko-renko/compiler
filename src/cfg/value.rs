@@ -30,7 +30,7 @@ impl Write for Value {
         &self,
         writer: &mut T,
         _: &Classes,
-        _: &Function,
+        _: &FunctionContext,
     ) -> Result<(), std::io::Error> {
         write!(writer, "{}", self.0)
     }

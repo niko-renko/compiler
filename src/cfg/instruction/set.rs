@@ -43,7 +43,7 @@ impl Write for Set {
         &self,
         writer: &mut T,
         classes: &Classes,
-        function: &Function,
+        function: &FunctionContext,
     ) -> Result<(), std::io::Error> {
         write!(writer, "setelt(")?;
         self.ptr.write(writer, classes, function)?;

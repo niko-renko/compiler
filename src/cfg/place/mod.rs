@@ -38,7 +38,7 @@ impl Write for Place {
         &self,
         writer: &mut T,
         classes: &Classes,
-        function: &Function,
+        function: &FunctionContext,
     ) -> Result<(), std::io::Error> {
         match self {
             Place::Named(p) => p.write(writer, classes, function),

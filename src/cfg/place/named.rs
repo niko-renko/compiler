@@ -28,7 +28,7 @@ impl Write for Named {
         &self,
         writer: &mut T,
         _: &Classes,
-        function: &Function,
+        function: &FunctionContext,
     ) -> Result<(), std::io::Error> {
         write!(
             writer,

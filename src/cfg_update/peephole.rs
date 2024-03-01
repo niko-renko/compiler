@@ -5,7 +5,7 @@ pub struct Peephole {
 }
 
 impl Peephole {
-    pub fn new(this_id: Option<usize>) -> Self {
+    pub fn from(this_id: Option<usize>) -> Self {
         Peephole { this_id }
     }
 }

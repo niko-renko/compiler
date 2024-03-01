@@ -34,7 +34,7 @@ impl Write for Operator {
         &self,
         writer: &mut T,
         _: &Classes,
-        _: &Function,
+        _: &FunctionContext,
     ) -> Result<(), std::io::Error> {
         write!(writer, " {} ", self.get_char())
     }
@@ -152,7 +152,7 @@ impl Write for Op {
         &self,
         writer: &mut T,
         classes: &Classes,
-        function: &Function,
+        function: &FunctionContext,
     ) -> Result<(), std::io::Error> {
         self.left.write(writer, classes, function)?;
         self.operator.write(writer, classes, function)?;

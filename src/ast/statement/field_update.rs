@@ -7,6 +7,20 @@ pub struct FieldUpdate {
     value: Expression,
 }
 
+impl FieldUpdate {
+    pub fn get_object(&self) -> &Expression {
+        &self.object
+    }
+
+    pub fn get_field(&self) -> &Local {
+        &self.field
+    }
+
+    pub fn get_value(&self) -> &Expression {
+        &self.value
+    }
+}
+
 impl Parse for FieldUpdate {
     fn try_parse(string: &str) -> Result<(&str, Self), String> {
         let next = Self::consume_string(string, "!", false)?;
@@ -24,35 +38,5 @@ impl Parse for FieldUpdate {
                 value,
             },
         ))
-    }
-}
-
-impl Update for FieldUpdate {
-    fn update<'cfg>(
-        &self,
-        cfg: &'cfg mut CFG,
-        classes: &Classes,
-        function: &Function,
-    ) -> Result<Place, String> {
-        let object = self.object.update(cfg, classes, function)?;
-        cfg.fail_if_int(object);
-
-        let field_id = if let Some(id) = classes.get_field_id(&self.field) {
-            id
-        } else {
-            return Err(format!("Field not found"));
-        };
-
-        let value = self.value.update(cfg, classes, function)?;
-        let field_map = cfg.add(Get::from(object.into(), Value::from_raw(1).into()).into());
-        let field_offset =
-            cfg.add(Get::from(field_map.into(), Value::from_raw(field_id).into()).into());
-
-        cfg.add_placed(
-            Place::None,
-            Set::from(object.into(), field_offset.into(), value.into()).into(),
-        );
-
-        Ok(value)
     }
 }

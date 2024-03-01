@@ -1,14 +1,14 @@
 use super::*;
 
 #[derive(Debug)]
-pub struct Method {
+pub struct Function {
     name: Name,
     params: Vec<Declaration>,
     locals: Vec<Declaration>,
     body: Vec<Statement>,
 }
 
-impl Method {
+impl Function {
     pub fn get_name(&self) -> &Name {
         &self.name
     }
@@ -26,8 +26,11 @@ impl Method {
     }
 }
 
-impl Parse for Method {
-    fn try_parse(string: &str) -> Result<(&str, Self), String> {
+impl Function
+where
+    Function: Parse,
+{
+    fn parse_method(string: &str) -> Result<(&str, Self), String> {
         let next = Self::consume_string(string, "method", false)?;
         let (next, name) = Name::parse(next, true)?;
 
@@ -41,12 +44,40 @@ impl Parse for Method {
 
         Ok((
             next,
-            Method {
+            Function {
                 name,
                 body,
                 params,
                 locals,
             },
         ))
+    }
+
+    fn parse_main(string: &str) -> Result<(&str, Self), String> {
+        let next = Self::consume_string(string, "main", false)?;
+        let next = Self::consume_string(next, "with", true)?;
+        let (next, locals) = Declaration::parse_until(next, ":", ",")?;
+        let (next, body) = Statement::parse_while(next)?;
+        let (_, name) = Name::parse("main", false)?;
+
+        Ok((
+            next,
+            Function {
+                name,
+                params: vec![],
+                locals,
+                body,
+            },
+        ))
+    }
+}
+
+impl Parse for Function {
+    fn try_parse(string: &str) -> Result<(&str, Self), String> {
+        if string.starts_with("method") {
+            Self::parse_method(string)
+        } else {
+            Self::parse_main(string)
+        }
     }
 }

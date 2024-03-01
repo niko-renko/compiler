@@ -46,7 +46,7 @@ impl Write for Branch {
         &self,
         writer: &mut T,
         classes: &Classes,
-        function: &Function,
+        function: &FunctionContext,
     ) -> Result<(), std::io::Error> {
         write!(writer, "if ")?;
         self.condition.write(writer, classes, function)?;

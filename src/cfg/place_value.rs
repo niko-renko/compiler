@@ -11,7 +11,7 @@ impl Write for PlaceValue {
         &self,
         writer: &mut T,
         classes: &Classes,
-        function: &Function,
+        function: &FunctionContext,
     ) -> Result<(), std::io::Error> {
         match self {
             PlaceValue::Place(pv) => pv.write(writer, classes, function),

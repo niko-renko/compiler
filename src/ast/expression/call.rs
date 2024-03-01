@@ -7,6 +7,20 @@ pub struct Call {
     args: Vec<Expression>,
 }
 
+impl Call {
+    pub fn get_object(&self) -> &Expression {
+        &self.object
+    }
+
+    pub fn get_method(&self) -> &Name {
+        &self.method
+    }
+
+    pub fn get_args(&self) -> &Vec<Expression> {
+        &self.args
+    }
+}
+
 impl Parse for Call {
     fn try_parse(string: &str) -> Result<(&str, Self), String> {
         let next = Self::consume_string(string, "^", false)?;
@@ -26,34 +40,5 @@ impl Parse for Call {
                 args,
             },
         ))
-    }
-}
-
-impl Update for Call {
-    fn update<'cfg>(
-        &self,
-        cfg: &'cfg mut CFG,
-        classes: &Classes,
-        function: &Function,
-    ) -> Result<Place, String> {
-        let object = self.object.update(cfg, classes, function)?;
-        cfg.fail_if_int(object);
-
-        let mut args = vec![];
-        for arg in &self.args {
-            args.push(arg.update(cfg, classes, function)?.into());
-        }
-
-        let method_id = if let Some(id) = classes.get_method_id(&self.method) {
-            id
-        } else {
-            return Err(format!("Method not found"));
-        };
-
-        let vtable = cfg.add(Get::from(object.into(), Value::from_raw(0).into()).into());
-        let method = cfg.add(Get::from(vtable.into(), Value::from_raw(method_id).into()).into());
-
-        cfg.fail_if(method, false, FailReason::NoSuchMethod);
-        Ok(cfg.add(cfg::Call::from(method.into(), object.into(), args).into()))
     }
 }

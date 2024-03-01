@@ -5,4 +5,4 @@ mod classes;
 mod functions;
 
 pub use classes::Classes;
-pub use functions::{Function, Functions};
+pub use functions::{FunctionContext, Functions};

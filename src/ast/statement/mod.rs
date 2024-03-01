@@ -71,22 +71,3 @@ impl Parse for Statement {
         Err(format!("Unexpected start of a statement: {}", string))
     }
 }
-
-impl Update for Statement {
-    fn update<'cfg>(
-        &self,
-        cfg: &'cfg mut CFG,
-        classes: &Classes,
-        function: &Function,
-    ) -> Result<Place, String> {
-        match self {
-            Statement::Assignment(s) => s.update(cfg, classes, function),
-            Statement::FieldUpdate(s) => s.update(cfg, classes, function),
-            Statement::If(s) => s.update(cfg, classes, function),
-            Statement::IfOnly(s) => s.update(cfg, classes, function),
-            Statement::While(s) => s.update(cfg, classes, function),
-            Statement::Return(s) => s.update(cfg, classes, function),
-            Statement::Print(s) => s.update(cfg, classes, function),
-        }
-    }
-}

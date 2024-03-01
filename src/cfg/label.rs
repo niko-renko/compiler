@@ -18,7 +18,7 @@ impl Write for Label {
         &self,
         writer: &mut T,
         _: &Classes,
-        function: &Function,
+        function: &FunctionContext,
     ) -> Result<(), std::io::Error> {
         if self.get_id() == 0 {
             write!(writer, "{}", function.get_name())

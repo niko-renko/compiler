@@ -3,6 +3,12 @@ use super::*;
 #[derive(Debug)]
 pub struct Constant(usize);
 
+impl Constant {
+    pub fn get_value(&self) -> usize {
+        self.0
+    }
+}
+
 impl Parse for Constant {
     fn try_parse(string: &str) -> Result<(&str, Self), String> {
         let mut remove = 0;
@@ -24,12 +30,5 @@ impl Parse for Constant {
 
         let next = Self::consume(string, remove)?;
         Ok((next, Constant(value)))
-    }
-}
-
-impl Update for Constant {
-    fn update<'cfg>(&self, cfg: &'cfg mut CFG, _: &Classes, _: &Function) -> Result<Place, String> {
-        let i = Alias::from(Value::from(self.0).into());
-        Ok(cfg.add(i.into()))
     }
 }

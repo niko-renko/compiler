@@ -92,7 +92,7 @@ impl Write for Instruction {
         &self,
         writer: &mut T,
         classes: &Classes,
-        function: &Function,
+        function: &FunctionContext,
     ) -> Result<(), std::io::Error> {
         match self {
             Instruction::Alloc(i) => i.write(writer, classes, function),

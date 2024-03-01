@@ -6,6 +6,7 @@ use std::{
 mod ast;
 mod ast_extract;
 mod cfg;
+mod cfg_builder;
 mod cfg_extract;
 mod cfg_update;
 mod traits;
@@ -30,10 +31,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     out_stream.write(b"code:\n")?;
     for function in functions {
         let mut cfg = cfg::CFG::new();
-        cfg_update::Build::from(&classes, &function).update(&mut cfg)?;
+        cfg_builder::Builder::from(&classes, &function).update(&mut cfg)?;
+
         cfg_update::SSA::new().update(&mut cfg)?;
-        cfg_update::Peephole::new(function.get_this_id()).update(&mut cfg)?;
+        cfg_update::Peephole::from(function.get_this_id()).update(&mut cfg)?;
         cfg_update::VN::new().update(&mut cfg)?;
+
         cfg::Write::write(&cfg, &mut out_stream, &classes, &function)?;
     }
 

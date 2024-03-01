@@ -5,6 +5,6 @@ pub trait Write {
         &self,
         writer: &mut T,
         classes: &Classes,
-        function: &Function,
+        function: &FunctionContext,
     ) -> Result<(), std::io::Error>;
 }

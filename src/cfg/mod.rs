@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use crate::ast_extract::{Classes, Function};
+use crate::ast_extract::{Classes, FunctionContext};
 
 mod bb;
 mod bfs;
@@ -185,7 +185,7 @@ impl Write for CFG {
         &self,
         writer: &mut T,
         classes: &Classes,
-        function: &Function,
+        function: &FunctionContext,
     ) -> Result<(), std::io::Error> {
         for label in self {
             let block = self.get_block(label);

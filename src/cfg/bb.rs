@@ -91,7 +91,7 @@ impl Write for BB {
         &self,
         writer: &mut T,
         classes: &Classes,
-        function: &Function,
+        function: &FunctionContext,
     ) -> Result<(), std::io::Error> {
         for (place, instruction) in &self.instructions {
             if let Place::None = place {

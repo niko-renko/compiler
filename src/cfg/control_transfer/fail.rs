@@ -13,7 +13,7 @@ impl Write for FailReason {
         &self,
         writer: &mut T,
         _: &Classes,
-        _: &Function,
+        _: &FunctionContext,
     ) -> Result<(), std::io::Error> {
         match self {
             FailReason::NotAPointer => write!(writer, "NotAPointer"),
@@ -54,7 +54,7 @@ impl Write for Fail {
         &self,
         writer: &mut T,
         classes: &Classes,
-        function: &Function,
+        function: &FunctionContext,
     ) -> Result<(), std::io::Error> {
         write!(writer, "fail ")?;
         self.0.write(writer, classes, function)

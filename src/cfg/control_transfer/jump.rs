@@ -34,7 +34,7 @@ impl Write for Jump {
         &self,
         writer: &mut T,
         classes: &Classes,
-        function: &Function,
+        function: &FunctionContext
     ) -> Result<(), std::io::Error> {
         write!(writer, "jump ")?;
         self.0.write(writer, classes, function)

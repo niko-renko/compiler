@@ -56,7 +56,7 @@ impl Write for Alias {
         &self,
         writer: &mut T,
         classes: &Classes,
-        function: &Function,
+        function: &FunctionContext,
     ) -> Result<(), std::io::Error> {
         self.0.write(writer, classes, function)
     }

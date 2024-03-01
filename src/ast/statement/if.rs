@@ -7,6 +7,20 @@ pub struct If {
     false_body: Body,
 }
 
+impl If {
+    pub fn get_condition(&self) -> &Expression {
+        &self.condition
+    }
+
+    pub fn get_true_body(&self) -> &Body {
+        &self.true_body
+    }
+
+    pub fn get_false_body(&self) -> &Body {
+        &self.false_body
+    }
+}
+
 impl Parse for If {
     fn try_parse(string: &str) -> Result<(&str, Self), String> {
         let next = Self::consume_string(string, "if", false)?;
@@ -23,34 +37,5 @@ impl Parse for If {
                 false_body,
             },
         ))
-    }
-}
-
-impl Update for If {
-    fn update<'cfg>(
-        &self,
-        cfg: &'cfg mut CFG,
-        classes: &Classes,
-        function: &Function,
-    ) -> Result<Place, String> {
-        let new_current = cfg.new_block();
-        let true_block = cfg.new_block();
-        let false_block = cfg.new_block();
-
-        let condition = self.condition.update(cfg, classes, function)?;
-        cfg.fail_if_ptr(condition);
-        let condition = cfg.to_raw(condition);
-        cfg.end(Branch::from(condition.into(), true_block, false_block).into());
-
-        cfg.set_current(true_block);
-        cfg.end(Jump::from(new_current).into());
-        self.true_body.update(cfg, classes, function)?;
-
-        cfg.set_current(false_block);
-        cfg.end(Jump::from(new_current).into());
-        self.false_body.update(cfg, classes, function)?;
-
-        cfg.set_current(new_current);
-        Ok(Place::None)
     }
 }

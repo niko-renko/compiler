@@ -41,7 +41,7 @@ impl Write for Alloc {
         &self,
         writer: &mut T,
         classes: &Classes,
-        function: &Function,
+        function: &FunctionContext,
     ) -> Result<(), std::io::Error> {
         write!(writer, "alloc(")?;
         self.size.write(writer, classes, function)?;

@@ -43,7 +43,7 @@ impl Write for ControlTransfer {
         &self,
         writer: &mut T,
         classes: &Classes,
-        function: &Function,
+        function: &FunctionContext,
     ) -> Result<(), std::io::Error> {
         match self {
             ControlTransfer::Return(cf) => cf.write(writer, classes, function),

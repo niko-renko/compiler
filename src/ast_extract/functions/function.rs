@@ -1,6 +1,6 @@
 use super::*;
 
-pub struct Function<'ast> {
+pub struct FunctionContext<'ast> {
     class_name: Option<&'ast Name>,
     function_name: &'ast Name,
     params: &'ast Vec<Declaration>,
@@ -9,7 +9,7 @@ pub struct Function<'ast> {
     this: Option<Declaration>,
 }
 
-impl<'ast> Function<'ast> {
+impl<'ast> FunctionContext<'ast> {
     pub fn from(
         class_name: Option<&'ast Name>,
         function_name: &'ast Name,

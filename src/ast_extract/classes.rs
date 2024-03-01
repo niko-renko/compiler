@@ -105,7 +105,7 @@ impl<'ast> Classes<'ast> {
 
             for &id in methods {
                 let &function_name = self.methods.ids_reverse.get(&id).unwrap();
-                methods_mapping[id] = Function::name(Some(class_name), function_name);
+                methods_mapping[id] = FunctionContext::name(Some(class_name), function_name);
             }
 
             write!(

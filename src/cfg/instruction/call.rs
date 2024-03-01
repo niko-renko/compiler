@@ -47,7 +47,7 @@ impl Write for Call {
         &self,
         writer: &mut T,
         classes: &Classes,
-        function: &Function,
+        function: &FunctionContext,
     ) -> Result<(), std::io::Error> {
         write!(writer, "call(")?;
         self.code.write(writer, classes, function)?;

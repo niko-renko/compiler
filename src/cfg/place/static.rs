@@ -30,7 +30,7 @@ impl Write for Static {
         &self,
         writer: &mut T,
         classes: &Classes,
-        _: &Function,
+        _: &FunctionContext,
     ) -> Result<(), std::io::Error> {
         match self.0 {
             StaticType::VTable => write!(writer, "@{}", classes.get_vtable_name(self.1)),

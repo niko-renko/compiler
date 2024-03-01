@@ -42,7 +42,7 @@ impl Write for Get {
         &self,
         writer: &mut T,
         classes: &Classes,
-        function: &Function,
+        function: &FunctionContext,
     ) -> Result<(), std::io::Error> {
         write!(writer, "getelt(")?;
         self.ptr.write(writer, classes, function)?;
