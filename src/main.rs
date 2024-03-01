@@ -26,7 +26,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let functions = ast_extract::Functions::extract(&ast)?;
 
     out_stream.write(b"data:\n")?;
-    classes.write(&mut out_stream)?;
+    // classes.write(&mut out_stream)?;
 
     out_stream.write(b"code:\n")?;
     for function in functions {
@@ -34,7 +34,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         cfg_builder::Builder::from(&classes, &function).update(&mut cfg)?;
 
         cfg_update::SSA::new().update(&mut cfg)?;
-        cfg_update::Peephole::from(function.get_this_id()).update(&mut cfg)?;
+
+        let this = ast::Local::from(ast::Name::from(String::from("this")));
+        cfg_update::Peephole::from(function.get_local_id(&this)).update(&mut cfg)?;
+
         cfg_update::VN::new().update(&mut cfg)?;
 
         cfg::Write::write(&cfg, &mut out_stream, &classes, &function)?;

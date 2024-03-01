@@ -72,52 +72,52 @@ impl<'ast> Classes<'ast> {
         fields.len()
     }
 
-    pub fn get_vtable_name(&self, class_id: usize) -> String {
-        format!("{}_vtable", self.classes[class_id].as_ref())
-    }
-
-    pub fn get_fieldmap_name(&self, class_id: usize) -> String {
-        format!("{}_field_map", self.classes[class_id].as_ref())
-    }
-
-    pub fn write<T: std::io::Write>(&self, writer: &mut T) -> Result<(), std::io::Error> {
-        for &class_name in &self.classes {
-            let class_id = self.get_class_id(class_name).unwrap();
-            let empty = Vec::new();
-
-            let fields = self.fields.class_owns.get(class_name).unwrap_or(&empty);
-            let mut fields_mapping = vec![String::from("0"); self.fields.next_id];
-
-            for &id in fields {
-                let field_position = id + 2;
-                fields_mapping[id] = field_position.to_string();
-            }
-
-            write!(
-                writer,
-                "global array {}: {{ {} }}\n",
-                self.get_fieldmap_name(class_id),
-                fields_mapping.join(", ")
-            )?;
-
-            let methods = self.methods.class_owns.get(class_name).unwrap_or(&empty);
-            let mut methods_mapping = vec![String::from("0"); self.methods.next_id];
-
-            for &id in methods {
-                let &function_name = self.methods.ids_reverse.get(&id).unwrap();
-                methods_mapping[id] = FunctionContext::name(Some(class_name), function_name);
-            }
-
-            write!(
-                writer,
-                "global array {}: {{ {} }}\n",
-                self.get_vtable_name(class_id),
-                methods_mapping.join(", ")
-            )?;
-        }
-
-        write!(writer, "\n")
-    }
+    //     pub fn get_vtable_name(&self, class_id: usize) -> String {
+    //         format!("{}_vtable", self.classes[class_id].as_ref())
+    //     }
+    //
+    //     pub fn get_fieldmap_name(&self, class_id: usize) -> String {
+    //         format!("{}_field_map", self.classes[class_id].as_ref())
+    //     }
+    //
+    //     pub fn write<T: std::io::Write>(&self, writer: &mut T) -> Result<(), std::io::Error> {
+    //         for &class_name in &self.classes {
+    //             let class_id = self.get_class_id(class_name).unwrap();
+    //             let empty = Vec::new();
+    //
+    //             let fields = self.fields.class_owns.get(class_name).unwrap_or(&empty);
+    //             let mut fields_mapping = vec![String::from("0"); self.fields.next_id];
+    //
+    //             for &id in fields {
+    //                 let field_position = id + 2;
+    //                 fields_mapping[id] = field_position.to_string();
+    //             }
+    //
+    //             write!(
+    //                 writer,
+    //                 "global array {}: {{ {} }}\n",
+    //                 self.get_fieldmap_name(class_id),
+    //                 fields_mapping.join(", ")
+    //             )?;
+    //
+    //             let methods = self.methods.class_owns.get(class_name).unwrap_or(&empty);
+    //             let mut methods_mapping = vec![String::from("0"); self.methods.next_id];
+    //
+    //             for &id in methods {
+    //                 let &function_name = self.methods.ids_reverse.get(&id).unwrap();
+    //                 methods_mapping[id] = FunctionContext::name(Some(class_name), function_name);
+    //             }
+    //
+    //             write!(
+    //                 writer,
+    //                 "global array {}: {{ {} }}\n",
+    //                 self.get_vtable_name(class_id),
+    //                 methods_mapping.join(", ")
+    //             )?;
+    //         }
+    //
+    //         write!(writer, "\n")
+    //     }
 }
 
 impl<'ast> Extract<'ast, AST> for Classes<'ast> {
