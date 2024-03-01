@@ -50,14 +50,3 @@ impl InstructionHash for Alias {
         }
     }
 }
-
-impl Write for Alias {
-    fn write<T: std::io::Write>(
-        &self,
-        writer: &mut T,
-        classes: &Classes,
-        function: &FunctionContext,
-    ) -> Result<(), std::io::Error> {
-        self.0.write(writer, classes, function)
-    }
-}

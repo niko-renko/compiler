@@ -24,15 +24,3 @@ impl Used for Return {
         vec![&mut self.0]
     }
 }
-
-impl Write for Return {
-    fn write<T: std::io::Write>(
-        &self,
-        writer: &mut T,
-        classes: &Classes,
-        function: &FunctionContext,
-    ) -> Result<(), std::io::Error> {
-        write!(writer, "ret ")?;
-        self.0.write(writer, classes, function)
-    }
-}

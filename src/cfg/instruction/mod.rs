@@ -86,23 +86,3 @@ impl InstructionHash for Instruction {
         }
     }
 }
-
-impl Write for Instruction {
-    fn write<T: std::io::Write>(
-        &self,
-        writer: &mut T,
-        classes: &Classes,
-        function: &FunctionContext,
-    ) -> Result<(), std::io::Error> {
-        match self {
-            Instruction::Alloc(i) => i.write(writer, classes, function),
-            Instruction::Call(i) => i.write(writer, classes, function),
-            Instruction::Get(i) => i.write(writer, classes, function),
-            Instruction::Alias(i) => i.write(writer, classes, function),
-            Instruction::Op(i) => i.write(writer, classes, function),
-            Instruction::Phi(i) => i.write(writer, classes, function),
-            Instruction::Print(i) => i.write(writer, classes, function),
-            Instruction::Set(i) => i.write(writer, classes, function),
-        }
-    }
-}

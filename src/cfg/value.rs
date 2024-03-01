@@ -24,14 +24,3 @@ impl Into<PlaceValue> for Value {
         PlaceValue::Value(self)
     }
 }
-
-impl Write for Value {
-    fn write<T: std::io::Write>(
-        &self,
-        writer: &mut T,
-        _: &Classes,
-        _: &FunctionContext,
-    ) -> Result<(), std::io::Error> {
-        write!(writer, "{}", self.0)
-    }
-}

@@ -41,22 +41,3 @@ impl InstructionHash for Call {
         None
     }
 }
-
-impl Write for Call {
-    fn write<T: std::io::Write>(
-        &self,
-        writer: &mut T,
-        classes: &Classes,
-        function: &FunctionContext,
-    ) -> Result<(), std::io::Error> {
-        write!(writer, "call(")?;
-        self.code.write(writer, classes, function)?;
-        write!(writer, ", ")?;
-        self.object.write(writer, classes, function)?;
-        for arg in &self.args {
-            write!(writer, ", ")?;
-            arg.write(writer, classes, function)?;
-        }
-        write!(writer, ")")
-    }
-}

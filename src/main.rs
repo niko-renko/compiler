@@ -9,6 +9,7 @@ mod cfg;
 mod cfg_builder;
 mod cfg_extract;
 mod cfg_update;
+mod cfg_writer;
 mod traits;
 
 use cfg_update::Update;
@@ -25,10 +26,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let classes = ast_extract::Classes::extract(&ast)?;
     let functions = ast_extract::Functions::extract(&ast)?;
 
-    out_stream.write(b"data:\n")?;
-    // classes.write(&mut out_stream)?;
+    let mut static_space = String::from("data:\n");
+    let mut code_space = String::from("code:\n");
+    let mut writer = cfg_writer::Writer::from(&mut static_space, &mut code_space);
 
-    out_stream.write(b"code:\n")?;
     for function in functions {
         let mut cfg = cfg::CFG::new();
         cfg_builder::Builder::from(&classes, &function).update(&mut cfg)?;
@@ -40,9 +41,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
         cfg_update::VN::new().update(&mut cfg)?;
 
-        cfg::Write::write(&cfg, &mut out_stream, &classes, &function)?;
+        writer.write(&cfg, &classes, &function)?;
     }
 
+    out_stream.write(static_space.as_bytes())?;
+    out_stream.write(code_space.as_bytes())?;
     Ok(())
 }
 

@@ -8,22 +8,6 @@ pub enum FailReason {
     NoSuchMethod,
 }
 
-impl Write for FailReason {
-    fn write<T: std::io::Write>(
-        &self,
-        writer: &mut T,
-        _: &Classes,
-        _: &FunctionContext,
-    ) -> Result<(), std::io::Error> {
-        match self {
-            FailReason::NotAPointer => write!(writer, "NotAPointer"),
-            FailReason::NotANumber => write!(writer, "NotANumber"),
-            FailReason::NoSuchField => write!(writer, "NoSuchField"),
-            FailReason::NoSuchMethod => write!(writer, "NoSuchMethod"),
-        }
-    }
-}
-
 #[derive(Clone, Copy)]
 pub struct Fail(FailReason);
 
@@ -46,17 +30,5 @@ impl Used for Fail {
 
     fn used_mut(&mut self) -> Vec<&mut PlaceValue> {
         vec![]
-    }
-}
-
-impl Write for Fail {
-    fn write<T: std::io::Write>(
-        &self,
-        writer: &mut T,
-        classes: &Classes,
-        function: &FunctionContext,
-    ) -> Result<(), std::io::Error> {
-        write!(writer, "fail ")?;
-        self.0.write(writer, classes, function)
     }
 }

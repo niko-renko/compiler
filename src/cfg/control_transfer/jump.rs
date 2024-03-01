@@ -28,15 +28,3 @@ impl Used for Jump {
         vec![]
     }
 }
-
-impl Write for Jump {
-    fn write<T: std::io::Write>(
-        &self,
-        writer: &mut T,
-        classes: &Classes,
-        function: &FunctionContext
-    ) -> Result<(), std::io::Error> {
-        write!(writer, "jump ")?;
-        self.0.write(writer, classes, function)
-    }
-}

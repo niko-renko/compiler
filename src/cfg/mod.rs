@@ -12,14 +12,14 @@ mod place_value;
 mod traits;
 mod value;
 
-use bb::BB;
+pub use bb::BB;
 pub use bfs::BFSIter;
 pub use control_transfer::*;
 pub use instruction::*;
 pub use label::Label;
 pub use place::*;
 pub use place_value::PlaceValue;
-pub use traits::{InstructionHash, Used, Write};
+pub use traits::{InstructionHash, Used};
 pub use value::Value;
 
 pub struct CFG {
@@ -177,27 +177,5 @@ impl CFG {
 
         let value = value.abs() as usize;
         self.add(Op::from(place.into(), Value::from_raw(value).into(), operator).into())
-    }
-}
-
-impl Write for CFG {
-    fn write<T: std::io::Write>(
-        &self,
-        writer: &mut T,
-        classes: &Classes,
-        function: &FunctionContext,
-    ) -> Result<(), std::io::Error> {
-        for label in self {
-            let block = self.get_block(label);
-            label.write(writer, classes, function)?;
-            if label.get_id() == 0 {
-                write!(writer, "{}:\n", function.get_params_sig())?;
-            } else {
-                write!(writer, ":\n")?;
-            }
-            block.write(writer, classes, function)?;
-        }
-
-        Ok(())
     }
 }

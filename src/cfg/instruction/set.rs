@@ -37,20 +37,3 @@ impl InstructionHash for Set {
         None
     }
 }
-
-impl Write for Set {
-    fn write<T: std::io::Write>(
-        &self,
-        writer: &mut T,
-        classes: &Classes,
-        function: &FunctionContext,
-    ) -> Result<(), std::io::Error> {
-        write!(writer, "setelt(")?;
-        self.ptr.write(writer, classes, function)?;
-        write!(writer, ", ")?;
-        self.offset.write(writer, classes, function)?;
-        write!(writer, ", ")?;
-        self.value.write(writer, classes, function)?;
-        write!(writer, ")")
-    }
-}

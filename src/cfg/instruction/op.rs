@@ -28,18 +28,6 @@ impl Operator {
         }
     }
 }
-
-impl Write for Operator {
-    fn write<T: std::io::Write>(
-        &self,
-        writer: &mut T,
-        _: &Classes,
-        _: &FunctionContext,
-    ) -> Result<(), std::io::Error> {
-        write!(writer, " {} ", self.get_char())
-    }
-}
-
 pub struct Op {
     left: PlaceValue,
     right: PlaceValue,
@@ -144,18 +132,5 @@ impl InstructionHash for Op {
         };
 
         Some(Value::from_raw(result))
-    }
-}
-
-impl Write for Op {
-    fn write<T: std::io::Write>(
-        &self,
-        writer: &mut T,
-        classes: &Classes,
-        function: &FunctionContext,
-    ) -> Result<(), std::io::Error> {
-        self.left.write(writer, classes, function)?;
-        self.operator.write(writer, classes, function)?;
-        self.right.write(writer, classes, function)
     }
 }

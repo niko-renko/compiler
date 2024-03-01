@@ -40,19 +40,3 @@ impl Used for Branch {
         vec![&mut self.condition]
     }
 }
-
-impl Write for Branch {
-    fn write<T: std::io::Write>(
-        &self,
-        writer: &mut T,
-        classes: &Classes,
-        function: &FunctionContext,
-    ) -> Result<(), std::io::Error> {
-        write!(writer, "if ")?;
-        self.condition.write(writer, classes, function)?;
-        write!(writer, " then ")?;
-        self.true_label.write(writer, classes, function)?;
-        write!(writer, " else ")?;
-        self.false_label.write(writer, classes, function)
-    }
-}

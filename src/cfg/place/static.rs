@@ -10,11 +10,11 @@ pub enum StaticType {
 pub struct Static(StaticType, usize);
 
 impl Static {
-    pub fn vtable(id: usize) -> Self {
+    pub fn vtable_from(id: usize) -> Self {
         Self(StaticType::VTable, id)
     }
 
-    pub fn fieldmap(id: usize) -> Self {
+    pub fn fieldmap_from(id: usize) -> Self {
         Self(StaticType::FieldMap, id)
     }
 }
@@ -22,19 +22,5 @@ impl Static {
 impl Into<Place> for Static {
     fn into(self) -> Place {
         Place::Static(self)
-    }
-}
-
-impl Write for Static {
-    fn write<T: std::io::Write>(
-        &self,
-        writer: &mut T,
-        classes: &Classes,
-        _: &FunctionContext,
-    ) -> Result<(), std::io::Error> {
-        match self.0 {
-            StaticType::VTable => write!(writer, "@{}", classes.get_vtable_name(self.1)),
-            StaticType::FieldMap => write!(writer, "@{}", classes.get_fieldmap_name(self.1)),
-        }
     }
 }

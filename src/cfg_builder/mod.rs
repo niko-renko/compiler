@@ -5,15 +5,9 @@ use crate::cfg::{self, *};
 
 mod expression;
 mod statement;
+mod traits;
 
-trait Build {
-    fn update<'cfg>(
-        &self,
-        cfg: &'cfg mut CFG,
-        classes: &Classes,
-        function: &FunctionContext,
-    ) -> Result<Place, String>;
-}
+use traits::Build;
 
 pub struct Builder<'ast> {
     classes: &'ast Classes<'ast>,
