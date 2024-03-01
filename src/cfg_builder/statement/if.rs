@@ -18,7 +18,7 @@ impl Build for If {
 
         cfg.set_current(true_block);
         cfg.end(Jump::from(new_current).into());
-        self.get_false_body().update(cfg, classes, function)?;
+        self.get_true_body().update(cfg, classes, function)?;
 
         cfg.set_current(false_block);
         cfg.end(Jump::from(new_current).into());
