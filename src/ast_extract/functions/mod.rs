@@ -8,6 +8,12 @@ pub struct FunctionsContext;
 
 pub struct Functions<'ast>(Vec<FunctionContext<'ast>>);
 
+impl Functions<'_> {
+    pub fn iter(&self) -> impl Iterator<Item = &FunctionContext> {
+        self.0.iter()
+    }
+}
+
 impl<'ast> Extract<'ast, AST, FunctionsContext> for Functions<'ast> {
     fn extract(ast: &'ast AST, _: Option<FunctionsContext>) -> Result<Self, String> {
         let mut contexts = vec![FunctionContext::from(None, ast.get_main())];
@@ -19,13 +25,5 @@ impl<'ast> Extract<'ast, AST, FunctionsContext> for Functions<'ast> {
         }
 
         Ok(Functions(contexts))
-    }
-}
-
-impl<'ast> Iterator for Functions<'ast> {
-    type Item = FunctionContext<'ast>;
-
-    fn next(&mut self) -> Option<Self::Item> {
-        self.0.pop()
     }
 }

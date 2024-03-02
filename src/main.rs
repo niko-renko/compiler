@@ -30,7 +30,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut static_space = String::from("data:\n");
     let mut code_space = String::from("code:\n");
 
-    for function in functions {
+    for function in functions.iter() {
         let mut cfg = cfg::CFG::new();
         cfg_builder::Builder::from(&classes, &function).update(&mut cfg)?;
         cfg_update::SSA::new().update(&mut cfg)?;
