@@ -1,8 +1,5 @@
-use crate::cfg::{
-    Alias, Instruction, InstructionHash, Label, Operator, Place, PlaceValue, Used, Value, CFG,
-};
-use crate::cfg_extract::Assign;
-use crate::Extract;
+use crate::cfg::*;
+use crate::cfg_extract::{Assign, Extract};
 
 mod peephole;
 mod ssa;

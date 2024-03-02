@@ -12,8 +12,8 @@ mod cfg_update;
 mod cfg_writer;
 mod traits;
 
+use ast_extract::Extract;
 use cfg_update::Update;
-use traits::Extract;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut in_stream = in_stream()?;
