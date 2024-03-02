@@ -1,12 +1,11 @@
 use crate::cfg::*;
-use crate::cfg_extract::{Assign, Extract};
+use crate::cfg_extract::{Assign, Dom};
+use crate::traits::{Extract, Update};
 
 mod peephole;
 mod ssa;
-mod traits;
 mod vn;
 
 pub use peephole::Peephole;
 pub use ssa::SSA;
-pub use traits::Update;
 pub use vn::VN;

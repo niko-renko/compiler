@@ -2,6 +2,8 @@ use std::collections::{HashMap, HashSet};
 
 use super::*;
 
+pub struct AssignContext;
+
 pub struct Assign {
     globals: HashSet<usize>,
     assigned: HashMap<usize, Vec<Label>>,
@@ -17,8 +19,8 @@ impl Assign {
     }
 }
 
-impl<'cfg> Extract<'cfg> for Assign {
-    fn extract(cfg: &'cfg CFG) -> Result<Self, String> {
+impl<'cfg> Extract<'cfg, CFG, AssignContext> for Assign {
+    fn extract(cfg: &'cfg CFG, _: Option<AssignContext>) -> Result<Self, String> {
         let mut globals = HashSet::new();
         let mut assigned = HashMap::new();
 

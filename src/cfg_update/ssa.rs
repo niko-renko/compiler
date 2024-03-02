@@ -12,8 +12,8 @@ impl SSA {
 
 impl Update for SSA {
     fn update(&self, cfg: &mut CFG) -> Result<(), String> {
-        let assign = Assign::extract(cfg)?;
-        let dom = crate::cfg_extract::Dom::extract(cfg)?;
+        let assign = Assign::extract(cfg, None)?;
+        let dom = Dom::extract(cfg, None)?;
 
         for global in assign.get_globals() {
             let empty = vec![];

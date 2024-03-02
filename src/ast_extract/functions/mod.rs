@@ -4,10 +4,12 @@ mod function;
 
 pub use function::FunctionContext;
 
+pub struct FunctionsContext;
+
 pub struct Functions<'ast>(Vec<FunctionContext<'ast>>);
 
-impl<'ast> Extract<'ast> for Functions<'ast> {
-    fn extract(ast: &'ast AST) -> Result<Self, String> {
+impl<'ast> Extract<'ast, AST, FunctionsContext> for Functions<'ast> {
+    fn extract(ast: &'ast AST, _: Option<FunctionsContext>) -> Result<Self, String> {
         let mut contexts = vec![FunctionContext::from(None, ast.get_main())];
 
         for class in ast.get_classes() {

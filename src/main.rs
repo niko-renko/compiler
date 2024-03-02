@@ -10,9 +10,10 @@ mod cfg_builder;
 mod cfg_extract;
 mod cfg_update;
 mod cfg_writer;
+mod traits;
 
-use ast_extract::Extract;
-use cfg_update::Update;
+use cfg_writer::WriterContext;
+use traits::{Extract, Update};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut in_stream = in_stream()?;
@@ -22,12 +23,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     in_stream.read_to_string(&mut program_string)?;
 
     let ast = ast::AST::try_from(program_string)?;
-    let classes = ast_extract::Classes::extract(&ast)?;
-    let functions = ast_extract::Functions::extract(&ast)?;
+
+    let classes = ast_extract::Classes::extract(&ast, None)?;
+    let functions = ast_extract::Functions::extract(&ast, None)?;
 
     let mut static_space = String::from("data:\n");
     let mut code_space = String::from("code:\n");
-    let mut writer = cfg_writer::Writer::from(&mut static_space, &mut code_space);
 
     for function in functions {
         let mut cfg = cfg::CFG::new();
@@ -39,7 +40,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         cfg_update::Peephole::from(function.get_declaration_id(&this)).update(&mut cfg)?;
 
         cfg_update::VN::new().update(&mut cfg)?;
-        cfg_writer::Write::write(&cfg, &mut writer, &classes, &function);
+
+        let writer_context = WriterContext::new(&classes, &function);
+        let writer = cfg_writer::Writer::extract(&cfg, Some(writer_context))?;
+        static_space.push_str(&writer.get_static_space());
+        code_space.push_str(&writer.get_code_space());
     }
 
     out_stream.write(static_space.as_bytes())?;

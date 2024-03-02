@@ -1,7 +1,7 @@
-use super::*;
 use crate::ast::{self, *};
 use crate::ast_extract::{Classes, FunctionContext};
 use crate::cfg::{self, *};
+use crate::traits::Update;
 
 mod expression;
 mod statement;

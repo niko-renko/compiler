@@ -39,6 +39,8 @@ impl<'ast> Index<'ast> {
     }
 }
 
+pub struct ClassesContext;
+
 pub struct Classes<'ast> {
     classes: &'ast Vec<Class>,
     fields: Index<'ast>,
@@ -89,8 +91,8 @@ impl<'ast> Classes<'ast> {
     }
 }
 
-impl<'ast> Extract<'ast> for Classes<'ast> {
-    fn extract(ast: &'ast AST) -> Result<Self, String> {
+impl<'ast> Extract<'ast, AST, ClassesContext> for Classes<'ast> {
+    fn extract(ast: &'ast AST, _: Option<ClassesContext>) -> Result<Self, String> {
         let mut class_names = HashSet::new();
         let mut fields = Index::new();
         let mut methods = Index::new();

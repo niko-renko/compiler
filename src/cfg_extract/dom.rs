@@ -2,12 +2,17 @@ use std::collections::{HashMap, HashSet};
 
 use super::*;
 
-#[derive(Debug)]
+pub struct DomContext;
+
 pub struct Dom {
     df: HashMap<Label, HashSet<Label>>,
 }
 
 impl Dom {
+    pub fn new() -> Self {
+        Self { df: HashMap::new() }
+    }
+
     pub fn get_df(&self) -> &HashMap<Label, HashSet<Label>> {
         &self.df
     }
@@ -97,12 +102,11 @@ impl Dom {
     }
 }
 
-impl<'cfg> Extract<'cfg> for Dom {
-    fn extract(from: &'cfg CFG) -> Result<Self, String> {
+impl<'cfg> Extract<'cfg, CFG, DomContext> for Dom {
+    fn extract(from: &'cfg CFG, _: Option<DomContext>) -> Result<Self, String> {
         let dom = Dom::compute_dom(from);
         let idom = Dom::compute_idom(&dom);
         let df = Dom::compute_df(from, &idom);
-
         Ok(Dom { df })
     }
 }
