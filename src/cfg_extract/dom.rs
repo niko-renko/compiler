@@ -9,10 +9,6 @@ pub struct Dom {
 }
 
 impl Dom {
-    pub fn new() -> Self {
-        Self { df: HashMap::new() }
-    }
-
     pub fn get_df(&self) -> &HashMap<Label, HashSet<Label>> {
         &self.df
     }
