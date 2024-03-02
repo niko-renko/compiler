@@ -5,6 +5,7 @@ use std::{
 
 mod ast;
 mod ast_extract;
+mod ast_tyck;
 mod cfg;
 mod cfg_builder;
 mod cfg_extract;
@@ -12,7 +13,6 @@ mod cfg_update;
 mod cfg_writer;
 mod traits;
 
-use cfg_writer::WriterContext;
 use traits::{Extract, Update};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -23,9 +23,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     in_stream.read_to_string(&mut program_string)?;
 
     let ast = ast::AST::try_from(program_string)?;
-
     let classes = ast_extract::Classes::extract(&ast, None)?;
     let functions = ast_extract::Functions::extract(&ast, None)?;
+    let _ = ast_tyck::TypeCheck::extract(&ast, None)?;
 
     let mut static_space = String::from("data:\n");
     let mut code_space = String::from("code:\n");
@@ -33,7 +33,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     for function in functions {
         let mut cfg = cfg::CFG::new();
         cfg_builder::Builder::from(&classes, &function).update(&mut cfg)?;
-
         cfg_update::SSA::new().update(&mut cfg)?;
 
         let this = ast::Local::from(ast::Name::from(String::from("this")));
@@ -41,7 +40,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
         cfg_update::VN::new().update(&mut cfg)?;
 
-        let writer_context = WriterContext::new(&classes, &function);
+        let writer_context = cfg_writer::WriterContext::new(&classes, &function);
         let writer = cfg_writer::Writer::extract(&cfg, Some(writer_context))?;
         static_space.push_str(&writer.get_static_space());
         code_space.push_str(&writer.get_code_space());
