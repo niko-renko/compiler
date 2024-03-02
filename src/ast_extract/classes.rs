@@ -60,7 +60,7 @@ impl<'ast> Classes<'ast> {
         self.methods.get(method_name)
     }
 
-    pub fn get_method_name(&self, method_id: usize) -> Option<&'ast Name> {
+    pub fn get_method_name(&self, method_id: usize) -> Option<&Name> {
         self.methods.ids_reverse.get(&method_id).map(|name| *name)
     }
 
@@ -74,12 +74,8 @@ impl<'ast> Classes<'ast> {
         self.classes.iter().position(|c| c.get_name() == class_name)
     }
 
-    pub fn get_classes(&self) -> Vec<usize> {
-        (0..self.classes.len()).collect()
-    }
-
-    pub fn get_class(&self, class_id: usize) -> &'ast Class {
-        &self.classes[class_id]
+    pub fn get_class_name(&self, class_id: usize) -> Option<&Name> {
+        self.classes.get(class_id).map(|c| c.get_name())
     }
 
     pub fn get_fields_by_class(&self, class_id: usize) -> &Vec<usize> {

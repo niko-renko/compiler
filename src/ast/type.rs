@@ -7,7 +7,7 @@ pub enum Type {
 }
 
 impl Type {
-    pub fn new_object(name: Name) -> Self {
+    pub fn object_from(name: Name) -> Self {
         Type::Object(name)
     }
 }

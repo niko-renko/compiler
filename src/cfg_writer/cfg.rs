@@ -7,8 +7,13 @@ impl Write for CFG {
             label.write(writer, classes, function);
 
             if label.get_id() == 0 {
-                // write!(writer, "{}:\n", function.get_params_sig())?;
-                writer.write_code(":\n");
+                let params: Vec<&str> = function
+                    .get_params()
+                    .iter()
+                    .map(|declaration| declaration.get_name().as_ref().as_str())
+                    .collect();
+
+                writer.write_code(&format!("({}):\n", params.join(", ")));
             } else {
                 writer.write_code(":\n");
             }
@@ -16,13 +21,12 @@ impl Write for CFG {
             block.write(writer, classes, function);
         }
 
-        let class = if let Some(class) = function.get_class() {
-            class
+        let class_name = if let Some(class_name) = function.get_class_name() {
+            class_name
         } else {
             return;
         };
 
-        let class_name = class.get_name();
         let class_id = classes.get_class_id(class_name).unwrap();
 
         let fields = classes.get_fields_by_class(class_id);
