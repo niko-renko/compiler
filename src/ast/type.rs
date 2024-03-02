@@ -7,6 +7,10 @@ pub enum Type {
 }
 
 impl Type {
+    pub fn int_new() -> Self {
+        Type::Int
+    }
+
     pub fn object_from(name: Name) -> Self {
         Type::Object(name)
     }

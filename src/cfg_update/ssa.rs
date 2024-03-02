@@ -1,7 +1,5 @@
 use std::collections::{HashMap, HashSet};
 
-use crate::cfg::Instruction;
-
 use super::*;
 
 pub struct SSA;

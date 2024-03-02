@@ -1,4 +1,4 @@
-use crate::cfg::{Label, Place, PlaceValue, Used, CFG};
+use crate::cfg::*;
 
 mod assign;
 mod dom;

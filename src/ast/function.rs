@@ -6,6 +6,7 @@ pub struct Function {
     params: Vec<Declaration>,
     locals: Vec<Declaration>,
     body: Vec<Statement>,
+    return_type: Type,
 }
 
 impl Function {
@@ -37,6 +38,9 @@ where
         let next = Self::consume_string(next, "(", false)?;
         let (next, params) = Declaration::parse_until(next, ")", ",")?;
 
+        let next = Self::consume_string(next, "returning", true)?;
+        let (next, return_type) = Type::parse(next, true)?;
+
         let next = Self::consume_string(next, "with", true)?;
         let next = Self::consume_string(next, "locals", true)?;
         let (next, locals) = Declaration::parse_until(next, ":", ",")?;
@@ -49,6 +53,7 @@ where
                 body,
                 params,
                 locals,
+                return_type,
             },
         ))
     }
@@ -67,6 +72,7 @@ where
                 params: vec![],
                 locals,
                 body,
+                return_type: Type::int_new(),
             },
         ))
     }
