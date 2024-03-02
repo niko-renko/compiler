@@ -1,13 +1,9 @@
 use super::*;
 
-mod field;
-
-pub use field::Field;
-
 #[derive(Debug)]
 pub struct Class {
     name: Name,
-    fields: Vec<Field>,
+    fields: Vec<Declaration>,
     methods: Vec<Function>,
 }
 
@@ -16,7 +12,7 @@ impl Class {
         &self.name
     }
 
-    pub fn get_fields(&self) -> &Vec<Field> {
+    pub fn get_fields(&self) -> &Vec<Declaration> {
         &self.fields
     }
 
@@ -31,7 +27,7 @@ impl Parse for Class {
         let (next, name) = Name::parse(next, true)?;
         let next = Self::consume_string(next, "[", true)?;
         let next = Self::consume_string(next, "fields", true)?;
-        let (next, fields) = Field::parse_until(next, "\n", ",")?;
+        let (next, fields) = Declaration::parse_until(next, "\n", ",")?;
         let (next, methods) = Function::parse_while(next)?;
         let next = Self::consume_string(next, "]", true)?;
 

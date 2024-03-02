@@ -106,7 +106,7 @@ impl<'ast> Extract<'ast, AST> for Classes<'ast> {
             class_names.insert(class_name);
 
             for field in class.get_fields() {
-                fields.bind(next_class_id, field.get_local().get_name());
+                fields.bind(next_class_id, field.get_name());
             }
 
             for method in class.get_methods() {

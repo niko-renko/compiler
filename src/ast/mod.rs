@@ -7,7 +7,7 @@ mod statement;
 mod traits;
 mod r#type;
 
-pub use class::{Class, Field};
+pub use class::Class;
 pub use declaration::Declaration;
 pub use expression::*;
 pub use function::Function;
