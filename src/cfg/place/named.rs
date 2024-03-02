@@ -12,6 +12,10 @@ impl Named {
         self.0
     }
 
+    pub fn get_version(&self) -> usize {
+        self.1
+    }
+
     pub fn set_version(&mut self, version: usize) {
         self.1 = version;
     }

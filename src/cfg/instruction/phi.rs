@@ -7,6 +7,16 @@ impl Phi {
         Phi(vec![])
     }
 
+    pub fn get_entries(&self) -> Vec<(&Named, &Label)> {
+        let mut entries = vec![];
+        for (named, label) in &self.0 {
+            if let PlaceValue::Place(Place::Named(named)) = named {
+                entries.push((named, label));
+            }
+        }
+        entries
+    }
+
     pub fn get_entries_mut(&mut self) -> Vec<(&mut Named, &mut Label)> {
         let mut entries = vec![];
         for (named, label) in &mut self.0 {

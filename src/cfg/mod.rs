@@ -1,7 +1,5 @@
 use std::collections::HashMap;
 
-use crate::ast_extract::{Classes, FunctionContext};
-
 mod bb;
 mod bfs;
 mod control_transfer;

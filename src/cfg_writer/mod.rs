@@ -2,6 +2,7 @@ use crate::ast_extract::{Classes, FunctionContext};
 use crate::cfg::*;
 
 mod bb;
+mod cfg;
 mod control_transfer;
 mod instruction;
 mod label;
@@ -10,7 +11,7 @@ mod place_value;
 mod traits;
 mod value;
 
-use traits::Write;
+pub use traits::Write;
 
 pub struct Writer<'space> {
     static_space: &'space mut String,
@@ -25,28 +26,30 @@ impl<'space> Writer<'space> {
         }
     }
 
-    pub fn write(
-        &mut self,
-        cfg: &CFG,
-        classes: &Classes,
-        function: &FunctionContext,
-    ) -> Result<(), std::io::Error> {
-        // Write static
+    fn write_code(&mut self, code: &str) {
+        self.code_space.push_str(code);
+    }
 
-        // Write code
-        for label in cfg {
-            let block = cfg.get_block(label);
-            label.write(self, classes, function)?;
+    fn write_static(&mut self, statics: String) {
+        self.static_space.push_str(&statics);
+    }
 
-            if label.get_id() == 0 {
-                // write!(writer, "{}:\n", function.get_params_sig())?;
-            } else {
-                self.code_space.push_str(":\n");
-            }
+    fn get_label_name(class_name: Option<&String>, function_name: &String) -> String {
+        let mut name = String::new();
 
-            block.write(self, classes, function)?;
+        if let Some(class_name) = class_name {
+            name.push_str(class_name);
         }
 
-        Ok(())
+        name.push_str(function_name);
+        name
+    }
+
+    fn get_vtable_name(class_name: &String) -> String {
+        format!("{}_vtable", class_name)
+    }
+
+    fn get_fieldmap_name(class_name: &String) -> String {
+        format!("{}_fieldmap", class_name)
     }
 }

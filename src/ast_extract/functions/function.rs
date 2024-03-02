@@ -10,6 +10,8 @@ impl<'ast> FunctionContext<'ast> {
     pub fn from(class: Option<&'ast Class>, function: &'ast Function) -> Self {
         let this = if let Some(class) = class { None } else { None };
 
+        // Do dupe check
+
         Self {
             class,
             function,
@@ -17,8 +19,31 @@ impl<'ast> FunctionContext<'ast> {
         }
     }
 
+    pub fn get_class(&self) -> Option<&Class> {
+        self.class
+    }
+
+    pub fn get_function(&self) -> &Function {
+        self.function
+    }
+
     pub fn get_statements(&self) -> &Vec<Statement> {
         self.function.get_body()
+    }
+
+    fn all_declarations(&self) -> Vec<&Declaration> {
+        let this_vec = if let Some(this) = &self.this {
+            vec![this]
+        } else {
+            vec![]
+        };
+
+        let this_vec = this_vec.iter().map(|this| *this);
+        let params = self.function.get_params();
+        let locals = self.function.get_locals();
+        let all = this_vec.chain(locals.iter()).chain(params.iter());
+
+        all.collect()
     }
 
     pub fn get_local_id(&self, local: &Local) -> Option<usize> {
@@ -33,9 +58,17 @@ impl<'ast> FunctionContext<'ast> {
         let locals = self.function.get_locals();
         let all = this_vec.chain(locals.iter()).chain(params.iter());
 
-        all.enumerate()
+        self.all_declarations()
+            .iter()
+            .enumerate()
             .find(|(index, declaration)| declaration.get_name() == local.get_name())
             .map(|(index, _)| index)
+    }
+
+    pub fn get_local_name(&self, id: usize) -> Option<&String> {
+        self.all_declarations()
+            .get(id)
+            .map(|declaration| declaration.get_name().as_ref())
     }
 
     // pub fn name(class_name: Option<&'ast Name>, function_name: &'ast Name) -> String {

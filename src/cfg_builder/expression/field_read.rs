@@ -10,7 +10,7 @@ impl Build for FieldRead {
         let object = self.get_object().update(cfg, classes, function)?;
         cfg.fail_if_int(object);
 
-        let field_id = if let Some(id) = classes.get_field_id(self.get_field()) {
+        let field_id = if let Some(id) = classes.get_field_id(self.get_field().get_name()) {
             id
         } else {
             return Err(format!("Field not found"));

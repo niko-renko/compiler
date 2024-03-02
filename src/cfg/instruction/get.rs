@@ -9,6 +9,14 @@ impl Get {
     pub fn from(ptr: PlaceValue, offset: PlaceValue) -> Self {
         Self { ptr, offset }
     }
+
+    pub fn get_ptr(&self) -> &PlaceValue {
+        &self.ptr
+    }
+
+    pub fn get_offset(&self) -> &PlaceValue {
+        &self.offset
+    }
 }
 
 impl Into<Instruction> for Get {

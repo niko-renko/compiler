@@ -40,8 +40,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         cfg_update::Peephole::from(function.get_local_id(&this)).update(&mut cfg)?;
 
         cfg_update::VN::new().update(&mut cfg)?;
-
-        writer.write(&cfg, &classes, &function)?;
+        cfg_writer::Write::write(&cfg, &mut writer, &classes, &function);
     }
 
     out_stream.write(static_space.as_bytes())?;

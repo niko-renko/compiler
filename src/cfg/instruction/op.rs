@@ -15,7 +15,7 @@ pub enum Operator {
 }
 
 impl Operator {
-    fn get_char(&self) -> String {
+    pub fn to_string(&self) -> String {
         match self {
             Operator::Add => String::from("+"),
             Operator::Sub => String::from("-"),
@@ -43,8 +43,16 @@ impl Op {
         }
     }
 
+    pub fn get_left(&self) -> &PlaceValue {
+        &self.left
+    }
+
     pub fn get_operator(&self) -> &Operator {
         &self.operator
+    }
+
+    pub fn get_right(&self) -> &PlaceValue {
+        &self.right
     }
 }
 
@@ -76,7 +84,7 @@ impl InstructionHash for Op {
 
         hashes.sort();
         hashes.hash(state);
-        self.operator.get_char().hash(state);
+        self.operator.to_string().hash(state);
     }
 
     fn get_constant(&self, vn: &HashMap<u64, PlaceValue>) -> Option<Value> {

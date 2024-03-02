@@ -13,7 +13,7 @@ impl Build for New {
             return Err(format!("Class not found"));
         };
 
-        let field_count = classes.get_field_count(class_id);
+        let field_count = classes.get_fields_by_class(class_id).len();
         let object = cfg.add(Alloc::from(Value::from_raw(2 + field_count).into()).into());
 
         let vtable: Place = Static::vtable_from(class_id).into();

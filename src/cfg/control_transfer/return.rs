@@ -7,6 +7,10 @@ impl Return {
     pub fn from(place_value: PlaceValue) -> Self {
         Return(place_value)
     }
+
+    pub fn get_place_value(&self) -> &PlaceValue {
+        &self.0
+    }
 }
 
 impl Into<ControlTransfer> for Return {

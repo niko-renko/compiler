@@ -8,7 +8,7 @@ mod r#static;
 mod temp;
 
 pub use named::Named;
-pub use r#static::Static;
+pub use r#static::{Static, StaticType};
 pub use temp::Temp;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]

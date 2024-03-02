@@ -8,6 +8,10 @@ impl Print {
     pub fn from(value: PlaceValue) -> Self {
         Print { value }
     }
+
+    pub fn get_value(&self) -> &PlaceValue {
+        &self.value
+    }
 }
 
 impl Into<Instruction> for Print {

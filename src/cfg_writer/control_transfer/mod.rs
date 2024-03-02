@@ -6,12 +6,7 @@ mod jump;
 mod r#return;
 
 impl Write for ControlTransfer {
-    fn write(
-        &self,
-        writer: &mut Writer,
-        classes: &Classes,
-        function: &FunctionContext,
-    ) -> Result<(), std::io::Error> {
+    fn write(&self, writer: &mut Writer, classes: &Classes, function: &FunctionContext) {
         match self {
             ControlTransfer::Return(cf) => cf.write(writer, classes, function),
             ControlTransfer::Branch(cf) => cf.write(writer, classes, function),

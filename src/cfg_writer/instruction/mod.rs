@@ -10,12 +10,7 @@ mod print;
 mod set;
 
 impl Write for Instruction {
-    fn write(
-        &self,
-        writer: &mut Writer,
-        classes: &Classes,
-        function: &FunctionContext,
-    ) -> Result<(), std::io::Error> {
+    fn write(&self, writer: &mut Writer, classes: &Classes, function: &FunctionContext) {
         match self {
             Instruction::Alloc(i) => i.write(writer, classes, function),
             Instruction::Call(i) => i.write(writer, classes, function),

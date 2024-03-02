@@ -10,6 +10,18 @@ impl Set {
     pub fn from(ptr: PlaceValue, offset: PlaceValue, value: PlaceValue) -> Self {
         Self { ptr, offset, value }
     }
+
+    pub fn get_ptr(&self) -> &PlaceValue {
+        &self.ptr
+    }
+
+    pub fn get_offset(&self) -> &PlaceValue {
+        &self.offset
+    }
+
+    pub fn get_value(&self) -> &PlaceValue {
+        &self.value
+    }
 }
 
 impl Into<Instruction> for Set {

@@ -15,6 +15,10 @@ impl Fail {
     pub fn from(reason: FailReason) -> Self {
         Fail(reason)
     }
+
+    pub fn get_reason(&self) -> &FailReason {
+        &self.0
+    }
 }
 
 impl Into<ControlTransfer> for Fail {

@@ -7,6 +7,10 @@ impl Temp {
     pub fn from(temp: usize) -> Self {
         Temp(temp)
     }
+
+    pub fn get_id(&self) -> usize {
+        self.0
+    }
 }
 
 impl Into<Place> for Temp {

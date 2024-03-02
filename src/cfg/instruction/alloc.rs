@@ -8,6 +8,10 @@ impl Alloc {
     pub fn from(size: PlaceValue) -> Self {
         Self { size }
     }
+
+    pub fn get_size(&self) -> &PlaceValue {
+        &self.size
+    }
 }
 
 impl Into<Instruction> for Alloc {

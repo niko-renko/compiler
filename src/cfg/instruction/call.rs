@@ -10,6 +10,18 @@ impl Call {
     pub fn from(code: PlaceValue, object: PlaceValue, args: Vec<PlaceValue>) -> Self {
         Self { code, object, args }
     }
+
+    pub fn get_code(&self) -> &PlaceValue {
+        &self.code
+    }
+
+    pub fn get_object(&self) -> &PlaceValue {
+        &self.object
+    }
+
+    pub fn get_args(&self) -> &Vec<PlaceValue> {
+        &self.args
+    }
 }
 
 impl Into<Instruction> for Call {

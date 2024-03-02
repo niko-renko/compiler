@@ -16,6 +16,10 @@ impl Branch {
         }
     }
 
+    pub fn get_condition(&self) -> PlaceValue {
+        self.condition
+    }
+
     pub fn get_true(&self) -> Label {
         self.true_label
     }
