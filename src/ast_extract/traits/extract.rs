@@ -1,6 +1,8 @@
-pub trait Extract<'from, T>
+use super::*;
+
+pub trait Extract<'from>
 where
     Self: Sized,
 {
-    fn extract(from: &'from T) -> Result<Self, String>;
+    fn extract(from: &'from AST) -> Result<Self, String>;
 }

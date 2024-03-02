@@ -97,7 +97,7 @@ impl Dom {
     }
 }
 
-impl<'cfg> Extract<'cfg, CFG> for Dom {
+impl<'cfg> Extract<'cfg> for Dom {
     fn extract(from: &'cfg CFG) -> Result<Self, String> {
         let dom = Dom::compute_dom(from);
         let idom = Dom::compute_idom(&dom);

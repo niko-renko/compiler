@@ -89,7 +89,7 @@ impl<'ast> Classes<'ast> {
     }
 }
 
-impl<'ast> Extract<'ast, AST> for Classes<'ast> {
+impl<'ast> Extract<'ast> for Classes<'ast> {
     fn extract(ast: &'ast AST) -> Result<Self, String> {
         let mut class_names = HashSet::new();
         let mut fields = Index::new();

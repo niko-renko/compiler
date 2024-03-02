@@ -1,4 +1,4 @@
-use crate::ast::{Class, Declaration, Function, Local, Name, Statement, Type, AST};
+use crate::ast::*;
 
 mod classes;
 mod functions;

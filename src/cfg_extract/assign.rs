@@ -17,7 +17,7 @@ impl Assign {
     }
 }
 
-impl<'cfg> Extract<'cfg, CFG> for Assign {
+impl<'cfg> Extract<'cfg> for Assign {
     fn extract(cfg: &'cfg CFG) -> Result<Self, String> {
         let mut globals = HashSet::new();
         let mut assigned = HashMap::new();

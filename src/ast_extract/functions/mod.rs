@@ -6,7 +6,7 @@ pub use function::FunctionContext;
 
 pub struct Functions<'ast>(Vec<FunctionContext<'ast>>);
 
-impl<'ast> Extract<'ast, AST> for Functions<'ast> {
+impl<'ast> Extract<'ast> for Functions<'ast> {
     fn extract(ast: &'ast AST) -> Result<Self, String> {
         let mut contexts = vec![FunctionContext::from(None, ast.get_main())];
 

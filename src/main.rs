@@ -10,7 +10,6 @@ mod cfg_builder;
 mod cfg_extract;
 mod cfg_update;
 mod cfg_writer;
-mod traits;
 
 use ast_extract::Extract;
 use cfg_update::Update;
