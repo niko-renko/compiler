@@ -2,6 +2,7 @@ use crate::ast::*;
 use crate::ast_extract::{FunctionContext, Functions};
 use crate::traits::Extract;
 
+mod expression;
 mod statement;
 mod traits;
 
