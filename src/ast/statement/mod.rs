@@ -18,7 +18,6 @@ pub use r#if::If;
 pub use r#return::Return;
 pub use r#while::While;
 
-#[derive(Debug)]
 pub enum Statement {
     Assignment(Assignment),
     FieldUpdate(FieldUpdate),

@@ -1,6 +1,5 @@
 use super::*;
 
-#[derive(Debug)]
 pub struct Constant(usize);
 
 impl Constant {

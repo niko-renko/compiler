@@ -20,7 +20,7 @@ lazy_static! {
     };
 }
 
-#[derive(Debug, PartialEq, Eq, Hash, Clone)]
+#[derive(PartialEq, Eq, Hash, Clone)]
 pub struct Name(String);
 
 impl Name {

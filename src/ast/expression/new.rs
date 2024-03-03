@@ -1,6 +1,5 @@
 use super::*;
 
-#[derive(Debug)]
 pub struct New {
     class_name: Name,
 }

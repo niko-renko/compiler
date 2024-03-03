@@ -1,6 +1,5 @@
 use super::*;
 
-#[derive(Debug)]
 pub struct While {
     condition: Expression,
     body: Body,

@@ -1,6 +1,5 @@
 use super::*;
 
-#[derive(Debug)]
 pub enum Operator {
     Add,
     Sub,
@@ -23,7 +22,6 @@ impl Parse for Operator {
     }
 }
 
-#[derive(Debug)]
 pub struct Op {
     left: Box<Expression>,
     right: Box<Expression>,

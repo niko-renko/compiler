@@ -16,7 +16,6 @@ pub use r#type::Type;
 pub use statement::*;
 use traits::Parse;
 
-#[derive(Debug)]
 pub struct AST {
     classes: Vec<Class>,
     main: Function,

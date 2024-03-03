@@ -1,6 +1,5 @@
 use super::*;
 
-#[derive(Debug)]
 pub struct Declaration {
     name: Name,
     ty: Type,

@@ -1,7 +1,7 @@
 use super::*;
 
 impl Check for Constant {
-    fn check(&self, function: &FunctionContext) -> Result<Type, String> {
-        unimplemented!()
+    fn check(&self, _: &FunctionContext) -> Result<Type, String> {
+        Ok(Type::int_new())
     }
 }

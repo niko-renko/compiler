@@ -1,6 +1,5 @@
 use super::*;
 
-#[derive(Debug)]
 pub struct Function {
     name: Name,
     params: Vec<Declaration>,

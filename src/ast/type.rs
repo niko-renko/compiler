@@ -1,6 +1,5 @@
 use super::*;
 
-#[derive(Debug, PartialEq, Eq, Hash)]
 pub enum Type {
     Int,
     Object(Name),

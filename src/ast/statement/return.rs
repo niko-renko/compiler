@@ -1,6 +1,5 @@
 use super::*;
 
-#[derive(Debug)]
 pub struct Return {
     expression: Expression,
 }

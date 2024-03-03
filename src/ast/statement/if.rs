@@ -1,6 +1,5 @@
 use super::*;
 
-#[derive(Debug)]
 pub struct If {
     condition: Expression,
     true_body: Body,

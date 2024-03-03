@@ -1,6 +1,5 @@
 use super::*;
 
-#[derive(Debug, PartialEq, Eq, Hash)]
 pub struct Local(Name);
 
 impl From<Name> for Local {

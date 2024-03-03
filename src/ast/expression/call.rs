@@ -1,6 +1,5 @@
 use super::*;
 
-#[derive(Debug)]
 pub struct Call {
     object: Box<Expression>,
     method: Name,

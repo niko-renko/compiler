@@ -14,7 +14,6 @@ pub use local::Local;
 pub use new::New;
 pub use op::{Op, Operator};
 
-#[derive(Debug)]
 pub enum Expression {
     Constant(Constant),
     Local(Local),

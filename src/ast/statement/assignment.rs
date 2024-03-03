@@ -1,6 +1,5 @@
 use super::*;
 
-#[derive(Debug)]
 pub enum AssignmentLeft {
     Local(Local),
     Empty,
@@ -20,7 +19,6 @@ impl Parse for AssignmentLeft {
     }
 }
 
-#[derive(Debug)]
 pub struct Assignment {
     left: AssignmentLeft,
     right: Expression,
