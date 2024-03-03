@@ -25,7 +25,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let ast = ast::AST::try_from(program_string)?;
     let classes = ast_extract::Classes::extract(&ast, None)?;
     let functions = ast_extract::Functions::extract(&ast, None)?;
-    let _ = ast_tyck::TypeCheck::extract(&ast, None)?;
+    let _ = ast_tyck::TypeCheck::extract(&functions, None)?;
 
     let mut static_space = String::from("data:\n");
     let mut code_space = String::from("code:\n");
@@ -47,7 +47,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     out_stream.write(static_space.as_bytes())?;
+    out_stream.write(b"\n")?;
     out_stream.write(code_space.as_bytes())?;
+
     Ok(())
 }
 
