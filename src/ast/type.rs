@@ -1,5 +1,6 @@
 use super::*;
 
+#[derive(Hash)]
 pub enum Type {
     Int,
     Object(Name),

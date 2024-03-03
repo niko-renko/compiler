@@ -76,9 +76,9 @@ impl InstructionHash for Op {
     fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
         let mut hashes = vec![];
 
-        for place in self.used() {
+        for place_value in self.used() {
             let mut hasher = DefaultHasher::new();
-            place.hash(&mut hasher);
+            place_value.hash(&mut hasher);
             hashes.push(hasher.finish());
         }
 

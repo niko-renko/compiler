@@ -5,10 +5,13 @@ use crate::traits::Extract;
 mod expression;
 mod statement;
 mod traits;
+mod type_id;
 
 use traits::Check;
+use type_id::TypeId;
 
 pub struct TypeCheckContext;
+
 pub struct TypeCheck;
 
 impl<'ast> Extract<'ast, Functions<'ast>, TypeCheckContext> for TypeCheck {
