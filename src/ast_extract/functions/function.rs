@@ -9,10 +9,12 @@ pub struct FunctionContext<'ast> {
 impl<'ast> FunctionContext<'ast> {
     pub fn from(class: Option<&'ast Class>, function: &'ast Function) -> Self {
         // TODO: Name dupe check
+
         let this = if let Some(class) = class {
+            let cloned_class_name = Name::from(String::from(class.get_name().as_ref()));
             let declaration = Declaration::from(
                 Name::from(String::from("this")),
-                Type::object_from(class.get_name().clone()),
+                Type::object_from(cloned_class_name),
             );
             Some(declaration)
         } else {
