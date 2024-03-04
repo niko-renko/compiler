@@ -13,6 +13,6 @@ impl Check for Local {
         };
 
         let decalaration = function.get_declaration(declaration_id).unwrap();
-        unimplemented!()
+        Ok(TypeId::from(decalaration.get_type()))
     }
 }

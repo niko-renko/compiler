@@ -6,7 +6,7 @@ use super::*;
 pub struct TypeId(usize);
 
 impl TypeId {
-    pub fn from(ty: Type) -> Self {
+    pub fn from(ty: &Type) -> Self {
         let mut hasher = DefaultHasher::new();
         ty.hash(&mut hasher);
         Self(hasher.finish() as usize)

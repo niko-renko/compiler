@@ -13,6 +13,10 @@ impl Declaration {
     pub fn get_name(&self) -> &Name {
         &self.name
     }
+
+    pub fn get_type(&self) -> &Type {
+        &self.ty
+    }
 }
 
 impl Parse for Declaration {
