@@ -1,7 +1,7 @@
 use super::*;
 
 impl Check for Assignment {
-    fn check(&self, function: &FunctionContext) -> Result<Type, String> {
+    fn check(&self, functions: &Functions, current: &FunctionContext) -> Result<Type, String> {
         unimplemented!()
     }
 }

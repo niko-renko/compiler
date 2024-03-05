@@ -1,8 +1,8 @@
 use super::*;
 
-mod function;
+mod function_context;
 
-pub use function::FunctionContext;
+pub use function_context::FunctionContext;
 
 pub struct FunctionsContext;
 
@@ -11,6 +11,12 @@ pub struct Functions<'ast>(Vec<FunctionContext<'ast>>);
 impl Functions<'_> {
     pub fn iter(&self) -> impl Iterator<Item = &FunctionContext> {
         self.0.iter()
+    }
+
+    pub fn get_method(&self, class: &Name, method: &Name) -> Option<&FunctionContext> {
+        self.0
+            .iter()
+            .find(|f| f.get_class_name() == Some(class) && f.get_function_name() == method)
     }
 }
 

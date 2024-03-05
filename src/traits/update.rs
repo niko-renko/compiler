@@ -1,5 +1,5 @@
 use super::*;
 
-pub trait Update {
-    fn update(&self, cfg: &mut CFG) -> Result<(), String>;
+pub trait Update<T> {
+    fn update(&self, item: &mut T) -> Result<(), String>;
 }

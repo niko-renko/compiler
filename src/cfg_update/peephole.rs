@@ -10,7 +10,7 @@ impl Peephole {
     }
 }
 
-impl Update for Peephole {
+impl Update<CFG> for Peephole {
     fn update(&self, cfg: &mut CFG) -> Result<(), String> {
         if self.this_id.is_none() {
             return Ok(());

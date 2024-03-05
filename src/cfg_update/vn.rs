@@ -27,7 +27,7 @@ impl VN {
     }
 }
 
-impl Update for VN {
+impl Update<CFG> for VN {
     fn update(&self, cfg: &mut CFG) -> Result<(), String> {
         // hash: instruction | place
         let mut vns: HashMap<Label, HashMap<u64, PlaceValue>> = HashMap::new();

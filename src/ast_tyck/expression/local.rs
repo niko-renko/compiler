@@ -1,8 +1,8 @@
 use super::*;
 
 impl Check for Local {
-    fn check(&self, function: &FunctionContext) -> Result<Type, String> {
-        let declaration_id = match function.get_declaration_id(self) {
+    fn check(&self, _: &Functions, current: &FunctionContext) -> Result<Type, String> {
+        let declaration_id = match current.get_declaration_id(self) {
             Some(declaration) => declaration,
             None => {
                 return Err(format!(
@@ -12,7 +12,7 @@ impl Check for Local {
             }
         };
 
-        let decalaration = function.get_declaration(declaration_id).unwrap();
+        let decalaration = current.get_declaration(declaration_id).unwrap();
         Ok(decalaration.get_type().clone())
     }
 }

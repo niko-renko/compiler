@@ -10,7 +10,7 @@ impl SSA {
     }
 }
 
-impl Update for SSA {
+impl Update<CFG> for SSA {
     fn update(&self, cfg: &mut CFG) -> Result<(), String> {
         let assign = Assign::extract(cfg, None)?;
         let dom = Dom::extract(cfg, None)?;

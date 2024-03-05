@@ -25,6 +25,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let ast = ast::AST::try_from(program_string)?;
     let classes = ast_extract::Classes::extract(&ast, None)?;
     let functions = ast_extract::Functions::extract(&ast, None)?;
+
     let _ = ast_tyck::TypeCheck::extract(&functions, None)?;
 
     let mut static_space = String::from("data:\n");

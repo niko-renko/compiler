@@ -1,6 +1,6 @@
 use super::*;
 
-#[derive(Hash, Clone)]
+#[derive(PartialEq, Eq, Hash, Clone)]
 pub enum Type {
     Int,
     Object(Name),
