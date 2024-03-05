@@ -10,7 +10,7 @@ mod r#return;
 mod r#while;
 
 impl Check for Statement {
-    fn check(&self, function: &FunctionContext) -> Result<TypeId, String> {
+    fn check(&self, function: &FunctionContext) -> Result<Type, String> {
         match self {
             Statement::Assignment(s) => s.check(function),
             Statement::FieldUpdate(s) => s.check(function),
