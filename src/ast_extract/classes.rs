@@ -96,7 +96,7 @@ impl Classes<'_> {
         self.fields.class_owns_ids.get(&class_id)
     }
 
-    pub fn get_field_count(&self) -> usize {
+    pub fn _get_field_count(&self) -> usize {
         self.fields.next_id
     }
 }

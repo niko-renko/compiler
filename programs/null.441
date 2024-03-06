@@ -1,9 +1,16 @@
 class A [
-    fields
+    fields x:int
     method m() returning int with locals:
+        !this.x = (&this.x + 1)
         return 1
 ]
 
 main with a:A:
 a = null:A
-return 1
+a = @A
+
+_ = ^a.m()
+_ = ^a.m()
+_ = ^a.m()
+
+return &a.x

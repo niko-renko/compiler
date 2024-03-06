@@ -14,18 +14,12 @@ impl Build for New {
             .unwrap_or(&vec![])
             .len();
 
-        let object = cfg.add(Alloc::from(Value::from(2 + field_count).into()).into());
+        let object = cfg.add(Alloc::from(Value::from(1 + field_count).into()).into());
 
         let vtable: Place = Static::vtable_from(class_id).into();
         cfg.add_placed(
             Place::None,
             Set::from(object.into(), Value::from(0).into(), vtable.into()).into(),
-        );
-
-        let field_map: Place = Static::fieldmap_from(class_id).into();
-        cfg.add_placed(
-            Place::None,
-            Set::from(object.into(), Value::from(1).into(), field_map.into()).into(),
         );
 
         Ok(object)
