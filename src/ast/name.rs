@@ -16,6 +16,7 @@ lazy_static! {
         set.insert("fields");
         set.insert("print");
         set.insert("return");
+        set.insert("null");
         set
     };
 }

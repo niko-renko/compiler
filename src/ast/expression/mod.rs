@@ -28,6 +28,11 @@ pub enum Expression {
 
 impl Parse for Expression {
     fn try_parse(string: &str) -> Result<(&str, Self), String> {
+        if string.starts_with("null") {
+            let (next, null) = Null::parse(string, false)?;
+            return Ok((next, Expression::Null(null)));
+        }
+
         let first: char = string.chars().next().unwrap();
 
         if first.is_digit(10) {
