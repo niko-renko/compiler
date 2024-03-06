@@ -30,7 +30,7 @@ impl<'ast> TypeCheckContext<'ast> {
 pub struct TypeCheck;
 
 impl<'ast> Extract<'ast, AST, TypeCheckContext<'ast>> for TypeCheck {
-    fn extract(ast: &'ast AST, context: Option<TypeCheckContext>) -> Result<Self, String> {
+    fn extract(_: &'ast AST, context: Option<TypeCheckContext>) -> Result<Self, String> {
         let context = match context {
             Some(context) => context,
             None => return Err(String::from("TypeCheckContext is required")),
