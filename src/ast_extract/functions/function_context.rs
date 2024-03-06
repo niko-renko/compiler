@@ -67,7 +67,7 @@ impl<'ast> FunctionContext<'ast> {
         all.collect()
     }
 
-    pub fn get_declaration_id(&self, local: &Local) -> Option<usize> {
+    pub fn get_local_id(&self, local: &Local) -> Option<usize> {
         self.all_declarations()
             .iter()
             .enumerate()
@@ -75,7 +75,7 @@ impl<'ast> FunctionContext<'ast> {
             .map(|(index, _)| index)
     }
 
-    pub fn get_declaration(&self, id: usize) -> Option<&Declaration> {
+    pub fn get_local_declaration(&self, id: usize) -> Option<&Declaration> {
         self.all_declarations()
             .get(id)
             .map(|declaration| *declaration)

@@ -3,6 +3,7 @@ use super::*;
 impl Write for Static {
     fn write(&self, writer: &mut Writer, classes: &Classes, _: &FunctionContext) {
         let static_type = self.get_type();
+
         let class_id = self.get_id();
         let class_name = classes
             .get_class_name(class_id)

@@ -114,12 +114,10 @@ impl<'cfg, 'ast> Extract<'cfg, CFG, WriterContext<'ast>> for Writer {
             return Ok(writer);
         };
 
-        let class_id = classes.get_class_id(class_name).unwrap();
-
-        let fields = classes.get_fields_by_class(class_id);
+        let fields = classes.get_class_field_ids(class_name);
         let mut fields_mapping = vec![String::from("0"); classes.get_field_count()];
 
-        for &id in fields {
+        for id in fields {
             let field_position = id + 2;
             fields_mapping[id] = field_position.to_string();
         }
@@ -132,13 +130,13 @@ impl<'cfg, 'ast> Extract<'cfg, CFG, WriterContext<'ast>> for Writer {
 
         writer.write_static(static_fields);
 
-        let methods = classes.get_methods_by_class(class_id);
+        let methods = classes.get_class_method_ids(class_name);
         let mut methods_mapping = vec![String::from("0"); classes.get_method_count()];
 
-        for &id in methods {
-            let method_name = classes.get_method_name(id).unwrap();
+        for id in methods {
+            let method = classes.get_method_by_id(id).unwrap();
             methods_mapping[id] =
-                Writer::get_label_name(Some(class_name.as_ref()), method_name.as_ref());
+                Writer::get_label_name(Some(class_name.as_ref()), method.get_name().as_ref());
         }
 
         let static_methods = format!(

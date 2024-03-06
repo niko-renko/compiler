@@ -2,7 +2,7 @@ use super::*;
 
 impl Write for Named {
     fn write(&self, writer: &mut Writer, _: &Classes, function: &FunctionContext) {
-        let local_name = function.get_declaration(self.get_id()).unwrap();
+        let local_name = function.get_local_declaration(self.get_id()).unwrap();
         let version = self.get_version();
 
         if version == 0 {

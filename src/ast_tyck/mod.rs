@@ -33,7 +33,7 @@ impl<'ast> Extract<'ast, AST, TypeCheckContext<'ast>> for TypeCheck {
     fn extract(ast: &'ast AST, context: Option<TypeCheckContext>) -> Result<Self, String> {
         let context = match context {
             Some(context) => context,
-            None => return Err("TypeCheckContext is required".to_string()),
+            None => return Err(String::from("TypeCheckContext is required")),
         };
 
         let classes = context.get_classes();

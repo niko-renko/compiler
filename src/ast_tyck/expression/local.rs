@@ -1,18 +1,25 @@
 use super::*;
 
 impl Check for Local {
-    fn check(&self, _: &Classes, _: &Functions, current: &FunctionContext) -> Result<Type, String> {
-        let declaration_id = match current.get_declaration_id(self) {
-            Some(declaration) => declaration,
-            None => {
-                return Err(format!(
-                    "Local variable not found: {}",
-                    self.get_name().as_ref()
-                ))
-            }
+    fn check(
+        &self,
+        classes: &Classes,
+        _: &Functions,
+        current: &FunctionContext,
+    ) -> Result<Type, String> {
+        let local_id = match current.get_local_id(self) {
+            Some(local_id) => local_id,
+            None => return Err(String::from("Local variable not found")),
         };
 
-        let decalaration = current.get_declaration(declaration_id).unwrap();
-        Ok(decalaration.get_type().clone())
+        let declaration = current.get_local_declaration(local_id).unwrap();
+
+        if let Type::Object(class_name) = declaration.get_type() {
+            if classes.get_class_id(class_name).is_none() {
+                return Err(String::from("Class does not exist"));
+            }
+        }
+
+        Ok(declaration.get_type().clone())
     }
 }

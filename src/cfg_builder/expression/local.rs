@@ -7,7 +7,7 @@ impl Build for Local {
         _: &Classes,
         function: &FunctionContext,
     ) -> Result<Place, String> {
-        if let Some(local_id) = function.get_declaration_id(self) {
+        if let Some(local_id) = function.get_local_id(self) {
             Ok(Named::from(local_id).into())
         } else {
             Err(format!("Local {} not found", self.get_name().as_ref()))

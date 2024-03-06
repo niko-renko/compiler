@@ -38,7 +38,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         cfg_update::SSA::new().update(&mut cfg)?;
 
         let this = ast::Local::from(ast::Name::from(String::from("this")));
-        cfg_update::Peephole::from(function.get_declaration_id(&this)).update(&mut cfg)?;
+        cfg_update::Peephole::from(function.get_local_id(&this)).update(&mut cfg)?;
 
         cfg_update::VN::new().update(&mut cfg)?;
 
