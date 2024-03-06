@@ -6,6 +6,6 @@ class A [
         return z
 ]
 
-main with a:int:
+main with a:A:
 a = @A
 return ^a.m(1)

@@ -21,7 +21,12 @@ impl Check for Call {
             None => return Err(String::from("Method not found")),
         };
 
-        for (param, arg) in function_context.get_params().iter().zip(self.get_args()) {
+        let mut params = function_context.get_params();
+        if let Some(_) = function_context.get_class_name() {
+            params = params[1..].to_vec();
+        }
+
+        for (param, arg) in params.iter().zip(self.get_args()) {
             let arg_type = arg.check(classes, functions, current)?;
             if param.get_type() != &arg_type {
                 return Err(String::from("Argument type mismatch"));
