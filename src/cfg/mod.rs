@@ -134,46 +134,4 @@ impl CFG {
         self.set_current(success_block);
         self.end(current_end);
     }
-
-    pub fn fail_if_ptr(&mut self, place: Place) {
-        self.force_type(place, true);
-    }
-
-    pub fn fail_if_int(&mut self, place: Place) {
-        self.force_type(place, false);
-    }
-}
-
-impl CFG {
-    fn force_type(&mut self, place: Place, int: bool) {
-        let is_int =
-            self.add(Op::from(place.into(), Value::from_raw(1).into(), Operator::And).into());
-
-        if int {
-            self.fail_if(is_int, false, FailReason::NotANumber);
-        } else {
-            self.fail_if(is_int, true, FailReason::NotAPointer);
-        };
-    }
-
-    pub fn to_int(&mut self, place: Place) -> Place {
-        let shifted =
-            self.add(Op::from(place.into(), Value::from_raw(4).into(), Operator::Mul).into());
-        self.add(Op::from(shifted.into(), Value::from_raw(1).into(), Operator::Add).into())
-    }
-
-    pub fn to_raw(&mut self, place: Place) -> Place {
-        self.add(Op::from(place.into(), Value::from_raw(4).into(), Operator::Div).into())
-    }
-
-    pub fn add_const(&mut self, place: Place, value: isize) -> Place {
-        let operator = if value > 0 {
-            Operator::Add
-        } else {
-            Operator::Sub
-        };
-
-        let value = value.abs() as usize;
-        self.add(Op::from(place.into(), Value::from_raw(value).into(), operator).into())
-    }
 }

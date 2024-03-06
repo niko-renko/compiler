@@ -10,7 +10,7 @@ impl BB {
     pub fn new() -> Self {
         BB {
             instructions: vec![],
-            end: Return::from(Value::from_raw(0).into()).into(),
+            end: Return::from(Value::from(0).into()).into(),
             next_phi: 0,
         }
     }

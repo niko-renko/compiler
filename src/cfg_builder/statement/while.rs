@@ -14,8 +14,6 @@ impl Build for While {
         cfg.end(Jump::from(condition_block).into());
         cfg.set_current(condition_block);
         let condition = self.get_condition().update(cfg, classes, function)?;
-        cfg.fail_if_ptr(condition);
-        let condition = cfg.to_raw(condition);
         cfg.end(Branch::from(condition.into(), body_block, new_current).into());
 
         cfg.set_current(body_block);

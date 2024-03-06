@@ -100,11 +100,11 @@ impl InstructionHash for Op {
             };
 
             if left == right && matches!(self.operator, Operator::Sub | Operator::Xor) {
-                return Some(Value::from_raw(0));
+                return Some(Value::from(0));
             }
 
             if left == right && matches!(self.operator, Operator::Div) {
-                return Some(Value::from_raw(1));
+                return Some(Value::from(1));
             }
         }
 
@@ -139,6 +139,6 @@ impl InstructionHash for Op {
             Operator::Eq => (left == right) as usize,
         };
 
-        Some(Value::from_raw(result))
+        Some(Value::from(result))
     }
 }

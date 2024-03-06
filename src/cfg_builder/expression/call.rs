@@ -8,7 +8,6 @@ impl Build for ast::Call {
         function: &FunctionContext,
     ) -> Result<Place, String> {
         let object = self.get_object().update(cfg, classes, function)?;
-        cfg.fail_if_int(object);
 
         let mut args = vec![];
         for arg in self.get_args() {
@@ -21,8 +20,8 @@ impl Build for ast::Call {
             return Err(format!("Method not found"));
         };
 
-        let vtable = cfg.add(Get::from(object.into(), Value::from_raw(0).into()).into());
-        let method = cfg.add(Get::from(vtable.into(), Value::from_raw(method_id).into()).into());
+        let vtable = cfg.add(Get::from(object.into(), Value::from(0).into()).into());
+        let method = cfg.add(Get::from(vtable.into(), Value::from(method_id).into()).into());
 
         cfg.fail_if(method, false, FailReason::NoSuchMethod);
         Ok(cfg.add(cfg::Call::from(method.into(), object.into(), args).into()))

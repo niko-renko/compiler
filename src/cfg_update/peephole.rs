@@ -51,7 +51,7 @@ impl Update<CFG> for Peephole {
                 }
 
                 if has_one && has_this {
-                    *instruction = Alias::from(Value::from_raw(0).into()).into();
+                    *instruction = Alias::from(Value::from(0).into()).into();
                     continue;
                 }
             }

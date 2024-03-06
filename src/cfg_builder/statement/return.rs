@@ -8,7 +8,6 @@ impl Build for ast::Return {
         function: &FunctionContext,
     ) -> Result<Place, String> {
         let value = self.get_expression().update(cfg, classes, function)?;
-        cfg.fail_if_ptr(value);
         cfg.end(cfg::Return::from(value.into()).into());
         Ok(Place::None)
     }

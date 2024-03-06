@@ -8,9 +8,7 @@ impl Build for ast::Print {
         function: &FunctionContext,
     ) -> Result<Place, String> {
         let place_value = self.get_expression().update(cfg, classes, function)?;
-        cfg.fail_if_ptr(place_value);
-        let raw = cfg.to_raw(place_value);
-        cfg.add_placed(Place::None, cfg::Print::from(raw.into()).into());
+        cfg.add_placed(Place::None, cfg::Print::from(place_value.into()).into());
         Ok(place_value)
     }
 }
