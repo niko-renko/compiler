@@ -1,3 +1,9 @@
+class A [
+    fields
+    method m() returning int with locals:
+        return 1
+]
+
 main with a:A:
 a = null:A
 return 1

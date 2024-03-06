@@ -114,25 +114,11 @@ impl<'cfg, 'ast> Extract<'cfg, CFG, WriterContext<'ast>> for Writer {
             return Ok(writer);
         };
 
-        let fields = classes.get_class_field_ids(class_name);
-        let mut fields_mapping = vec![String::from("0"); classes.get_field_count()];
+        let methods = match classes.get_class_method_ids(class_name) {
+            Some(methods) => methods,
+            None => return Ok(writer),
+        };
 
-        let mut offset = 0;
-        for &id in fields {
-            let field_position = 2 + offset;
-            fields_mapping[id] = field_position.to_string();
-            offset += 1;
-        }
-
-        let static_fields = format!(
-            "global array {}: {{ {} }}\n",
-            Writer::get_fieldmap_name(class_name.as_ref()),
-            fields_mapping.join(", ")
-        );
-
-        writer.write_static(static_fields);
-
-        let methods = classes.get_class_method_ids(class_name);
         let mut methods_mapping = vec![String::from("0"); classes.get_method_count()];
 
         for &id in methods {

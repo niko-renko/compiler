@@ -10,7 +10,7 @@ impl Build for FieldRead {
         let object = self.get_object().update(cfg, classes, function)?;
 
         let class_name = function.get_class_name().unwrap();
-        let fields = classes.get_class_field_ids(class_name);
+        let fields = classes.get_class_field_ids(class_name).unwrap();
         let field_id = classes.get_field_id(self.get_field().get_name()).unwrap();
         let field_index = fields.iter().position(|&x| x == field_id).unwrap();
 

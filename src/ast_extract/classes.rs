@@ -72,9 +72,9 @@ impl Classes<'_> {
         self.methods.ids_reverse.get(&id).map(|name| *name)
     }
 
-    pub fn get_class_method_ids(&self, class_name: &Name) -> &Vec<usize> {
+    pub fn get_class_method_ids(&self, class_name: &Name) -> Option<&Vec<usize>> {
         let class_id = self.get_class_id(class_name).unwrap();
-        self.methods.class_owns_ids.get(&class_id).unwrap()
+        self.methods.class_owns_ids.get(&class_id)
     }
 
     pub fn get_method_count(&self) -> usize {
@@ -91,9 +91,9 @@ impl Classes<'_> {
         self.fields.ids_reverse.get(&id).map(|name| *name)
     }
 
-    pub fn get_class_field_ids(&self, class_name: &Name) -> &Vec<usize> {
+    pub fn get_class_field_ids(&self, class_name: &Name) -> Option<&Vec<usize>> {
         let class_id = self.get_class_id(class_name).unwrap();
-        self.fields.class_owns_ids.get(&class_id).unwrap()
+        self.fields.class_owns_ids.get(&class_id)
     }
 
     pub fn get_field_count(&self) -> usize {

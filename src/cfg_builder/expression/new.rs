@@ -8,7 +8,12 @@ impl Build for New {
         _: &FunctionContext,
     ) -> Result<Place, String> {
         let class_id = classes.get_class_id(&self.get_class_name()).unwrap();
-        let field_count = classes.get_class_field_ids(self.get_class_name()).len();
+
+        let field_count = classes
+            .get_class_field_ids(self.get_class_name())
+            .unwrap_or(&vec![])
+            .len();
+
         let object = cfg.add(Alloc::from(Value::from(2 + field_count).into()).into());
 
         let vtable: Place = Static::vtable_from(class_id).into();
