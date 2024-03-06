@@ -14,16 +14,9 @@ impl Build for ast::Call {
             args.push(arg.update(cfg, classes, function)?.into());
         }
 
-        let method_id = if let Some(id) = classes.get_method_id(self.get_method()) {
-            id
-        } else {
-            return Err(format!("Method not found"));
-        };
-
+        let method_id = classes.get_method_id(self.get_method()).unwrap();
         let vtable = cfg.add(Get::from(object.into(), Value::from(0).into()).into());
         let method = cfg.add(Get::from(vtable.into(), Value::from(method_id).into()).into());
-
-        cfg.fail_if(method, false, FailReason::NoSuchMethod);
         Ok(cfg.add(cfg::Call::from(method.into(), object.into(), args).into()))
     }
 }
