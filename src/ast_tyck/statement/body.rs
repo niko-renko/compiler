@@ -7,6 +7,10 @@ impl Check for Body {
         functions: &Functions,
         current: &FunctionContext,
     ) -> Result<Type, String> {
-        unimplemented!()
+        for statement in self.get_statements() {
+            statement.check(classes, functions, current)?;
+        }
+
+        Ok(Type::Void)
     }
 }

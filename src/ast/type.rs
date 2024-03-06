@@ -4,6 +4,7 @@ use super::*;
 pub enum Type {
     Int,
     Object(Name),
+    Void,
 }
 
 impl Type {

@@ -7,6 +7,11 @@ impl Check for If {
         functions: &Functions,
         current: &FunctionContext,
     ) -> Result<Type, String> {
-        unimplemented!()
+        if self.get_condition().check(classes, functions, current)? != Type::Int {
+            return Err(String::from("If condition must be boolean"));
+        }
+        self.get_true_body().check(classes, functions, current)?;
+        self.get_false_body().check(classes, functions, current)?;
+        Ok(Type::Void)
     }
 }

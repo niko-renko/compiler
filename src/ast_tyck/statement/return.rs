@@ -7,6 +7,12 @@ impl Check for Return {
         functions: &Functions,
         current: &FunctionContext,
     ) -> Result<Type, String> {
-        unimplemented!()
+        if &self.get_expression().check(classes, functions, current)? != current.get_return_type() {
+            return Err(String::from(
+                "Return type does not match function return type",
+            ));
+        }
+
+        Ok(Type::Void)
     }
 }

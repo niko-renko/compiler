@@ -9,7 +9,7 @@ impl Check for Call {
     ) -> Result<Type, String> {
         let class_name = match self.get_object().check(classes, functions, current)? {
             Type::Object(object) => object,
-            _ => return Err(String::from("Cannot call method on non-object")),
+            _ => return Err(String::from("Method call on non-object")),
         };
 
         let function_context = functions.iter().find(|f| {
