@@ -7,12 +7,7 @@ impl Build for New {
         classes: &Classes,
         _: &FunctionContext,
     ) -> Result<Place, String> {
-        let class_id = if let Some(id) = classes.get_class_id(&self.get_class_name()) {
-            id
-        } else {
-            return Err(format!("Class not found"));
-        };
-
+        let class_id = classes.get_class_id(&self.get_class_name()).unwrap();
         let field_count = classes.get_class_field_ids(self.get_class_name()).len();
         let object = cfg.add(Alloc::from(Value::from(2 + field_count).into()).into());
 

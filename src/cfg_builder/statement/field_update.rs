@@ -9,12 +9,7 @@ impl Build for FieldUpdate {
     ) -> Result<Place, String> {
         let object = self.get_object().update(cfg, classes, function)?;
 
-        let field_id = if let Some(id) = classes.get_field_id(self.get_field().get_name()) {
-            id
-        } else {
-            return Err(format!("Field not found"));
-        };
-
+        let field_id = classes.get_field_id(self.get_field().get_name()).unwrap();
         let value = self.get_value().update(cfg, classes, function)?;
         let field_map = cfg.add(Get::from(object.into(), Value::from(1).into()).into());
         let field_offset =
