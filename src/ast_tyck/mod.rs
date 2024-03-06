@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use crate::ast::*;
 use crate::ast_extract::{Classes, FunctionContext, Functions};
 use crate::traits::Extract;
@@ -10,15 +8,40 @@ mod traits;
 
 use traits::Check;
 
-pub struct TypeCheckContext;
+pub struct TypeCheckContext<'ast> {
+    classes: &'ast Classes<'ast>,
+    functions: &'ast Functions<'ast>,
+}
+
+impl<'ast> TypeCheckContext<'ast> {
+    pub fn new(classes: &'ast Classes<'ast>, functions: &'ast Functions<'ast>) -> Self {
+        TypeCheckContext { classes, functions }
+    }
+
+    pub fn get_classes(&self) -> &'ast Classes<'ast> {
+        self.classes
+    }
+
+    pub fn get_functions(&self) -> &'ast Functions<'ast> {
+        self.functions
+    }
+}
 
 pub struct TypeCheck;
 
-impl<'ast> Extract<'ast, Functions<'ast>, TypeCheckContext> for TypeCheck {
-    fn extract(functions: &'ast Functions, _: Option<TypeCheckContext>) -> Result<Self, String> {
+impl<'ast> Extract<'ast, AST, TypeCheckContext<'ast>> for TypeCheck {
+    fn extract(ast: &'ast AST, context: Option<TypeCheckContext>) -> Result<Self, String> {
+        let context = match context {
+            Some(context) => context,
+            None => return Err("TypeCheckContext is required".to_string()),
+        };
+
+        let classes = context.get_classes();
+        let functions = context.get_functions();
+
         for function in functions.iter() {
             for statement in function.get_statements() {
-                statement.check(functions, function)?;
+                statement.check(classes, functions, function)?;
             }
         }
 

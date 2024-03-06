@@ -26,7 +26,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let classes = ast_extract::Classes::extract(&ast, None)?;
     let functions = ast_extract::Functions::extract(&ast, None)?;
 
-    let _ = ast_tyck::TypeCheck::extract(&functions, None)?;
+    let type_check_context = ast_tyck::TypeCheckContext::new(&classes, &functions);
+    let _ = ast_tyck::TypeCheck::extract(&ast, Some(type_check_context))?;
 
     let mut static_space = String::from("data:\n");
     let mut code_space = String::from("code:\n");

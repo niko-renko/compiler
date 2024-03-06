@@ -55,6 +55,11 @@ impl<'ast> Classes<'ast> {
     pub fn get_field_count(&self) -> usize {
         self.fields.next_id
     }
+
+    pub fn get_fields_by_class(&self, class_id: usize) -> &Vec<usize> {
+        let fields = self.fields.class_owns.get(&class_id).unwrap();
+        fields
+    }
 }
 
 impl<'ast> Classes<'ast> {
@@ -69,6 +74,11 @@ impl<'ast> Classes<'ast> {
     pub fn get_method_count(&self) -> usize {
         self.methods.next_id
     }
+
+    pub fn get_methods_by_class(&self, class_id: usize) -> &Vec<usize> {
+        let methods = self.methods.class_owns.get(&class_id).unwrap();
+        methods
+    }
 }
 
 impl<'ast> Classes<'ast> {
@@ -78,16 +88,6 @@ impl<'ast> Classes<'ast> {
 
     pub fn get_class_name(&self, class_id: usize) -> Option<&Name> {
         self.classes.get(class_id).map(|c| c.get_name())
-    }
-
-    pub fn get_fields_by_class(&self, class_id: usize) -> &Vec<usize> {
-        let fields = self.fields.class_owns.get(&class_id).unwrap();
-        fields
-    }
-
-    pub fn get_methods_by_class(&self, class_id: usize) -> &Vec<usize> {
-        let methods = self.methods.class_owns.get(&class_id).unwrap();
-        methods
     }
 }
 

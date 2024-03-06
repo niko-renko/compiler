@@ -1,7 +1,7 @@
 use super::*;
 
 impl Check for Local {
-    fn check(&self, _: &Functions, current: &FunctionContext) -> Result<Type, String> {
+    fn check(&self, _: &Classes, _: &Functions, current: &FunctionContext) -> Result<Type, String> {
         let declaration_id = match current.get_declaration_id(self) {
             Some(declaration) => declaration,
             None => {

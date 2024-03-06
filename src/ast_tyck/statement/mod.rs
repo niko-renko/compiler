@@ -10,15 +10,20 @@ mod r#return;
 mod r#while;
 
 impl Check for Statement {
-    fn check(&self, functions: &Functions, current: &FunctionContext) -> Result<Type, String> {
+    fn check(
+        &self,
+        classes: &Classes,
+        functions: &Functions,
+        current: &FunctionContext,
+    ) -> Result<Type, String> {
         match self {
-            Statement::Assignment(s) => s.check(functions, current),
-            Statement::FieldUpdate(s) => s.check(functions, current),
-            Statement::If(s) => s.check(functions, current),
-            Statement::IfOnly(s) => s.check(functions, current),
-            Statement::Print(s) => s.check(functions, current),
-            Statement::Return(s) => s.check(functions, current),
-            Statement::While(s) => s.check(functions, current),
+            Statement::Assignment(s) => s.check(classes, functions, current),
+            Statement::FieldUpdate(s) => s.check(classes, functions, current),
+            Statement::If(s) => s.check(classes, functions, current),
+            Statement::IfOnly(s) => s.check(classes, functions, current),
+            Statement::Print(s) => s.check(classes, functions, current),
+            Statement::Return(s) => s.check(classes, functions, current),
+            Statement::While(s) => s.check(classes, functions, current),
         }
     }
 }
