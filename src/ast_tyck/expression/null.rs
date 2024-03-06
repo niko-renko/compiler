@@ -1,13 +1,17 @@
 use super::*;
 
 impl Check for Null {
-    fn check(&self, _: &Classes, _: &Functions, _: &FunctionContext) -> Result<Type, String> {
+    fn check(&self, classes: &Classes, _: &Functions, _: &FunctionContext) -> Result<Type, String> {
         let ty = self.get_type();
 
-        if !matches!(ty, Type::Object(_)) {
-            return Err(String::from("Null non-object type"));
-        }
+        if let Type::Object(class_name) = ty {
+            if let Some(_) = classes.get_class_id(class_name) {
+                return Ok(ty.clone());
+            }
 
-        Ok(ty.clone())
+            Err(format!("Class {} does not exist", class_name.as_ref()))
+        } else {
+            Err(String::from("Null non-object type"))
+        }
     }
 }
