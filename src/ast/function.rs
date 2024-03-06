@@ -24,6 +24,10 @@ impl Function {
     pub fn get_body(&self) -> &Vec<Statement> {
         &self.body
     }
+
+    pub fn get_return_type(&self) -> &Type {
+        &self.return_type
+    }
 }
 
 impl Function

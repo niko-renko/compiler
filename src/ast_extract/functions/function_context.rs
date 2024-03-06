@@ -52,6 +52,10 @@ impl<'ast> FunctionContext<'ast> {
     pub fn get_statements(&self) -> &Vec<Statement> {
         self.function.get_body()
     }
+
+    pub fn get_return_type(&self) -> &Type {
+        self.function.get_return_type()
+    }
 }
 
 impl<'ast> FunctionContext<'ast> {
