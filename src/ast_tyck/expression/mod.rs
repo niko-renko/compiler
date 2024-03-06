@@ -5,6 +5,7 @@ mod constant;
 mod field_read;
 mod local;
 mod new;
+mod null;
 mod op;
 
 impl Check for Expression {
@@ -20,6 +21,7 @@ impl Check for Expression {
             Expression::FieldRead(e) => e.check(classes, functions, current),
             Expression::Local(e) => e.check(classes, functions, current),
             Expression::New(e) => e.check(classes, functions, current),
+            Expression::Null(e) => e.check(classes, functions, current),
             Expression::Op(e) => e.check(classes, functions, current),
         }
     }

@@ -1,5 +1,0 @@
-main with:
-    print((9 / 3))
-    print((3 * 3))
-    print((3 + 5))
-    print((10 - 5))

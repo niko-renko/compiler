@@ -5,6 +5,7 @@ mod constant;
 mod field_read;
 mod local;
 mod new;
+mod null;
 mod op;
 
 pub use call::Call;
@@ -12,6 +13,7 @@ pub use constant::Constant;
 pub use field_read::FieldRead;
 pub use local::Local;
 pub use new::New;
+pub use null::Null;
 pub use op::{Op, Operator};
 
 pub enum Expression {
@@ -21,6 +23,7 @@ pub enum Expression {
     Call(Call),
     FieldRead(FieldRead),
     New(New),
+    Null(Null),
 }
 
 impl Parse for Expression {

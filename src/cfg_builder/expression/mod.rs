@@ -5,6 +5,7 @@ mod constant;
 mod field_read;
 mod local;
 mod new;
+mod null;
 mod op;
 
 impl Build for Expression {
@@ -20,7 +21,8 @@ impl Build for Expression {
             Expression::Op(e) => e.update(cfg, classes, function),
             Expression::Call(e) => e.update(cfg, classes, function),
             Expression::FieldRead(e) => e.update(cfg, classes, function),
-            Expression::New(i) => i.update(cfg, classes, function),
+            Expression::New(e) => e.update(cfg, classes, function),
+            Expression::Null(e) => e.update(cfg, classes, function),
         }
     }
 }

@@ -1,12 +1,11 @@
 class A [
-    fields
-    method m(x) with locals y, z:
-        y = 1
-        z = y
-        print(z)
+    fields a:int
+    method m(x:int) returning int with locals y:int, z:int:
+        y = (x + 10)
+        z = (10 + x)
         return z
 ]
 
-main with x:
-print(^@A.m(0))
-return 0
+main with a:A:
+a = @A
+return ^a.m(1)
