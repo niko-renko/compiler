@@ -2,7 +2,7 @@ use super::*;
 
 impl Check for Local {
     fn check(&self, context: &mut CheckContext) -> Result<Type, String> {
-        let current = context.get_current();
+        let current = context.get_function();
 
         let local_id = match current.get_local_id(self) {
             Some(local_id) => local_id,
