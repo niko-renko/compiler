@@ -1,12 +1,9 @@
 use super::*;
 
 impl Check for Local {
-    fn check(
-        &self,
-        classes: &Classes,
-        _: &Functions,
-        current: &FunctionContext,
-    ) -> Result<Type, String> {
+    fn check(&self, context: &mut CheckContext) -> Result<Type, String> {
+        let current = context.get_current();
+
         let local_id = match current.get_local_id(self) {
             Some(local_id) => local_id,
             None => return Err(String::from("Local variable not found")),
@@ -16,7 +13,7 @@ impl Check for Local {
         let ty = declaration.get_type();
 
         if let Type::Object(class_name) = ty {
-            if let Some(_) = classes.get_class_id(class_name) {
+            if let Some(_) = context.get_classes().get_class_id(class_name) {
                 Ok(ty.clone())
             } else {
                 Err(format!("Class {} does not exist", class_name.as_ref()))

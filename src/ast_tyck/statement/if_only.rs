@@ -1,16 +1,11 @@
 use super::*;
 
 impl Check for IfOnly {
-    fn check(
-        &self,
-        classes: &Classes,
-        functions: &Functions,
-        current: &FunctionContext,
-    ) -> Result<Type, String> {
-        if self.get_condition().check(classes, functions, current)? != Type::Int {
+    fn check(&self, context: &mut CheckContext) -> Result<Type, String> {
+        if self.get_condition().check(context)? != Type::Int {
             return Err(String::from("If condition must be boolean"));
         }
-        self.get_body().check(classes, functions, current)?;
+        self.get_body().check(context)?;
         Ok(Type::Void)
     }
 }

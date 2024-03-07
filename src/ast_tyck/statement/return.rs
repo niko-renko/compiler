@@ -1,16 +1,9 @@
 use super::*;
 
 impl Check for Return {
-    fn check(
-        &self,
-        classes: &Classes,
-        functions: &Functions,
-        current: &FunctionContext,
-    ) -> Result<Type, String> {
-        if &self.get_expression().check(classes, functions, current)? != current.get_return_type() {
-            return Err(String::from(
-                "Return type does not match function return type",
-            ));
+    fn check(&self, context: &mut CheckContext) -> Result<Type, String> {
+        if &self.get_expression().check(context)? != context.get_current().get_return_type() {
+            return Err(String::from("Return type does not match"));
         }
 
         Ok(Type::Void)

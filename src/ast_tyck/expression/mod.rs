@@ -9,20 +9,15 @@ mod null;
 mod op;
 
 impl Check for Expression {
-    fn check(
-        &self,
-        classes: &Classes,
-        functions: &Functions,
-        current: &FunctionContext,
-    ) -> Result<Type, String> {
+    fn check(&self, context: &mut CheckContext) -> Result<Type, String> {
         match self {
-            Expression::Call(e) => e.check(classes, functions, current),
-            Expression::Constant(e) => e.check(classes, functions, current),
-            Expression::FieldRead(e) => e.check(classes, functions, current),
-            Expression::Local(e) => e.check(classes, functions, current),
-            Expression::New(e) => e.check(classes, functions, current),
-            Expression::Null(e) => e.check(classes, functions, current),
-            Expression::Op(e) => e.check(classes, functions, current),
+            Expression::Call(e) => e.check(context),
+            Expression::Constant(e) => e.check(context),
+            Expression::FieldRead(e) => e.check(context),
+            Expression::Local(e) => e.check(context),
+            Expression::New(e) => e.check(context),
+            Expression::Null(e) => e.check(context),
+            Expression::Op(e) => e.check(context),
         }
     }
 }

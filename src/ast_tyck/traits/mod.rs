@@ -2,4 +2,4 @@ use super::*;
 
 mod check;
 
-pub use check::Check;
+pub use check::{Check, CheckContext};

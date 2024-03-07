@@ -1,14 +1,9 @@
 use super::*;
 
 impl Check for Body {
-    fn check(
-        &self,
-        classes: &Classes,
-        functions: &Functions,
-        current: &FunctionContext,
-    ) -> Result<Type, String> {
+    fn check(&self, context: &mut CheckContext) -> Result<Type, String> {
         for statement in self.get_statements() {
-            statement.check(classes, functions, current)?;
+            statement.check(context)?;
         }
 
         Ok(Type::Void)

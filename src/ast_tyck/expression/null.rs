@@ -1,11 +1,11 @@
 use super::*;
 
 impl Check for Null {
-    fn check(&self, classes: &Classes, _: &Functions, _: &FunctionContext) -> Result<Type, String> {
+    fn check(&self, context: &mut CheckContext) -> Result<Type, String> {
         let ty = self.get_type();
 
         if let Type::Object(class_name) = ty {
-            if let Some(_) = classes.get_class_id(class_name) {
+            if let Some(_) = context.get_classes().get_class_id(class_name) {
                 return Ok(ty.clone());
             }
 

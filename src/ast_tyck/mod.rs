@@ -8,7 +8,7 @@ mod expression;
 mod statement;
 mod traits;
 
-use traits::Check;
+use traits::{Check, CheckContext};
 
 pub struct TypesContext<'ast> {
     classes: &'ast Classes<'ast>,
@@ -49,14 +49,18 @@ impl<'ast> Extract<'ast, AST, TypesContext<'ast>> for Types<'_> {
         let classes = context.get_classes();
         let functions = context.get_functions();
 
-        let expression_types = HashMap::new();
-
         for function in functions.iter() {
+            let mut function_types = HashMap::new();
+            let mut check_context =
+                CheckContext::from(classes, functions, function, &mut function_types);
+
             for statement in function.get_statements() {
-                statement.check(classes, functions, function)?;
+                statement.check(&mut check_context)?;
             }
         }
 
-        Ok(Self { expression_types })
+        Ok(Self {
+            expression_types: HashMap::new(),
+        })
     }
 }
