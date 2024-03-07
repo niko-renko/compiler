@@ -28,13 +28,6 @@ impl<'ast> FunctionContext<'ast> {
         }
     }
 
-    fn this_iter(&'ast self) -> std::vec::IntoIter<&'ast Declaration> {
-        match &self.this {
-            Some(this) => vec![this].into_iter(),
-            None => vec![].into_iter(),
-        }
-    }
-
     pub fn get_function_name(&self) -> &Name {
         self.function.get_name()
     }
@@ -59,6 +52,13 @@ impl<'ast> FunctionContext<'ast> {
 }
 
 impl<'ast> FunctionContext<'ast> {
+    fn this_iter(&'ast self) -> std::vec::IntoIter<&'ast Declaration> {
+        match &self.this {
+            Some(this) => vec![this].into_iter(),
+            None => vec![].into_iter(),
+        }
+    }
+
     fn all_declarations(&self) -> Vec<&Declaration> {
         let params = self.function.get_params();
         let locals = self.function.get_locals();
@@ -73,6 +73,11 @@ impl<'ast> FunctionContext<'ast> {
             .enumerate()
             .find(|(_, declaration)| declaration.get_name() == local.get_name())
             .map(|(index, _)| index)
+    }
+
+    pub fn get_this_id(&self) -> Option<usize> {
+        let this = Local::from(Name::from(String::from("this")));
+        self.get_local_id(&this)
     }
 
     pub fn get_local_declaration(&self, id: usize) -> Option<&Declaration> {

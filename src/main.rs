@@ -34,12 +34,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     for function in functions.iter() {
         let mut cfg = cfg::CFG::new();
+
         cfg_builder::Builder::from(&classes, &function).update(&mut cfg)?;
         cfg_update::SSA::new().update(&mut cfg)?;
-
-        let this = ast::Local::from(ast::Name::from(String::from("this")));
-        cfg_update::Peephole::from(function.get_local_id(&this)).update(&mut cfg)?;
-
+        cfg_update::Peephole::from(function.get_this_id()).update(&mut cfg)?;
         cfg_update::VN::new().update(&mut cfg)?;
 
         let writer_context = cfg_writer::WriterContext::new(&classes, &function);
