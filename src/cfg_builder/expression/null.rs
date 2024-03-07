@@ -5,7 +5,7 @@ impl Build for Null {
         &self,
         cfg: &'cfg mut CFG,
         _: &Classes,
-        types: &Types,
+        _: &Types,
         _: &FunctionContext,
     ) -> Result<Place, String> {
         let constant = Alias::from(Value::from(0).into());
