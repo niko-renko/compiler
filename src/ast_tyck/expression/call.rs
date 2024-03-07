@@ -12,11 +12,7 @@ impl Check for Call {
             _ => return Err(String::from("Method call on non-object")),
         };
 
-        let function_context = functions.iter().find(|f| {
-            f.get_class_name() == Some(&class_name) && f.get_function_name() == self.get_method()
-        });
-
-        let function_context = match function_context {
+        let function_context = match functions.get_function(Some(&class_name), self.get_method()) {
             Some(function_context) => function_context,
             None => return Err(String::from("Method not found")),
         };
