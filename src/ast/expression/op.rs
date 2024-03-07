@@ -1,5 +1,6 @@
 use super::*;
 
+#[derive(PartialEq, Eq, Hash)]
 pub enum Operator {
     Add,
     Sub,
@@ -22,6 +23,7 @@ impl Parse for Operator {
     }
 }
 
+#[derive(PartialEq, Eq, Hash)]
 pub struct Op {
     left: Box<Expression>,
     right: Box<Expression>,

@@ -1,5 +1,6 @@
 use crate::ast::{self, *};
 use crate::ast_extract::{Classes, FunctionContext};
+use crate::ast_tyck::Types;
 use crate::cfg::{self, *};
 use crate::traits::Update;
 
@@ -15,7 +16,11 @@ pub struct Builder<'ast> {
 }
 
 impl<'ast> Builder<'ast> {
-    pub fn from(classes: &'ast Classes, function: &'ast FunctionContext) -> Self {
+    pub fn from(
+        classes: &'ast Classes,
+        types: &'ast Types,
+        function: &'ast FunctionContext,
+    ) -> Self {
         Builder { classes, function }
     }
 }

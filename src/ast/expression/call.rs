@@ -1,5 +1,6 @@
 use super::*;
 
+#[derive(PartialEq, Eq, Hash)]
 pub struct Call {
     object: Box<Expression>,
     method: Name,

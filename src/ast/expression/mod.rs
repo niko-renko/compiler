@@ -16,6 +16,7 @@ pub use new::New;
 pub use null::Null;
 pub use op::{Op, Operator};
 
+#[derive(PartialEq, Eq, Hash)]
 pub enum Expression {
     Constant(Constant),
     Local(Local),

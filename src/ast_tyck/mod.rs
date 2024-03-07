@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use crate::ast::*;
 use crate::ast_extract::{Classes, FunctionContext, Functions};
 use crate::traits::Extract;
@@ -8,14 +10,14 @@ mod traits;
 
 use traits::Check;
 
-pub struct TypeCheckContext<'ast> {
+pub struct TypesContext<'ast> {
     classes: &'ast Classes<'ast>,
     functions: &'ast Functions<'ast>,
 }
 
-impl<'ast> TypeCheckContext<'ast> {
+impl<'ast> TypesContext<'ast> {
     pub fn new(classes: &'ast Classes<'ast>, functions: &'ast Functions<'ast>) -> Self {
-        TypeCheckContext { classes, functions }
+        TypesContext { classes, functions }
     }
 
     pub fn get_classes(&self) -> &'ast Classes<'ast> {
@@ -27,10 +29,18 @@ impl<'ast> TypeCheckContext<'ast> {
     }
 }
 
-pub struct TypeCheck;
+pub struct Types<'ast> {
+    expression_types: HashMap<&'ast Expression, Type>,
+}
 
-impl<'ast> Extract<'ast, AST, TypeCheckContext<'ast>> for TypeCheck {
-    fn extract(_: &'ast AST, context: Option<TypeCheckContext>) -> Result<Self, String> {
+impl Types<'_> {
+    pub fn get_expression_type(&self, expression: &Expression) -> &Type {
+        self.expression_types.get(expression).unwrap()
+    }
+}
+
+impl<'ast> Extract<'ast, AST, TypesContext<'ast>> for Types<'_> {
+    fn extract(_: &'ast AST, context: Option<TypesContext>) -> Result<Self, String> {
         let context = match context {
             Some(context) => context,
             None => return Err(String::from("TypeCheckContext is required")),
@@ -39,12 +49,14 @@ impl<'ast> Extract<'ast, AST, TypeCheckContext<'ast>> for TypeCheck {
         let classes = context.get_classes();
         let functions = context.get_functions();
 
+        let expression_types = HashMap::new();
+
         for function in functions.iter() {
             for statement in function.get_statements() {
                 statement.check(classes, functions, function)?;
             }
         }
 
-        Ok(TypeCheck)
+        Ok(Self { expression_types })
     }
 }

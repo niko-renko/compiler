@@ -26,8 +26,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let classes = ast_extract::Classes::extract(&ast, None)?;
     let functions = ast_extract::Functions::extract(&ast, None)?;
 
-    let type_check_context = ast_tyck::TypeCheckContext::new(&classes, &functions);
-    let _ = ast_tyck::TypeCheck::extract(&ast, Some(type_check_context))?;
+    let type_check_context = ast_tyck::TypesContext::new(&classes, &functions);
+    let types = ast_tyck::Types::extract(&ast, Some(type_check_context))?;
 
     let mut static_space = String::from("data:\n");
     let mut code_space = String::from("code:\n");
@@ -35,7 +35,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     for function in functions.iter() {
         let mut cfg = cfg::CFG::new();
 
-        cfg_builder::Builder::from(&classes, &function).update(&mut cfg)?;
+        cfg_builder::Builder::from(&classes, &types, &function).update(&mut cfg)?;
         cfg_update::SSA::new().update(&mut cfg)?;
         cfg_update::Peephole::from(function.get_this_id()).update(&mut cfg)?;
         cfg_update::VN::new().update(&mut cfg)?;

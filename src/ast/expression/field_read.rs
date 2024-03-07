@@ -1,5 +1,6 @@
 use super::*;
 
+#[derive(PartialEq, Eq, Hash)]
 pub struct FieldRead {
     object: Box<Expression>,
     field: Local,
