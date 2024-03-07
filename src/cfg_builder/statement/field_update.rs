@@ -8,7 +8,9 @@ impl Build for FieldUpdate {
         types: &Types,
         function: &FunctionContext,
     ) -> Result<Place, String> {
-        let object_type = types.get_expression_type(self.get_object()).unwrap();
+        let object_type = types
+            .get_type(function.get_function_name(), self.get_object())
+            .unwrap();
 
         let class_name = if let Type::Object(class_name) = object_type {
             class_name
