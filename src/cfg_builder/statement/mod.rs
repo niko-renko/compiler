@@ -14,16 +14,17 @@ impl Build for Statement {
         &self,
         cfg: &'cfg mut CFG,
         classes: &Classes,
+        types: &Types,
         function: &FunctionContext,
     ) -> Result<Place, String> {
         match self {
-            Statement::Assignment(s) => s.update(cfg, classes, function),
-            Statement::FieldUpdate(s) => s.update(cfg, classes, function),
-            Statement::If(s) => s.update(cfg, classes, function),
-            Statement::IfOnly(s) => s.update(cfg, classes, function),
-            Statement::While(s) => s.update(cfg, classes, function),
-            Statement::Return(s) => s.update(cfg, classes, function),
-            Statement::Print(s) => s.update(cfg, classes, function),
+            Statement::Assignment(s) => s.update(cfg, classes, types, function),
+            Statement::FieldUpdate(s) => s.update(cfg, classes, types, function),
+            Statement::If(s) => s.update(cfg, classes, types, function),
+            Statement::IfOnly(s) => s.update(cfg, classes, types, function),
+            Statement::While(s) => s.update(cfg, classes, types, function),
+            Statement::Return(s) => s.update(cfg, classes, types, function),
+            Statement::Print(s) => s.update(cfg, classes, types, function),
         }
     }
 }

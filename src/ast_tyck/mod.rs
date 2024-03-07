@@ -34,8 +34,8 @@ pub struct Types<'ast> {
 }
 
 impl Types<'_> {
-    pub fn get_expression_type(&self, expression: &Expression) -> &Type {
-        self.expression_types.get(expression).unwrap()
+    pub fn get_expression_type(&self, expression: &Expression) -> Option<&Type> {
+        self.expression_types.get(expression)
     }
 }
 

@@ -5,6 +5,7 @@ impl Build for New {
         &self,
         cfg: &'cfg mut CFG,
         classes: &Classes,
+        types: &Types,
         _: &FunctionContext,
     ) -> Result<Place, String> {
         let class_id = classes.get_class_id(&self.get_class_name()).unwrap();

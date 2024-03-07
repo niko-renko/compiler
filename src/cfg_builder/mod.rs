@@ -12,6 +12,7 @@ use traits::Build;
 
 pub struct Builder<'ast> {
     classes: &'ast Classes<'ast>,
+    types: &'ast Types<'ast>,
     function: &'ast FunctionContext<'ast>,
 }
 
@@ -21,14 +22,18 @@ impl<'ast> Builder<'ast> {
         types: &'ast Types,
         function: &'ast FunctionContext,
     ) -> Self {
-        Builder { classes, function }
+        Builder {
+            classes,
+            types,
+            function,
+        }
     }
 }
 
 impl<'ast> Update<CFG> for Builder<'ast> {
     fn update(&self, cfg: &mut CFG) -> Result<(), String> {
         for statement in self.function.get_statements() {
-            statement.update(cfg, self.classes, self.function)?;
+            statement.update(cfg, self.classes, self.types, self.function)?;
         }
 
         Ok(())

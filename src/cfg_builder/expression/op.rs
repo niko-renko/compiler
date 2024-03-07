@@ -5,10 +5,11 @@ impl Build for ast::Op {
         &self,
         cfg: &'cfg mut CFG,
         classes: &Classes,
+        types: &Types,
         function: &FunctionContext,
     ) -> Result<Place, String> {
-        let left = self.get_left().update(cfg, classes, function)?;
-        let right = self.get_right().update(cfg, classes, function)?;
+        let left = self.get_left().update(cfg, classes, types, function)?;
+        let right = self.get_right().update(cfg, classes, types, function)?;
         let operator = self.get_operator();
 
         if matches!(operator, ast::Operator::Div) {

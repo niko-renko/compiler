@@ -5,12 +5,18 @@ impl Build for FieldRead {
         &self,
         cfg: &'cfg mut CFG,
         classes: &Classes,
+        types: &Types,
         function: &FunctionContext,
     ) -> Result<Place, String> {
-        let object = self.get_object().update(cfg, classes, function)?;
+        let object_type = types.get_expression_type(self.get_object()).unwrap();
 
-        // BUG -- READ FROM SUPPLIED CLASS
-        let class_name = function.get_class_name().unwrap();
+        let class_name = if let Type::Object(class_name) = object_type {
+            class_name
+        } else {
+            unreachable!();
+        };
+
+        let object = self.get_object().update(cfg, classes, types, function)?;
         let fields = classes.get_class_field_ids(class_name).unwrap();
         let field_id = classes.get_field_id(self.get_field().get_name()).unwrap();
         let field_index = fields.iter().position(|&x| x == field_id).unwrap();

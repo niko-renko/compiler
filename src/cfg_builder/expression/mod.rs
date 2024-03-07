@@ -13,16 +13,17 @@ impl Build for Expression {
         &self,
         cfg: &'cfg mut CFG,
         classes: &Classes,
+        types: &Types,
         function: &FunctionContext,
     ) -> Result<Place, String> {
         match self {
-            Expression::Constant(e) => e.update(cfg, classes, function),
-            Expression::Local(e) => e.update(cfg, classes, function),
-            Expression::Op(e) => e.update(cfg, classes, function),
-            Expression::Call(e) => e.update(cfg, classes, function),
-            Expression::FieldRead(e) => e.update(cfg, classes, function),
-            Expression::New(e) => e.update(cfg, classes, function),
-            Expression::Null(e) => e.update(cfg, classes, function),
+            Expression::Constant(e) => e.update(cfg, classes, types, function),
+            Expression::Local(e) => e.update(cfg, classes, types, function),
+            Expression::Op(e) => e.update(cfg, classes, types, function),
+            Expression::Call(e) => e.update(cfg, classes, types, function),
+            Expression::FieldRead(e) => e.update(cfg, classes, types, function),
+            Expression::New(e) => e.update(cfg, classes, types, function),
+            Expression::Null(e) => e.update(cfg, classes, types, function),
         }
     }
 }

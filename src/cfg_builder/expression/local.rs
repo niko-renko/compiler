@@ -5,6 +5,7 @@ impl Build for Local {
         &self,
         _: &'cfg mut CFG,
         _: &Classes,
+        _: &Types,
         function: &FunctionContext,
     ) -> Result<Place, String> {
         Ok(Named::from(function.get_local_id(self).unwrap()).into())

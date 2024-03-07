@@ -5,13 +5,14 @@ impl Build for ast::Call {
         &self,
         cfg: &'cfg mut CFG,
         classes: &Classes,
+        types: &Types,
         function: &FunctionContext,
     ) -> Result<Place, String> {
-        let object = self.get_object().update(cfg, classes, function)?;
+        let object = self.get_object().update(cfg, classes, types, function)?;
 
         let mut args = vec![];
         for arg in self.get_args() {
-            args.push(arg.update(cfg, classes, function)?.into());
+            args.push(arg.update(cfg, classes, types, function)?.into());
         }
 
         let method_id = classes.get_method_id(self.get_method()).unwrap();
