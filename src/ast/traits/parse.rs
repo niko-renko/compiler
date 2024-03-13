@@ -75,7 +75,7 @@ where
         }
 
         if !allow_whitespace && from.chars().next().unwrap() != string.chars().next().unwrap() {
-            return Err(String::from("Unexpected whitespace"));
+            return Err(format!("Could not consume {} from {}", string, from));
         }
 
         let first_char = string.chars().next().unwrap();

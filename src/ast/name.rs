@@ -17,7 +17,6 @@ lazy_static! {
         set.insert("print");
         set.insert("return");
         set.insert("null");
-        set.insert("this");
         set
     };
 }
