@@ -13,4 +13,5 @@ _ = ^a.m()
 _ = ^a.m()
 _ = ^a.m()
 
+a = null:A
 return &a.x

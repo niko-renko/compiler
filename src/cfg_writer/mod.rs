@@ -68,10 +68,6 @@ impl Writer {
     fn get_vtable_name(class_name: &String) -> String {
         format!("{}_vtable", class_name)
     }
-
-    fn get_fieldmap_name(class_name: &String) -> String {
-        format!("{}_fieldmap", class_name)
-    }
 }
 
 impl<'cfg, 'ast> Extract<'cfg, CFG, WriterContext<'ast>> for Writer {

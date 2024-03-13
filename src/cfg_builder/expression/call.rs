@@ -9,6 +9,9 @@ impl Build for ast::Call {
         function: &FunctionContext,
     ) -> Result<Place, String> {
         let object = self.get_object().update(cfg, classes, types, function)?;
+        let is_zero =
+            cfg.add(cfg::Op::from(object.into(), Value::from(0).into(), cfg::Operator::Eq).into());
+        cfg.fail_if(is_zero, true, FailReason::NotAPointer);
 
         let mut args = vec![];
         for arg in self.get_args() {

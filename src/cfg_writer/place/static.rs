@@ -13,7 +13,6 @@ impl Write for Static {
         writer.write_code("@");
         match static_type {
             StaticType::VTable => writer.write_code(&Writer::get_vtable_name(class_name)),
-            StaticType::FieldMap => writer.write_code(&Writer::get_fieldmap_name(class_name)),
         }
     }
 }

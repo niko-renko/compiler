@@ -4,8 +4,6 @@ use super::*;
 pub enum FailReason {
     NotAPointer,
     NotANumber,
-    NoSuchField,
-    NoSuchMethod,
 }
 
 #[derive(Clone, Copy)]
