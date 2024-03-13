@@ -4,7 +4,7 @@ pub struct CheckContext<'ast> {
     classes: &'ast Classes<'ast>,
     functions: &'ast Functions<'ast>,
     function: &'ast FunctionContext<'ast>,
-    function_types: &'ast mut HashMap<&'ast Expression, Type>,
+    types: HashMap<&'ast Expression, Type>,
 }
 
 impl<'ast> CheckContext<'ast> {
@@ -12,13 +12,12 @@ impl<'ast> CheckContext<'ast> {
         classes: &'ast Classes<'ast>,
         functions: &'ast Functions<'ast>,
         function: &'ast FunctionContext<'ast>,
-        function_types: &'ast mut HashMap<&'ast Expression, Type>,
     ) -> Self {
         CheckContext {
             classes,
             functions,
             function,
-            function_types,
+            types: HashMap::new(),
         }
     }
 
@@ -34,11 +33,15 @@ impl<'ast> CheckContext<'ast> {
         self.function
     }
 
-    pub fn get_function_types(&'ast mut self) -> &'ast mut HashMap<&'ast Expression, Type> {
-        self.function_types
+    pub fn get_types_mut(&mut self) -> &mut HashMap<&'ast Expression, Type> {
+        &mut self.types
+    }
+
+    pub fn move_types(self) -> HashMap<&'ast Expression, Type> {
+        self.types
     }
 }
 
-pub trait Check {
-    fn check(&self, context: &mut CheckContext) -> Result<Type, String>;
+pub trait Check<'ast> {
+    fn check(&'ast self, context: &mut CheckContext<'ast>) -> Result<Type, String>;
 }

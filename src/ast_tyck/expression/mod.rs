@@ -8,9 +8,9 @@ mod new;
 mod null;
 mod op;
 
-impl Check for Expression {
-    fn check(&self, context: &mut CheckContext) -> Result<Type, String> {
-        match self {
+impl<'ast> Check<'ast> for Expression {
+    fn check(&'ast self, context: &mut CheckContext<'ast>) -> Result<Type, String> {
+        let expression_type = match self {
             Expression::Call(e) => e.check(context),
             Expression::Constant(e) => e.check(context),
             Expression::FieldRead(e) => e.check(context),
@@ -18,6 +18,12 @@ impl Check for Expression {
             Expression::New(e) => e.check(context),
             Expression::Null(e) => e.check(context),
             Expression::Op(e) => e.check(context),
-        }
+        }?;
+
+        context
+            .get_types_mut()
+            .insert(self, expression_type.clone());
+
+        Ok(expression_type)
     }
 }

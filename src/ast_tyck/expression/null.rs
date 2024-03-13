@@ -1,6 +1,6 @@
 use super::*;
 
-impl Check for Null {
+impl<'ast> Check<'ast> for Null {
     fn check(&self, context: &mut CheckContext) -> Result<Type, String> {
         let ty = self.get_type();
 

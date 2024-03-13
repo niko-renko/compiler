@@ -1,7 +1,7 @@
 use super::*;
 
-impl Check for Op {
-    fn check(&self, context: &mut CheckContext) -> Result<Type, String> {
+impl<'ast> Check<'ast> for Op {
+    fn check(&'ast self, context: &mut CheckContext<'ast>) -> Result<Type, String> {
         if self.get_left().check(context)? != Type::Int {
             return Err(format!("Left side of operator is not an integer"));
         }

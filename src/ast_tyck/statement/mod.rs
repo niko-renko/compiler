@@ -9,8 +9,8 @@ mod print;
 mod r#return;
 mod r#while;
 
-impl Check for Statement {
-    fn check(&self, context: &mut CheckContext) -> Result<Type, String> {
+impl<'ast> Check<'ast> for Statement {
+    fn check(&'ast self, context: &mut CheckContext<'ast>) -> Result<Type, String> {
         match self {
             Statement::Assignment(s) => s.check(context),
             Statement::FieldUpdate(s) => s.check(context),

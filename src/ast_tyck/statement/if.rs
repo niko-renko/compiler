@@ -1,7 +1,7 @@
 use super::*;
 
-impl Check for If {
-    fn check(&self, context: &mut CheckContext) -> Result<Type, String> {
+impl<'ast> Check<'ast> for If {
+    fn check(&'ast self, context: &mut CheckContext<'ast>) -> Result<Type, String> {
         if self.get_condition().check(context)? != Type::Int {
             return Err(String::from("If condition must be boolean"));
         }

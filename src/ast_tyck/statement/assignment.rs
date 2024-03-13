@@ -1,7 +1,7 @@
 use super::*;
 
-impl Check for Assignment {
-    fn check(&self, context: &mut CheckContext) -> Result<Type, String> {
+impl<'ast> Check<'ast> for Assignment {
+    fn check(&'ast self, context: &mut CheckContext<'ast>) -> Result<Type, String> {
         let right = self.get_right().check(context)?;
 
         let left = match self.get_left() {

@@ -1,6 +1,6 @@
 use super::*;
 
-impl Check for Local {
+impl<'ast> Check<'ast> for Local {
     fn check(&self, context: &mut CheckContext) -> Result<Type, String> {
         let current = context.get_function();
 

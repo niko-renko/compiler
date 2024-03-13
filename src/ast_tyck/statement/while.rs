@@ -1,7 +1,7 @@
 use super::*;
 
-impl Check for While {
-    fn check(&self, context: &mut CheckContext) -> Result<Type, String> {
+impl<'ast> Check<'ast> for While {
+    fn check(&'ast self, context: &mut CheckContext<'ast>) -> Result<Type, String> {
         if self.get_condition().check(context)? != Type::Int {
             return Err(String::from("While condition must be boolean"));
         }

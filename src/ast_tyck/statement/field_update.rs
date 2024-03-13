@@ -1,7 +1,7 @@
 use super::*;
 
-impl Check for FieldUpdate {
-    fn check(&self, context: &mut CheckContext) -> Result<Type, String> {
+impl<'ast> Check<'ast> for FieldUpdate {
+    fn check(&'ast self, context: &mut CheckContext<'ast>) -> Result<Type, String> {
         let class_name = match self.get_object().check(context)? {
             Type::Object(object) => object,
             _ => return Err(String::from("Method call on non-object")),

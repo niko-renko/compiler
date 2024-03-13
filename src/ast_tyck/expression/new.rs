@@ -1,6 +1,6 @@
 use super::*;
 
-impl Check for New {
+impl<'ast> Check<'ast> for New {
     fn check(&self, context: &mut CheckContext) -> Result<Type, String> {
         let class_name = self.get_class_name();
 
