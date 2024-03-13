@@ -103,7 +103,7 @@ impl InstructionHash for Op {
                 return Some(Value::from(0));
             }
 
-            if left == right && matches!(self.operator, Operator::Div) {
+            if left == right && matches!(self.operator, Operator::Div | Operator::Eq) {
                 return Some(Value::from(1));
             }
         }

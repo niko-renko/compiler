@@ -23,6 +23,7 @@ impl Build for ast::Op {
             ast::Operator::Sub => cfg::Operator::Sub,
             ast::Operator::Mul => cfg::Operator::Mul,
             ast::Operator::Div => cfg::Operator::Div,
+            ast::Operator::Eq => cfg::Operator::Eq,
         };
 
         let result = cfg.add(cfg::Op::from(left.into(), right.into(), cfg_operator).into());

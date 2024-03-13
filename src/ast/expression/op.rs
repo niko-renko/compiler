@@ -6,19 +6,41 @@ pub enum Operator {
     Sub,
     Mul,
     Div,
+    Eq,
 }
 
 impl Parse for Operator {
     fn try_parse(string: &str) -> Result<(&str, Self), String> {
+        let mut chars = string.chars();
         let char = string.chars().next();
+
         let operator = match char {
-            Some('+') => Operator::Add,
-            Some('-') => Operator::Sub,
-            Some('*') => Operator::Mul,
-            Some('/') => Operator::Div,
-            _ => return Err(String::from("Expected arithmetic operator")),
+            Some('+') => Some(Operator::Add),
+            Some('-') => Some(Operator::Sub),
+            Some('*') => Some(Operator::Mul),
+            Some('/') => Some(Operator::Div),
+            Some('=') => {
+                if chars.next() == Some('=') {
+                    Some(Operator::Eq)
+                } else {
+                    None
+                }
+            }
+            _ => None,
         };
-        let next = Self::consume(string, 1)?;
+
+        let operator = match operator {
+            Some(operator) => operator,
+            None => return Err(format!("Expected operator, found {}", char.unwrap())),
+        };
+
+        let mut length = 1;
+
+        if operator == Operator::Eq {
+            length = 2;
+        }
+
+        let next = Self::consume(string, length)?;
         Ok((next, operator))
     }
 }
